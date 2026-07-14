@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block title %}Upload Attachment - EchoDesk{% endblock %}
+
+{% block content %}
+<div class="form-container" style="max-width: 700px;">
+    <h2>Upload Attachment</h2>
+    <p style="color: #666; margin: 10px 0 20px 0;">
+        Complaint: <strong>{{ complaint.complaint_id }} - {{ complaint.title }}</strong>
+    </p>
+    
+    <div style="background: #d1ecf1; padding: 15px; border-radius: 3px; margin-bottom: 20px; border-left: 4px solid #0c5460;">
+        <strong style="color: #0c5460;">📄 Supported File Types</strong>
+        <p style="color: #0c5460; margin: 10px 0 0 0;">PDF, DOC, DOCX, JPG, JPEG, PNG, GIF (Max 5MB each)</p>
+    </div>
+    
+    <form method="post" enctype="multipart/form-data" novalidate>
+        {% csrf_token %}
+        
+        {% if form.non_field_errors %}
+            <div class="message error">
+                {% for error in form.non_field_errors %}
+                    {{ error }}<br>
+                {% endfor %}
+            </div>
+        {% endif %}
+        
+        <div class="form-group">
+            <label for="id_file">Choose File *</label>
+            {{ form.file }}
+            {% if form.file.errors %}
+                <div class="error-messages">
+                    {% for error in form.file.errors %}
+                        <div>{{ error }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+        
+        <button type="submit">Upload Attachment</button>
+        <a href="{% url 'complaints:complaint_detail' complaint.id %}"><button type="button" class="btn-secondary">Cancel</button></a>
+    </form>
+</div>
+{% endblock %}

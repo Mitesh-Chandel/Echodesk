@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block title %}Staff Dashboard - EchoDesk{% endblock %}
+
+{% block content %}
+<div style="max-width: 1000px; margin: 0 auto;">
+    <h2>Staff Dashboard 👨‍💼</h2>
+    <p style="color: #666; margin: 10px 0 20px 0;">Manage your assigned complaints</p>
+    
+    <!-- Statistics -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; margin-bottom: 20px;">
+        <div class="card" style="text-align: center;">
+            <div style="font-size: 32px; font-weight: bold; color: #3498db;">{{ total_assigned }}</div>
+            <div style="color: #666;">Total Assigned</div>
+        </div>
+        
+        <div class="card" style="text-align: center;">
+            <div style="font-size: 32px; font-weight: bold; color: #e74c3c;">{{ pending }}</div>
+            <div style="color: #666;">Pending</div>
+        </div>
+        
+        <div class="card" style="text-align: center;">
+            <div style="font-size: 32px; font-weight: bold; color: #f39c12;">{{ in_progress }}</div>
+            <div style="color: #666;">In Progress</div>
+        </div>
+        
+        <div class="card" style="text-align: center;">
+            <div style="font-size: 32px; font-weight: bold; color: #9370db;">{{ waiting }}</div>
+            <div style="color: #666;">Waiting</div>
+        </div>
+        
+        <div class="card" style="text-align: center;">
+            <div style="font-size: 32px; font-weight: bold; color: #27ae60;">{{ resolved }}</div>
+            <div style="color: #666;">Resolved</div>
+        </div>
+    </div>
+    
+    <!-- Assigned Complaints -->
+    {% if recent_complaints %}
+    <div class="card">
+        <h3>Your Assigned Complaints</h3>
+        <div class="complaints-list">
+            {% for complaint in recent_complaints %}
+            <div class="complaint-item">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <div class="complaint-id">{{ complaint.complaint_id }}</div>
+                        <div class="complaint-title">{{ complaint.title }}</div>
+                        <div style="margin-top: 5px; font-size: 12px;">
+                            <strong>From:</strong> {{ complaint.user.get_full_name|default:complaint.user.username }}<br>
+                            <span class="complaint-status status-{{ complaint.status }}">{{ complaint.get_status_display }}</span>
+                            <span class="complaint-status" style="background-color: #9b59b6; color: white;">{{ complaint.get_priority_display }}</span>
+                        </div>
+                    </div>
+                    <a href="{% url 'complaints:complaint_detail' complaint.id %}"><button>View</button></a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% else %}
+    <div class="card">
+        <h3>No Assigned Complaints</h3>
+        <p>You don't have any assigned complaints at this time.</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

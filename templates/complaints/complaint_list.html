@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+
+{% block title %}My Complaints - EchoDesk{% endblock %}
+
+{% block content %}
+<div style="max-width: 1000px; margin: 0 auto;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <h2>My Complaints</h2>
+        <a href="{% url 'complaints:complaint_create' %}"><button class="btn-success">+ New Complaint</button></a>
+    </div>
+    
+    <!-- Filter Section -->
+    <div class="card">
+        <h3>Filter Complaints</h3>
+        <form method="get" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+            {{ filter_form.search }}
+            {{ filter_form.status }}
+            {{ filter_form.priority }}
+            {{ filter_form.category }}
+            <button type="submit">Apply Filters</button>
+            <a href="?"><button type="button" class="btn-secondary">Clear Filters</button></a>
+        </form>
+    </div>
+    
+    <!-- Complaints List -->
+    {% if page_obj %}
+        {% for complaint in page_obj %}
+            <div class="complaint-item">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <div class="complaint-id">{{ complaint.complaint_id }}</div>
+                        <div class="complaint-title">{{ complaint.title }}</div>
+                        <div style="margin-top: 10px;">
+                            <span class="complaint-status status-{{ complaint.status }}">{{ complaint.get_status_display }}</span>
+                            <span class="complaint-status" style="background-color: #3498db; color: white;">{{ complaint.category.name }}</span>
+                            <span class="complaint-status" style="background-color: #9b59b6; color: white;">Priority: {{ complaint.get_priority_display }}</span>
+                        </div>
+                        <div style="font-size: 12px; color: #666; margin-top: 5px;">
+                            Created: {{ complaint.created_at|date:"d M, Y H:i" }} | Replies: {{ complaint.replies.count }}
+                        </div>
+                    </div>
+                    <div>
+                        <a href="{% url 'complaints:complaint_detail' complaint.id %}"><button>View</button></a>
+                        {% if complaint.status == 'pending' %}
+                            <a href="{% url 'complaints:complaint_update' complaint.id %}"><button class="btn-secondary">Edit</button></a>
+                            <a href="{% url 'complaints:complaint_delete' complaint.id %}"><button class="btn-danger">Delete</button></a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+        
+        <!-- Pagination -->
+        {% if page_obj.has_other_pages %}
+        <div style="text-align: center; margin-top: 20px;">
+            {% if page_obj.has_previous %}
+                <a href="?page=1{% if filter_form.is_valid %}&{{ filter_form.urlencode }}{% endif %}"><button>First</button></a>
+                <a href="?page={{ page_obj.previous_page_number }}{% if filter_form.is_valid %}&{{ filter_form.urlencode }}{% endif %}"><button>Previous</button></a>
+            {% endif %}
+            
+            <span style="margin: 0 10px;">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+            
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}{% if filter_form.is_valid %}&{{ filter_form.urlencode }}{% endif %}"><button>Next</button></a>
+                <a href="?page={{ page_obj.paginator.num_pages }}{% if filter_form.is_valid %}&{{ filter_form.urlencode }}{% endif %}"><button>Last</button></a>
+            {% endif %}
+        </div>
+        {% endif %}
+    {% else %}
+        <div class="card">
+            <h3>No Complaints Found</h3>
+            <p>You haven't submitted any complaints yet.</p>
+            <a href="{% url 'complaints:complaint_create' %}"><button>Create Your First Complaint</button></a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
