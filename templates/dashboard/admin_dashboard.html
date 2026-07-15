@@ -3,123 +3,275 @@
 {% block title %}Admin Dashboard - EchoDesk{% endblock %}
 
 {% block content %}
-<div style="max-width: 1000px; margin: 0 auto;">
-    <h2>Admin Dashboard 🔧</h2>
-    <p style="color: #666; margin: 10px 0 20px 0;">System-wide overview and management</p>
+<div style="max-width: 1400px; margin: 0 auto;">
     
-    <!-- System Statistics -->
-    <h3 style="margin-top: 20px;">System Statistics</h3>
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; margin-bottom: 20px;">
-        <div class="card" style="text-align: center;">
-            <div style="font-size: 32px; font-weight: bold; color: #3498db;">{{ total_complaints }}</div>
-            <div style="color: #666;">Total Complaints</div>
-        </div>
-        
-        <div class="card" style="text-align: center;">
-            <div style="font-size: 32px; font-weight: bold; color: #e74c3c;">{{ total_users }}</div>
-            <div style="color: #666;">Total Users</div>
-        </div>
-        
-        <div class="card" style="text-align: center;">
-            <div style="font-size: 32px; font-weight: bold; color: #f39c12;">{{ total_categories }}</div>
-            <div style="color: #666;">Categories</div>
-        </div>
+    <div style="background-color: #ecf0f1; padding: 20px; border-radius: 5px; margin-bottom: 30px;">
+        <h2>Admin Dashboard 🎛️</h2>
+        <p style="color: #555; margin-top: 10px;">
+            System-wide overview and management controls.
+        </p>
     </div>
     
-    <!-- User Breakdown -->
-    <h3>User Breakdown</h3>
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; margin-bottom: 20px;">
-        <div class="card" style="text-align: center;">
-            <div style="font-size: 28px; font-weight: bold; color: #27ae60;">{{ total_regular_users }}</div>
-            <div style="color: #666;">Regular Users</div>
-        </div>
-        
-        <div class="card" style="text-align: center;">
-            <div style="font-size: 28px; font-weight: bold; color: #3498db;">{{ total_staff }}</div>
-            <div style="color: #666;">Staff Members</div>
-        </div>
-        
-        <div class="card" style="text-align: center;">
-            <div style="font-size: 28px; font-weight: bold; color: #9b59b6;">{{ total_admins }}</div>
-            <div style="color: #666;">Admins</div>
-        </div>
-    </div>
+    <h3 style="margin-bottom: 20px;">System Overview</h3>
     
-    <!-- Complaint Status Distribution -->
-    <h3>Complaint Status Distribution</h3>
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 15px; margin-bottom: 20px;">
-        <div class="card" style="text-align: center;">
-            <div style="font-size: 24px; font-weight: bold; color: #FFA500;">{{ pending }}</div>
-            <div style="font-size: 12px; color: #666;">Pending</div>
-        </div>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; margin-bottom: 30px;">
         
-        <div class="card" style="text-align: center;">
-            <div style="font-size: 24px; font-weight: bold; color: #1E90FF;">{{ assigned }}</div>
-            <div style="font-size: 12px; color: #666;">Assigned</div>
-        </div>
-        
-        <div class="card" style="text-align: center;">
-            <div style="font-size: 24px; font-weight: bold; color: #4169E1;">{{ in_progress }}</div>
-            <div style="font-size: 12px; color: #666;">In Progress</div>
-        </div>
-        
-        <div class="card" style="text-align: center;">
-            <div style="font-size: 24px; font-weight: bold; color: #9370DB;">{{ waiting }}</div>
-            <div style="font-size: 12px; color: #666;">Waiting</div>
-        </div>
-        
-        <div class="card" style="text-align: center;">
-            <div style="font-size: 24px; font-weight: bold; color: #228B22;">{{ resolved }}</div>
-            <div style="font-size: 12px; color: #666;">Resolved</div>
-        </div>
-        
-        <div class="card" style="text-align: center;">
-            <div style="font-size: 24px; font-weight: bold; color: #808080;">{{ closed }}</div>
-            <div style="font-size: 12px; color: #666;">Closed</div>
-        </div>
-        
-        <div class="card" style="text-align: center;">
-            <div style="font-size: 24px; font-weight: bold; color: #DC143C;">{{ rejected }}</div>
-            <div style="font-size: 12px; color: #666;">Rejected</div>
-        </div>
-    </div>
-    
-    <!-- Quick Actions -->
-    <div class="card">
-        <h3>Quick Actions</h3>
-        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-            <a href="/admin/"><button>Manage All Models</button></a>
-            <a href="/admin/complaints/complaint/"><button>View All Complaints</button></a>
-            <a href="/admin/auth/user/"><button>Manage Users</button></a>
-            <a href="/admin/users/userprofile/"><button>Manage User Roles</button></a>
-            <a href="/admin/complaints/category/"><button>Manage Categories</button></a>
-        </div>
-    </div>
-    
-    <!-- Recent Complaints -->
-    {% if recent_complaints %}
-    <div class="card">
-        <h3>Recent Complaints</h3>
-        <div class="complaints-list">
-            {% for complaint in recent_complaints %}
-            <div class="complaint-item">
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <div>
-                        <div class="complaint-id">{{ complaint.complaint_id }}</div>
-                        <div class="complaint-title">{{ complaint.title }}</div>
-                        <div style="margin-top: 5px; font-size: 12px;">
-                            <strong>From:</strong> {{ complaint.user.username }}<br>
-                            <span class="complaint-status status-{{ complaint.status }}">{{ complaint.get_status_display }}</span>
-                            <span class="complaint-status" style="background-color: #3498db; color: white;">{{ complaint.category.name }}</span>
-                            <span class="complaint-status" style="background-color: #9b59b6; color: white;">{{ complaint.get_priority_display }}</span>
-                        </div>
-                    </div>
-                    <a href="{% url 'complaints:complaint_detail' complaint.id %}"><button>View</button></a>
-                </div>
+        <div class="card" style="border-top: 4px solid #9b59b6; text-align: center;">
+            <div style="font-size: 32px; font-weight: bold; color: #9b59b6;">
+                {{ total_users }}
             </div>
-            {% endfor %}
+            <div style="color: #666; font-size: 14px; margin-top: 10px;">
+                Total Users
+            </div>
+        </div>
+        
+        <div class="card" style="border-top: 4px solid #3498db; text-align: center;">
+            <div style="font-size: 32px; font-weight: bold; color: #3498db;">
+                {{ total_regular_users }}
+            </div>
+            <div style="color: #666; font-size: 14px; margin-top: 10px;">
+                Regular Users
+            </div>
+        </div>
+        
+        <div class="card" style="border-top: 4px solid #e67e22; text-align: center;">
+            <div style="font-size: 32px; font-weight: bold; color: #e67e22;">
+                {{ total_staff }}
+            </div>
+            <div style="color: #666; font-size: 14px; margin-top: 10px;">
+                Staff Members
+            </div>
+        </div>
+        
+        <div class="card" style="border-top: 4px solid #c0392b; text-align: center;">
+            <div style="font-size: 32px; font-weight: bold; color: #c0392b;">
+                {{ total_admins }}
+            </div>
+            <div style="color: #666; font-size: 14px; margin-top: 10px;">
+                Administrators
+            </div>
+        </div>
+        
+        <div class="card" style="border-top: 4px solid #16a085; text-align: center;">
+            <div style="font-size: 32px; font-weight: bold; color: #16a085;">
+                {{ total_categories }}
+            </div>
+            <div style="color: #666; font-size: 14px; margin-top: 10px;">
+                Categories
+            </div>
+        </div>
+        
+    </div>
+    
+    <h3 style="margin-bottom: 20px;">Complaint Statistics</h3>
+    
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; margin-bottom: 30px;">
+        
+        <div class="card" style="border-top: 4px solid #2c3e50; text-align: center;">
+            <div style="font-size: 32px; font-weight: bold; color: #2c3e50;">
+                {{ complaint_stats.total }}
+            </div>
+            <div style="color: #666; font-size: 14px; margin-top: 10px;">
+                Total Complaints
+            </div>
+        </div>
+        
+        <div class="card" style="border-top: 4px solid #FFA500; text-align: center;">
+            <div style="font-size: 32px; font-weight: bold; color: #FFA500;">
+                {{ complaint_stats.pending }}
+            </div>
+            <div style="color: #666; font-size: 14px; margin-top: 10px;">
+                Pending
+            </div>
+        </div>
+        
+        <div class="card" style="border-top: 4px solid #1E90FF; text-align: center;">
+            <div style="font-size: 32px; font-weight: bold; color: #1E90FF;">
+                {{ complaint_stats.assigned }}
+            </div>
+            <div style="color: #666; font-size: 14px; margin-top: 10px;">
+                Assigned
+            </div>
+        </div>
+        
+        <div class="card" style="border-top: 4px solid #4169E1; text-align: center;">
+            <div style="font-size: 32px; font-weight: bold; color: #4169E1;">
+                {{ complaint_stats.in_progress }}
+            </div>
+            <div style="color: #666; font-size: 14px; margin-top: 10px;">
+                In Progress
+            </div>
+        </div>
+        
+        <div class="card" style="border-top: 4px solid #9370DB; text-align: center;">
+            <div style="font-size: 32px; font-weight: bold; color: #9370DB;">
+                {{ complaint_stats.waiting }}
+            </div>
+            <div style="color: #666; font-size: 14px; margin-top: 10px;">
+                Waiting for User
+            </div>
+        </div>
+        
+        <div class="card" style="border-top: 4px solid #228B22; text-align: center;">
+            <div style="font-size: 32px; font-weight: bold; color: #228B22;">
+                {{ complaint_stats.resolved }}
+            </div>
+            <div style="color: #666; font-size: 14px; margin-top: 10px;">
+                Resolved
+            </div>
+        </div>
+        
+        <div class="card" style="border-top: 4px solid #808080; text-align: center;">
+            <div style="font-size: 32px; font-weight: bold; color: #808080;">
+                {{ complaint_stats.closed }}
+            </div>
+            <div style="color: #666; font-size: 14px; margin-top: 10px;">
+                Closed
+            </div>
+        </div>
+        
+        <div class="card" style="border-top: 4px solid #DC143C; text-align: center;">
+            <div style="font-size: 32px; font-weight: bold; color: #DC143C;">
+                {{ complaint_stats.rejected }}
+            </div>
+            <div style="color: #666; font-size: 14px; margin-top: 10px;">
+                Rejected
+            </div>
+        </div>
+        
+    </div>
+    
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 20px; margin-bottom: 30px;">
+        
+        <div class="card">
+            <h4 style="margin-bottom: 15px; color: #2c3e50;">Complaints by Category</h4>
+            <div style="max-height: 300px; overflow-y: auto;">
+                {% if category_chart_data %}
+                    <table style="width: 100%; border-collapse: collapse;">
+                        <tbody>
+                            {% for category, count in category_chart_data.items %}
+                            <tr style="border-bottom: 1px solid #eee;">
+                                <td style="padding: 10px; font-weight: bold;">{{ category }}</td>
+                                <td style="padding: 10px; text-align: right;">
+                                    <span style="background-color: #3498db; color: white; padding: 5px 10px; border-radius: 3px;">
+                                        {{ count }}
+                                    </span>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% else %}
+                    <p style="color: #999;">No complaints yet.</p>
+                {% endif %}
+            </div>
+        </div>
+        
+        <div class="card">
+            <h4 style="margin-bottom: 15px; color: #2c3e50;">Complaints by Status</h4>
+            <div style="max-height: 300px; overflow-y: auto;">
+                {% if status_chart_data %}
+                    <table style="width: 100%; border-collapse: collapse;">
+                        <tbody>
+                            {% for status, count in status_chart_data.items %}
+                            <tr style="border-bottom: 1px solid #eee;">
+                                <td style="padding: 10px; font-weight: bold;">{{ status }}</td>
+                                <td style="padding: 10px; text-align: right;">
+                                    <span style="background-color: #27ae60; color: white; padding: 5px 10px; border-radius: 3px;">
+                                        {{ count }}
+                                    </span>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% else %}
+                    <p style="color: #999;">No complaints yet.</p>
+                {% endif %}
+            </div>
+        </div>
+        
+    </div>
+    
+    <div class="card" style="margin-bottom: 30px;">
+        <h4 style="margin-bottom: 15px; color: #2c3e50;">Complaints by Priority</h4>
+        <div style="max-height: 300px; overflow-y: auto;">
+            {% if priority_chart_data %}
+                <table style="width: 100%; border-collapse: collapse;">
+                    <tbody>
+                        {% for priority, count in priority_chart_data.items %}
+                        <tr style="border-bottom: 1px solid #eee;">
+                            <td style="padding: 10px; font-weight: bold;">{{ priority }}</td>
+                            <td style="padding: 10px; text-align: right;">
+                                <span style="background-color: #e67e22; color: white; padding: 5px 10px; border-radius: 3px;">
+                                    {{ count }}
+                                </span>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <p style="color: #999;">No complaints yet.</p>
+            {% endif %}
         </div>
     </div>
+    
+    <h3 style="margin-bottom: 20px;">Latest Complaints (Last 10)</h3>
+    
+    {% if recent_complaints %}
+        <div class="card">
+            <table style="width: 100%; border-collapse: collapse;">
+                <thead>
+                    <tr style="background-color: #f5f5f5; border-bottom: 2px solid #ddd;">
+                        <th style="padding: 12px; text-align: left; font-weight: bold;">User</th>
+                        <th style="padding: 12px; text-align: left; font-weight: bold;">Complaint ID</th>
+                        <th style="padding: 12px; text-align: left; font-weight: bold;">Title</th>
+                        <th style="padding: 12px; text-align: left; font-weight: bold;">Category</th>
+                        <th style="padding: 12px; text-align: left; font-weight: bold;">Status</th>
+                        <th style="padding: 12px; text-align: left; font-weight: bold;">Priority</th>
+                        <th style="padding: 12px; text-align: left; font-weight: bold;">Created Date</th>
+                        <th style="padding: 12px; text-align: left; font-weight: bold;">Assigned To</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for complaint in recent_complaints %}
+                    <tr style="border-bottom: 1px solid #eee;">
+                        <td style="padding: 12px;">{{ complaint.user.username }}</td>
+                        <td style="padding: 12px;"><strong>{{ complaint.complaint_id }}</strong></td>
+                        <td style="padding: 12px;">{{ complaint.title }}</td>
+                        <td style="padding: 12px;">{{ complaint.category.name }}</td>
+                        <td style="padding: 12px;">
+                            <span class="complaint-status status-{{ complaint.status }}" style="padding: 5px 10px; border-radius: 3px; font-size: 12px; font-weight: bold;">
+                                {{ complaint.get_status_display }}
+                            </span>
+                        </td>
+                        <td style="padding: 12px;">{{ complaint.get_priority_display }}</td>
+                        <td style="padding: 12px;">{{ complaint.created_at|date:"d M Y" }}</td>
+                        <td style="padding: 12px;">
+                            {% if complaint.assigned_staff %}
+                                {{ complaint.assigned_staff.username }}
+                            {% else %}
+                                <span style="color: #999;">Unassigned</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        
+        <div style="text-align: center; margin-top: 20px;">
+            <a href="{% url 'complaints:complaint_list' %}"><button class="btn-secondary">View All Complaints</button></a>
+            <a href="{% url 'admin:complaints_complaint_changelist' %}"><button>Manage in Admin Panel</button></a>
+        </div>
+    {% else %}
+        <div class="card">
+            <div style="text-align: center; padding: 40px;">
+                <h4 style="color: #666;">No complaints in the system yet.</h4>
+            </div>
+        </div>
     {% endif %}
+    
 </div>
 {% endblock %}
