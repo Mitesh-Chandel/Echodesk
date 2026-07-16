@@ -38,4 +38,4 @@ for cat_data in categories_data:
 print("\nCategories setup complete!")
 print("\nTo create an admin user, run:")
 print("  python manage.py createsuperuser")
-print("\nThen access admin at: http://localhost:8000/admin/")
+print("\nThen access admin at: http://localhost:8000/django-admin/")

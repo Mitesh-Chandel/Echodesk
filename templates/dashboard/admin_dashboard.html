@@ -262,8 +262,10 @@
         </div>
         
         <div style="text-align: center; margin-top: 20px;">
+            <!-- <a href="{% url 'complaints:complaint_list' %}"><button class="btn-secondary">View All Complaints</button></a>
+            <a href="{% url 'admin:complaints_complaint_changelist' %}"><button>Manage in Admin Panel</button></a> -->
             <a href="{% url 'complaints:complaint_list' %}"><button class="btn-secondary">View All Complaints</button></a>
-            <a href="{% url 'admin:complaints_complaint_changelist' %}"><button>Manage in Admin Panel</button></a>
+            <a href="{% url 'admin:complaints_complaint_changelist' %}"><button>Manage in Django Admin</button></a>
         </div>
     {% else %}
         <div class="card">

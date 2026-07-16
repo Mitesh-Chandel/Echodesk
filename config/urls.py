@@ -14,17 +14,42 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+# from django.contrib import admin
+# from django.urls import path, include
+# from django.conf import settings
+# from django.conf.urls.static import static
+# from dashboard.views import home
+
+# urlpatterns = [
+#     # Home
+#     path('', home, name='home'),
+    
+#     path('admin/', admin.site.urls),
+    
+#     # Apps URLs
+#     path('auth/', include('users.urls')),
+#     path('complaints/', include('complaints.urls')),
+#     path('dashboard/', include('dashboard.urls')),
+# ]
+
+# # Serve media files during development
+# if settings.DEBUG:
+#     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+#     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+
+
 from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
-from dashboard.views import home
+from dashboard.views import home, admin_dashboard  # import admin_dashboard directly
 
 urlpatterns = [
     # Home
     path('', home, name='home'),
     
-    path('admin/', admin.site.urls),
+    path('django-admin/', admin.site.urls),   # Django's built-in admin moved here
+    path('admin/', admin_dashboard, name='admin_shortcut'),  # your dashboard now lives at /admin/
     
     # Apps URLs
     path('auth/', include('users.urls')),
@@ -32,8 +57,9 @@ urlpatterns = [
     path('dashboard/', include('dashboard.urls')),
 ]
 
-# Serve media files during development
+
+
+    # Serve media files during development
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
-
