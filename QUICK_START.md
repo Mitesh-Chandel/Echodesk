@@ -47,7 +47,12 @@ Categories setup complete!
 
 ### Step 5: Start Development Server
 ```bash
-"d:\Python AIML\.venv\Scripts\python.exe" manage.py runserver
+"d:\Python AIML\.venv\Scripts\python.exe" 
+
+source venv/Scripts/activate
+
+
+ python manage.py runserver
 ```
 
 Should output:

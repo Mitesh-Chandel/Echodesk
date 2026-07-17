@@ -2,81 +2,82 @@
 
 {% block title %}Student Dashboard - EchoDesk{% endblock %}
 
+{% block page_header %}
+<div class="page__header container">
+    <h2 class="page__title">Welcome, {{ user.get_full_name|default:user.username }}! 👋</h2>
+    <p class="page__subtitle">Track your complaints and stay updated on their status.</p>
+</div>
+{% endblock %}
+
 {% block content %}
-<div style="max-width: 1200px; margin: 0 auto;">
+<div class="container page">
     
-    <div style="background-color: #ecf0f1; padding: 20px; border-radius: 5px; margin-bottom: 30px;">
-        <h2>Welcome, {{ user.get_full_name|default:user.username }}! 👋</h2>
-        <p style="color: #555; margin-top: 10px;">
-            Track your complaints and stay updated on their status.
-        </p>
-    </div>
+    <h3 class="page__subtitle">Your Complaint Summary</h3>
     
-    <h3 style="margin-bottom: 20px;">Your Complaint Summary</h3>
-    
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 30px;">
+    <!-- Statistics Grid -->
+    <div class="grid grid--6 stack">
         
-        <div class="card" style="border-top: 4px solid #3498db;">
-            <div style="text-align: center;">
-                <div style="font-size: 36px; font-weight: bold; color: #3498db;">
+        <div class="card stat-card border--primary">
+            <div class="stack stack--align-center">
+                <div class="page__title text--primary">
                     {{ stats.total }}
                 </div>
-                <div style="color: #666; font-size: 14px; margin-top: 10px;">
+                <div class="page__subtitle">
                     Total Complaints
                 </div>
             </div>
         </div>
         
-        <div class="card" style="border-top: 4px solid #FFA500;">
-            <div style="text-align: center;">
-                <div style="font-size: 36px; font-weight: bold; color: #FFA500;">
+        <div class="card stat-card border--warning">
+            <div class="stack stack--align-center">
+                <div class="page__title text--warning">
                     {{ stats.pending }}
                 </div>
-                <div style="color: #666; font-size: 14px; margin-top: 10px;">
+                <div class="page__subtitle">
                     Pending
                 </div>
             </div>
         </div>
         
-        <div class="card" style="border-top: 4px solid #4169E1;">
-            <div style="text-align: center;">
-                <div style="font-size: 36px; font-weight: bold; color: #4169E1;">
+        <div class="card stat-card border--info">
+            <div class="stack stack--align-center">
+                <div class="page__title text--info">
                     {{ stats.in_progress }}
                 </div>
-                <div style="color: #666; font-size: 14px; margin-top: 10px;">
+                <div class="page__subtitle">
                     In Progress
                 </div>
             </div>
         </div>
         
-        <div class="card" style="border-top: 4px solid #228B22;">
-            <div style="text-align: center;">
-                <div style="font-size: 36px; font-weight: bold; color: #228B22;">
+        <div class="card stat-card border--success">
+            <div class="stack stack--align-center">
+                <div class="page__title text--success">
                     {{ stats.resolved }}
                 </div>
-                <div style="color: #666; font-size: 14px; margin-top: 10px;">
+                <div class="page__subtitle">
                     Resolved
                 </div>
             </div>
         </div>
         
-        <div class="card" style="border-top: 4px solid #DC143C;">
-            <div style="text-align: center;">
-                <div style="font-size: 36px; font-weight: bold; color: #DC143C;">
+        <div class="card stat-card border--danger">
+            <div class="stack stack--align-center">
+                <div class="page__title text--danger">
                     {{ stats.rejected }}
                 </div>
-                <div style="color: #666; font-size: 14px; margin-top: 10px;">
+                <div class="page__subtitle">
                     Rejected
                 </div>
             </div>
         </div>
         
-        <div class="card" style="border-top: 4px solid #808080;">
-            <div style="text-align: center;">
-                <div style="font-size: 36px; font-weight: bold; color: #808080;">
+        <div class="card stat-card border--muted">
+            <div class="stack stack--align-center">
+                <div class="page__title text--muted">
                     {{ stats.closed }}
                 </div>
-                <div style="color: #666; font-size: 14px; margin-top: 10px;">
+                <div class="page__subtitle">
                     Closed
                 </div>
             </div>
@@ -84,54 +85,65 @@
         
     </div>
     
+    <!-- Unread Notifications Banner -->
     {% if unread_notifications_count > 0 %}
-    <div class="card" style="background-color: #fff3cd; border-left: 4px solid #ffc107; margin-bottom: 30px;">
-        <div style="display: flex; justify-content: space-between; align-items: center;">
+    <div class="card card--glass card--alert-warning stack">
+        <div class="row row--justify-between row--align-center">
             <div>
-                <h4 style="color: #856404; margin: 0;">You have {{ unread_notifications_count }} unread notification{{ unread_notifications_count|pluralize }}</h4>
+                <h4 class="text--warning">You have {{ unread_notifications_count }} unread notification{{ unread_notifications_count|pluralize }}</h4>
             </div>
-            <a href="{% url 'complaints:complaint_list' %}"><button class="btn-secondary">View</button></a>
+            <a href="{% url 'complaints:complaint_list' %}">
+                <button class="btn btn--secondary">View</button>
+            </a>
         </div>
     </div>
     {% endif %}
     
-    <h3 style="margin-bottom: 20px;">Your Recent Complaints (Latest 5)</h3>
+    <h3 class="page__subtitle">Your Recent Complaints (Latest 5)</h3>
     
     {% if recent_complaints %}
-        <div class="card">
-            <table style="width: 100%; border-collapse: collapse;">
+        <div class="card table-responsive">
+            <table class="table">
                 <thead>
-                    <tr style="background-color: #f5f5f5; border-bottom: 2px solid #ddd;">
-                        <th style="padding: 12px; text-align: left; font-weight: bold;">Complaint ID</th>
-                        <th style="padding: 12px; text-align: left; font-weight: bold;">Title</th>
-                        <th style="padding: 12px; text-align: left; font-weight: bold;">Category</th>
-                        <th style="padding: 12px; text-align: left; font-weight: bold;">Status</th>
-                        <th style="padding: 12px; text-align: left; font-weight: bold;">Priority</th>
-                        <th style="padding: 12px; text-align: left; font-weight: bold;">Created Date</th>
-                        <th style="padding: 12px; text-align: left; font-weight: bold;">Actions</th>
+                    <tr>
+                        <th>Complaint ID</th>
+                        <th>Title</th>
+                        <th>Category</th>
+                        <th>Status</th>
+                        <th>Priority</th>
+                        <th>Created Date</th>
+                        <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for complaint in recent_complaints %}
-                    <tr style="border-bottom: 1px solid #eee;">
-                        <td style="padding: 12px;">
+                    <tr>
+                        <td>
                             <strong>{{ complaint.complaint_id }}</strong>
                         </td>
-                        <td style="padding: 12px;">{{ complaint.title }}</td>
-                        <td style="padding: 12px;">{{ complaint.category.name }}</td>
-                        <td style="padding: 12px;">
-                            <span class="complaint-status status-{{ complaint.status }}" style="padding: 5px 10px; border-radius: 3px; font-size: 12px; font-weight: bold;">
+                        <td>{{ complaint.title }}</td>
+                        <td>{{ complaint.category.name }}</td>
+                        <td>
+                            <span class="badge badge--{{ complaint.status }}">
                                 {{ complaint.get_status_display }}
                             </span>
                         </td>
-                        <td style="padding: 12px;">{{ complaint.get_priority_display }}</td>
-                        <td style="padding: 12px;">{{ complaint.created_at|date:"d M Y" }}</td>
-                        <td style="padding: 12px;">
-                            <a href="{% url 'complaints:complaint_detail' complaint.id %}"><button style="padding: 5px 10px; font-size: 12px;">View</button></a>
-                            {% if complaint.status == "pending" %}
-                                <a href="{% url 'complaints:complaint_update' complaint.id %}"><button class="btn-secondary" style="padding: 5px 10px; font-size: 12px;">Edit</button></a>
-                                <a href="{% url 'complaints:complaint_delete' complaint.id %}"><button class="btn-danger" style="padding: 5px 10px; font-size: 12px;">Delete</button></a>
-                            {% endif %}
+                        <td>{{ complaint.get_priority_display }}</td>
+                        <td>{{ complaint.created_at|date:"d M Y" }}</td>
+                        <td>
+                            <div class="row row--gap-sm">
+                                <a href="{% url 'complaints:complaint_detail' complaint.id %}">
+                                    <button class="btn btn--ghost btn--xs">View</button>
+                                </a>
+                                {% if complaint.status == "pending" %}
+                                    <a href="{% url 'complaints:complaint_update' complaint.id %}">
+                                        <button class="btn btn--secondary btn--xs">Edit</button>
+                                    </a>
+                                    <a href="{% url 'complaints:complaint_delete' complaint.id %}">
+                                        <button class="btn btn--danger btn--xs">Delete</button>
+                                    </a>
+                                {% endif %}
+                            </div>
                         </td>
                     </tr>
                     {% endfor %}
@@ -139,14 +151,18 @@
             </table>
         </div>
         
-        <div style="text-align: center; margin-top: 20px;">
-            <a href="{% url 'complaints:complaint_list' %}"><button class="btn-success">View All Complaints</button></a>
+        <div class="row row--justify-center">
+            <a href="{% url 'complaints:complaint_list' %}">
+                <button class="btn btn--success">View All Complaints</button>
+            </a>
         </div>
     {% else %}
         <div class="card">
-            <div style="text-align: center; padding: 40px;">
-                <h4 style="color: #666; margin-bottom: 20px;">You haven't submitted any complaints yet.</h4>
-                <a href="{% url 'complaints:complaint_create' %}"><button class="btn-success">Submit Your First Complaint</button></a>
+            <div class="stack stack--align-center stack--pad-lg">
+                <h4 class="text--muted">You haven't submitted any complaints yet.</h4>
+                <a href="{% url 'complaints:complaint_create' %}">
+                    <button class="btn btn--success">Submit Your First Complaint</button>
+                </a>
             </div>
         </div>
     {% endif %}

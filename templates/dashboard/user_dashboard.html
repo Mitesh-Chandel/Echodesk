@@ -2,70 +2,81 @@
 
 {% block title %}User Dashboard - EchoDesk{% endblock %}
 
+{% block page_header %}
+<div class="page__header">
+    <h2 class="page__title">Welcome, {{ user.first_name|default:user.username }}! 👋</h2>
+    <p class="page__subtitle">Here's an overview of your complaints</p>
+</div>
+{% endblock %}
+
 {% block content %}
-<div style="max-width: 1000px; margin: 0 auto;">
-    <h2>Welcome, {{ user.first_name|default:user.username }}! 👋</h2>
-    <p style="color: #666; margin: 10px 0 20px 0;">Here's an overview of your complaints</p>
+<div class="container page">
     
-    <!-- Statistics -->
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; margin-bottom: 20px;">
-        <div class="card" style="text-align: center;">
-            <div style="font-size: 32px; font-weight: bold; color: #3498db;">{{ total_complaints }}</div>
-            <div style="color: #666;">Total Complaints</div>
+    <!-- Statistics Grid -->
+    <div class="grid grid--6 stack">
+        <div class="card stat-card">
+            <div class="page__title text--primary">{{ total_complaints }}</div>
+            <div class="page__subtitle">Total Complaints</div>
         </div>
         
-        <div class="card" style="text-align: center;">
-            <div style="font-size: 32px; font-weight: bold; color: #e74c3c;">{{ pending }}</div>
-            <div style="color: #666;">Pending</div>
+        <div class="card stat-card">
+            <div class="page__title text--danger">{{ pending }}</div>
+            <div class="page__subtitle">Pending</div>
         </div>
         
-        <div class="card" style="text-align: center;">
-            <div style="font-size: 32px; font-weight: bold; color: #f39c12;">{{ in_progress }}</div>
-            <div style="color: #666;">In Progress</div>
+        <div class="card stat-card">
+            <div class="page__title text--warning">{{ in_progress }}</div>
+            <div class="page__subtitle">In Progress</div>
         </div>
         
-        <div class="card" style="text-align: center;">
-            <div style="font-size: 32px; font-weight: bold; color: #27ae60;">{{ resolved }}</div>
-            <div style="color: #666;">Resolved</div>
+        <div class="card stat-card">
+            <div class="page__title text--success">{{ resolved }}</div>
+            <div class="page__subtitle">Resolved</div>
         </div>
         
-        <div class="card" style="text-align: center;">
-            <div style="font-size: 32px; font-weight: bold; color: #95a5a6;">{{ closed }}</div>
-            <div style="color: #666;">Closed</div>
+        <div class="card stat-card">
+            <div class="page__title text--muted">{{ closed }}</div>
+            <div class="page__subtitle">Closed</div>
         </div>
         
-        <div class="card" style="text-align: center;">
-            <div style="font-size: 32px; font-weight: bold; color: #c0392b;">{{ rejected }}</div>
-            <div style="color: #666;">Rejected</div>
+        <div class="card stat-card">
+            <div class="page__title text--danger">{{ rejected }}</div>
+            <div class="page__subtitle">Rejected</div>
         </div>
     </div>
     
     <!-- Quick Actions -->
-    <div class="card">
+    <div class="card stack">
         <h3>Quick Actions</h3>
-        <div style="display: flex; gap: 10px;">
-            <a href="{% url 'complaints:complaint_create' %}"><button class="btn-success">+ New Complaint</button></a>
-            <a href="{% url 'complaints:complaint_list' %}"><button>View All Complaints</button></a>
+        <div class="row">
+            <a href="{% url 'complaints:complaint_create' %}">
+                <button class="btn btn--success">+ New Complaint</button>
+            </a>
+            <a href="{% url 'complaints:complaint_list' %}">
+                <button class="btn btn--outline">View All Complaints</button>
+            </a>
         </div>
     </div>
     
     <!-- Recent Complaints -->
     {% if recent_complaints %}
-    <div class="card">
+    <div class="card stack">
         <h3>Recent Complaints</h3>
-        <div class="complaints-list">
+        <div class="complaints-list stack">
             {% for complaint in recent_complaints %}
             <div class="complaint-item">
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <div>
+                <div class="row row--justify-between row--align-center">
+                    <div class="stack">
                         <div class="complaint-id">{{ complaint.complaint_id }}</div>
                         <div class="complaint-title">{{ complaint.title }}</div>
-                        <div style="margin-top: 5px;">
-                            <span class="complaint-status status-{{ complaint.status }}">{{ complaint.get_status_display }}</span>
-                            <span class="complaint-status" style="background-color: #3498db; color: white;">{{ complaint.category.name }}</span>
+                        <div class="row">
+                            <span class="badge badge--{{ complaint.status }}">{{ complaint.get_status_display }}</span>
+                            <span class="badge badge--info">{{ complaint.category.name }}</span>
                         </div>
                     </div>
-                    <a href="{% url 'complaints:complaint_detail' complaint.id %}"><button>View</button></a>
+                    <a href="{% url 'complaints:complaint_detail' complaint.id %}">
+                        <button class="btn btn--outline">View</button>
+                    </a>
                 </div>
             </div>
             {% endfor %}
@@ -75,14 +86,14 @@
     
     <!-- Notifications -->
     {% if unread_notifications %}
-    <div class="card">
+    <div class="card stack">
         <h3>🔔 Unread Notifications ({{ unread_notifications.count }})</h3>
-        <div style="display: grid; gap: 10px;">
+        <div class="grid stack">
             {% for notification in unread_notifications|slice:":5" %}
-            <div style="padding: 10px; background: #d1ecf1; border-radius: 3px; border-left: 4px solid #0c5460;">
-                <strong style="color: #0c5460;">{{ notification.get_notification_type_display }}</strong><br>
-                <p style="color: #0c5460; margin: 5px 0;">{{ notification.message }}</p>
-                <small style="color: #0c5460;">{{ notification.created_at|timesince }} ago</small>
+            <div class="card card--glass card--alert-info">
+                <strong class="text--info">{{ notification.get_notification_type_display }}</strong>
+                <p class="text--info">{{ notification.message }}</p>
+                <small class="text--info">{{ notification.created_at|timesince }} ago</small>
             </div>
             {% endfor %}
         </div>

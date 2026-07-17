@@ -1,0 +1,447 @@
+ /* ==========================================================================
+   AUTH & PROFILE MODULE (auth.css)
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. Structural Layouts (.auth & .auth__container)
+   -------------------------------------------------------------------------- */
+
+/* Full-screen wrapper for auth views */
+.auth {
+  display: flex;
+  min-height: 100vh;
+  min-height: 100dvh;
+  width: 100%;
+  background-color: var(--color-bg-main);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Flex centring container */
+.auth__container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: var(--space-4);
+  z-index: 10;
+}
+
+/* --------------------------------------------------------------------------
+   2. The Card Structure (.auth__card)
+   -------------------------------------------------------------------------- */
+
+.auth__card {
+  width: 100%;
+  max-width: 440px; /* Sweets-pot for login/register */
+  background-color: var(--color-bg-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-xl);
+  padding: var(--space-8);
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+/* Modifier: Profile layout switches to a wide canvas */
+.auth__card--wide {
+  max-width: 900px;
+  padding: var(--space-10);
+}
+
+/* --------------------------------------------------------------------------
+   3. Card Sub-sections & Typography
+   -------------------------------------------------------------------------- */
+
+.auth__header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  margin-bottom: var(--space-6);
+}
+
+.auth__logo {
+  height: var(--space-10);
+  width: auto;
+  margin-bottom: var(--space-4);
+  object-fit: contain;
+}
+
+.auth__title {
+  font-family: var(--font-sans);
+  font-size: var(--font-size-2xl); /* ~24px */
+  font-weight: 600;
+  color: var(--color-text-primary);
+  letter-spacing: -0.025em;
+  margin-bottom: var(--space-2);
+}
+
+.auth__subtitle {
+  font-family: var(--font-sans);
+  font-size: var(--font-size-sm); /* ~14px */
+  color: var(--color-text-secondary);
+}
+
+.auth__body {
+  margin-bottom: var(--space-6);
+}
+
+.auth__footer {
+  text-align: center;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  border-top: 1px solid var(--color-border-subtle);
+  padding-top: var(--space-4);
+  margin-top: var(--space-2);
+}
+
+/* --------------------------------------------------------------------------
+   4. Forms, Floating Labels & Actions
+   -------------------------------------------------------------------------- */
+
+.auth__form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.auth__group {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Floating Label Engine (Compatible with forms.css defaults) */
+.auth__group input {
+  padding: var(--space-4) var(--space-3) var(--space-2);
+  font-size: var(--font-size-base);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background-color: var(--color-bg-input);
+  color: var(--color-text-primary);
+  width: 100%;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.auth__group label {
+  position: absolute;
+  left: var(--space-3);
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: var(--font-size-base);
+  color: var(--color-text-muted);
+  pointer-events: none;
+  transition: transform 0.15s ease, font-size 0.15s ease, color 0.15s ease;
+  transform-origin: left top;
+}
+
+/* Floating behavior states */
+.auth__group input:focus ~ label,
+.auth__group input:not(:placeholder-shown) ~ label {
+  transform: translateY(-85%) scale(0.75);
+  color: var(--color-primary);
+}
+
+.auth__group input:placeholder-shown::placeholder {
+  opacity: 0;
+}
+
+/* Focus Ring Utility */
+.auth__group input:focus-visible,
+.auth__link:focus-visible,
+.auth__remember input:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* Secondary controls layer */
+.auth__actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: var(--space-1);
+  font-size: var(--font-size-sm);
+}
+
+.auth__remember {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  user-select: none;
+}
+
+.auth__remember input[type="checkbox"] {
+  width: var(--space-4);
+  height: var(--space-4);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-border);
+  accent-color: var(--color-primary);
+}
+
+.auth__forgot {
+  color: var(--color-primary);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.auth__forgot:hover {
+  text-decoration: underline;
+}
+
+.auth__link {
+  color: var(--color-primary);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.auth__link:hover {
+  text-decoration: underline;
+}
+
+/* --------------------------------------------------------------------------
+   5. Dividers & Social Auth
+   -------------------------------------------------------------------------- */
+
+.auth__divider {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  margin: var(--space-6) 0;
+  color: var(--color-text-muted);
+}
+
+.auth__divider::before,
+.auth__divider::after {
+  content: '';
+  flex: 1;
+  border-bottom: 1px solid var(--color-border-subtle);
+}
+
+.auth__divider::before {
+  margin-right: var(--space-3);
+}
+
+.auth__divider::after {
+  margin-left: var(--space-3);
+}
+
+.auth__divider-text {
+  font-size: var(--font-size-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 500;
+}
+
+.auth__social {
+  display: flex;
+  gap: var(--space-3);
+  margin-bottom: var(--space-4);
+}
+
+.auth__social *.btn,
+.auth__social button {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: var(--space-3);
+  background-color: var(--color-bg-secondary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  color: var(--color-text-primary);
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.auth__social *.btn:hover,
+.auth__social button:hover {
+  background-color: var(--color-bg-hover);
+  border-color: var(--color-border-hover);
+}
+
+/* --------------------------------------------------------------------------
+   6. Feedback States (.auth__error & .auth__success)
+   -------------------------------------------------------------------------- */
+
+.auth__error {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-4);
+  background-color: var(--color-danger-subtle); /* Expected soft background mapping */
+  border: 1px solid var(--color-danger-border);
+  border-radius: var(--radius-md);
+  color: var(--color-danger-text);
+  font-size: var(--font-size-sm);
+  line-height: 1.4;
+  margin-bottom: var(--space-4);
+}
+
+.auth__success {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-4);
+  background-color: var(--color-success-subtle);
+  border: 1px solid var(--color-success-border);
+  border-radius: var(--radius-md);
+  color: var(--color-success-text);
+  font-size: var(--font-size-sm);
+  line-height: 1.4;
+  margin-bottom: var(--space-4);
+}
+
+/* --------------------------------------------------------------------------
+   7. Decorative Backgrounds & Glass Effects
+   -------------------------------------------------------------------------- */
+
+.auth__background {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.auth__floating-shape {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px); /* Strictly kept background blurs clean */
+  opacity: 0.08;
+  mix-blend-mode: multiply;
+  pointer-events: none;
+}
+
+/* Dark mode adjustments for shapes to keep contrast optimized */
+[data-theme="dark"] .auth__floating-shape {
+  opacity: 0.15;
+  mix-blend-mode: screen;
+}
+
+.auth__floating-shape--1 {
+  top: -10%;
+  left: -10%;
+  width: 40vw;
+  height: 40vw;
+  background-color: var(--color-primary);
+}
+
+.auth__floating-shape--2 {
+  bottom: -10%;
+  right: -10%;
+  width: 50vw;
+  height: 50vw;
+  background-color: var(--color-secondary);
+}
+
+.auth__illustration {
+  display: none; /* Default hidden on mobile screens */
+}
+
+/* --------------------------------------------------------------------------
+   8. User Profile Sub-system (SaaS Dashboards)
+   -------------------------------------------------------------------------- */
+
+.auth__profile {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+  border-bottom: 1px solid var(--color-border-subtle);
+  padding-bottom: var(--space-6);
+  margin-bottom: var(--space-6);
+}
+
+.auth__profile-avatar {
+  width: var(--space-16);
+  height: var(--space-16);
+  border-radius: var(--radius-xl);
+  object-fit: cover;
+  border: 2px solid var(--color-border);
+  box-shadow: var(--shadow-sm);
+}
+
+.auth__profile-details {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.auth__profile-actions {
+  display: flex;
+  gap: var(--space-3);
+  margin-top: var(--space-2);
+}
+
+/* Profile Form Structures */
+.profile-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+}
+
+.profile-form__section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.profile-form__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-4);
+}
+
+.profile-form__footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--space-4);
+  border-top: 1px solid var(--color-border-subtle);
+  padding-top: var(--space-6);
+}
+
+/* --------------------------------------------------------------------------
+   9. Media Queries & Desktop Enhancements
+   -------------------------------------------------------------------------- */
+
+@media (min-width: 768px) {
+  /* Profile layout scales out cleanly on desktops */
+  .auth__profile {
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .profile-form__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .profile-form__grid--full {
+    grid-column: span 2;
+  }
+}
+
+/* Optional split view for typical Linear/Vercel styling layouts */
+@media (min-width: 1024px) {
+  .auth__illustration {
+    display: flex;
+    flex: 1;
+    background-color: var(--color-bg-secondary);
+    border-right: 1px solid var(--color-border);
+    position: relative;
+    z-index: 5;
+    /* Hook up illustrations via background-images or inner tags */
+  }
+  
+  .auth__container--split {
+    width: 450px;
+    flex: none;
+  }
+}

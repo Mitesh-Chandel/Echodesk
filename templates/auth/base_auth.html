@@ -1,0 +1,52 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>
+        {% block title %}EchoDesk{% endblock %}
+    </title>
+
+    <!-- Global CSS -->
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">
+    <link rel="stylesheet" href="{% static 'css/forms.css' %}">
+    <link rel="stylesheet" href="{% static 'css/auth.css' %}">
+    <link rel="stylesheet" href="{% static 'css/responsive.css' %}">
+
+    {% block extra_css %}{% endblock %}
+</head>
+
+<body class="auth-page">
+
+<div class="auth-container">
+
+    <div class="auth-card">
+
+        <div class="auth-header">
+
+            <h1 class="auth-logo">
+                EchoDesk
+            </h1>
+
+            <p class="auth-subtitle">
+                Complaint & Review Management System
+            </p>
+
+        </div>
+
+        {% include "partials/messages.html" %}
+
+        {% block content %}
+        {% endblock %}
+
+    </div>
+
+</div>
+
+{% block extra_js %}
+{% endblock %}
+
+</body>
+</html>

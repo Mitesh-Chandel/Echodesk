@@ -3,98 +3,152 @@
 {% block title %}My Profile - EchoDesk{% endblock %}
 
 {% block content %}
-<div style="max-width: 900px; margin: 0 auto;">
+
+<div class="profile-page">
+
     <h2>My Profile</h2>
-    
+
     <div class="card">
+
         <h3>Personal Information</h3>
+
         <div class="profile-info">
+
             <div class="info-item">
                 <div class="info-label">Username</div>
                 <div class="info-value">{{ user.username }}</div>
             </div>
-            
+
             <div class="info-item">
                 <div class="info-label">Email</div>
                 <div class="info-value">{{ user.email }}</div>
             </div>
-            
+
             <div class="info-item">
                 <div class="info-label">Full Name</div>
                 <div class="info-value">{{ user.get_full_name|default:"Not provided" }}</div>
             </div>
-            
+
             <div class="info-item">
                 <div class="info-label">User Role</div>
                 <div class="info-value">{{ profile.get_role_display }}</div>
             </div>
-            
+
             <div class="info-item">
                 <div class="info-label">Phone</div>
                 <div class="info-value">{{ profile.phone|default:"Not provided" }}</div>
             </div>
-            
+
             <div class="info-item">
                 <div class="info-label">Member Since</div>
                 <div class="info-value">{{ user.date_joined|date:"d M, Y" }}</div>
             </div>
+
         </div>
-        
-        <div style="margin-top: 20px;">
-            <a href="{% url 'auth:edit_profile' %}"><button>Edit Profile</button></a>
-            <a href="{% url 'auth:change_password' %}"><button class="btn-secondary">Change Password</button></a>
+
+        <div class="profile-actions">
+
+            <a href="{% url 'auth:edit_profile' %}" class="btn">
+                Edit Profile
+            </a>
+
+            <a href="{% url 'auth:change_password' %}" class="btn btn-secondary">
+                Change Password
+            </a>
+
         </div>
+
     </div>
-    
+
     {% if profile.address %}
     <div class="card">
+
         <h3>Address</h3>
+
         <p>{{ profile.address|linebreaks }}</p>
+
     </div>
     {% endif %}
-    
+
     <div class="card">
+
         <h3>Statistics</h3>
+
         <div class="profile-info">
+
             <div class="info-item">
                 <div class="info-label">Total Complaints</div>
-                <div class="info-value" style="font-size: 24px; font-weight: bold; color: #3498db;">{{ user.complaints.count }}</div>
-            </div>
-            
-            <div class="info-item">
-                <div class="info-label">Pending Complaints</div>
-                <div class="info-value" style="font-size: 24px; font-weight: bold; color: #e74c3c;">{{ user.complaints.filter|dictsort:"status=pending"|length }}</div>
-            </div>
-            
-            <div class="info-item">
-                <div class="info-label">Resolved Complaints</div>
-                <div class="info-value" style="font-size: 24px; font-weight: bold; color: #27ae60;">{{ user.complaints.filter|dictsort:"status=resolved"|length }}</div>
-            </div>
-            
-            <div class="info-item">
-                <div class="info-label">Unread Notifications</div>
-                <div class="info-value" style="font-size: 24px; font-weight: bold; color: #f39c12;">{{ unread_notifications }}</div>
-            </div>
-        </div>
-    </div>
-    
-    {% if recent_complaints %}
-    <div class="card">
-        <h3>Recent Complaints</h3>
-        <div class="complaints-list">
-            {% for complaint in recent_complaints %}
-            <div class="complaint-item">
-                <div class="complaint-id">{{ complaint.complaint_id }}</div>
-                <div class="complaint-title">{{ complaint.title }}</div>
-                <span class="complaint-status status-{{ complaint.status }}">{{ complaint.get_status_display }}</span>
-                <span class="complaint-status" style="background-color: #95a5a6; color: white;">Priority: {{ complaint.get_priority_display }}</span>
-                <div style="font-size: 12px; color: #666; margin-top: 5px;">
-                    Created: {{ complaint.created_at|date:"d M, Y" }}
+                <div class="info-value stat-value stat-primary">
+                    {{ user.complaints.count }}
                 </div>
             </div>
-            {% endfor %}
+
+            <div class="info-item">
+                <div class="info-label">Pending Complaints</div>
+                <div class="info-value stat-value stat-danger">
+                    {{ user.complaints.filter|dictsort:"status=pending"|length }}
+                </div>
+            </div>
+
+            <div class="info-item">
+                <div class="info-label">Resolved Complaints</div>
+                <div class="info-value stat-value stat-success">
+                    {{ user.complaints.filter|dictsort:"status=resolved"|length }}
+                </div>
+            </div>
+
+            <div class="info-item">
+                <div class="info-label">Unread Notifications</div>
+                <div class="info-value stat-value stat-warning">
+                    {{ unread_notifications }}
+                </div>
+            </div>
+
         </div>
+
+    </div>
+
+    {% if recent_complaints %}
+    <div class="card">
+
+        <h3>Recent Complaints</h3>
+
+        <div class="complaints-list">
+
+            {% for complaint in recent_complaints %}
+
+            <div class="complaint-item">
+
+                <div class="complaint-id">
+                    {{ complaint.complaint_id }}
+                </div>
+
+                <div class="complaint-title">
+                    {{ complaint.title }}
+                </div>
+
+                <span class="complaint-status status-{{ complaint.status }}">
+                    {{ complaint.get_status_display }}
+                </span>
+
+                <span class="complaint-status complaint-priority">
+                    Priority: {{ complaint.get_priority_display }}
+                </span>
+
+                <div class="complaint-date">
+                    Created:
+                    {{ complaint.created_at|date:"d M, Y" }}
+                </div>
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
     </div>
     {% endif %}
+
 </div>
+
 {% endblock %}

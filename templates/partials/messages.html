@@ -1,0 +1,19 @@
+{% if messages %}
+
+<div class="stack">
+
+    {% for message in messages %}
+
+        <div class="card">
+
+            <strong>{{ message.tags|title }}</strong>
+
+            <p>{{ message }}</p>
+
+        </div>
+
+    {% endfor %}
+
+</div>
+
+{% endif %}

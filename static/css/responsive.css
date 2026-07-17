@@ -1,0 +1,292 @@
+   /* ==========================================================================
+   ECHODESK RESPONSIVE CORE (responsive.css)
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   GLOBAL ACCESSIBILITY & UTILITIES
+   -------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Mobile defaults / Fluid Base Layout Structure */
+.app-layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.app-main {
+  padding: var(--space-4);
+  width: 100%;
+}
+
+/* Mobile-first structural fallbacks */
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 280px;
+  transform: translateX(-100%);
+  z-index: 100;
+  transition: transform 0.3s ease;
+}
+
+.sidebar--open {
+  transform: translateX(0);
+}
+
+.table-wrapper {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  width: 100%;
+}
+
+.btn--responsive {
+  width: 100%;
+}
+
+/* ==========================================================================
+   BREAKPOINT: 480px (Mobile Landscape / Small Tablets)
+   ========================================================================== */
+@media (min-width: 480px) {
+  /* Forms & Filters */
+  .search-bar {
+    display: flex;
+    flex-direction: row;
+    gap: var(--space-2);
+  }
+
+  .search-bar__input {
+    flex: 1;
+  }
+
+  /* Actions & Navigation */
+  .auth__actions {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+}
+
+/* ==========================================================================
+   BREAKPOINT: 640px (Small Tablets / Large Phones)
+   ========================================================================== */
+@media (min-width: 640px) {
+  /* Structural Spacing */
+  .app-main {
+    padding: var(--space-6);
+  }
+
+  /* Dashboard Grid */
+  .dashboard-grid--stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  /* Buttons & Component Controls */
+  .btn--responsive {
+    width: auto;
+  }
+
+  .filter-group {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  /* Pagination & Controls */
+  .pagination {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .pagination__controls {
+    margin-top: 0;
+  }
+
+  /* Complaint Detail Page */
+  .complaint-detail__header {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+}
+
+/* ==========================================================================
+   BREAKPOINT: 768px (Tablets - Portrait)
+   ========================================================================== */
+@media (min-width: 768px) {
+  /* Layout Transformation */
+  .app-layout {
+    flex-direction: row;
+  }
+
+  .app-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 0; /* Prevents flex items from breaking layout boundaries */
+  }
+
+  /* Topbar Scale */
+  .topbar {
+    padding: 0 var(--space-6);
+    height: var(--space-14);
+  }
+
+  /* Profile & Complex Form Layouts */
+  .profile-form__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .profile-form__grid--full {
+    grid-column: span 2;
+  }
+
+  /* Dashboard Cards & Layout Grids */
+  .dashboard-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .dashboard-grid--full {
+    grid-column: span 2;
+  }
+
+  /* Optional Collapsed/Compact Sidebar Hook */
+  .sidebar--collapsed {
+    width: 80px;
+  }
+  
+  .sidebar--collapsed + .app-container {
+    margin-left: 0;
+  }
+
+  /* Modals */
+  .modal__dialog {
+    max-width: 600px;
+    margin: var(--space-16) auto;
+  }
+}
+
+/* ==========================================================================
+   BREAKPOINT: 992px (Tablets - Landscape / Small Laptops)
+   ========================================================================== */
+@media (min-width: 992px) {
+  /* Reset Drawer to Permanent Sidebar Layout */
+  .sidebar {
+    position: sticky;
+    top: 0;
+    transform: translateX(0);
+    z-index: 50;
+  }
+
+  /* Dashboard Grid Systems */
+  .dashboard-grid--stats {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .dashboard-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  /* Charts & Metrics Spacing */
+  .chart-container {
+    padding: var(--space-6);
+  }
+
+  /* Complaint Detail & Columns split view */
+  .complaint-detail__layout {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: var(--space-6);
+  }
+
+  /* Split Authentication Interfaces Layouts */
+  .auth__container--split {
+    flex-direction: row;
+    align-items: stretch;
+  }
+
+  .auth__illustration {
+    display: flex;
+    flex: 1;
+  }
+
+  .auth__card {
+    max-width: 460px;
+  }
+}
+
+/* ==========================================================================
+   BREAKPOINT: 1200px (Laptops / Standard Desktops)
+   ========================================================================== */
+@media (min-width: 1200px) {
+  /* Spacing Optimization */
+  .app-main {
+    padding: var(--space-8);
+  }
+
+  /* Grid Scale */
+  .dashboard-grid--stats {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .dashboard-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .dashboard-grid--main-content {
+    grid-column: span 3;
+  }
+
+  .dashboard-grid--side-content {
+    grid-column: span 1;
+  }
+
+  /* Timeline View Optimization */
+  .timeline {
+    position: relative;
+  }
+
+  .timeline__item {
+    padding-left: var(--space-8);
+  }
+
+  /* Dropdowns & Complex Navigation items alignment */
+  .nav-menu {
+    flex-direction: row;
+    gap: var(--space-4);
+  }
+}
+
+/* ==========================================================================
+   BREAKPOINT: 1440px (Ultra-wide Monitors)
+   ========================================================================== */
+@media (min-width: 1440px) {
+  /* Prevent content line-lengths/grids from stretching infinitely */
+  .app-main__content-wrapper {
+    max-width: 1400px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
+  }
+
+  /* Wide Profiles */
+  .auth__card--wide {
+    max-width: 960px;
+  }
+
+  /* Chart & Workspace breathing room layout updates */
+  .chart-grid {
+    gap: var(--space-8);
+  }
+}
