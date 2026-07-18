@@ -276,24 +276,6 @@ This project demonstrates:
 
 ---
 
-## Screenshots
-
-Add project screenshots here.
-
-```
-/screenshots
-
-login.png
-
-dashboard.png
-
-complaints.png
-
-admin.png
-```
-
----
-
 ## Author
 
 **Mitesh Chandel**
