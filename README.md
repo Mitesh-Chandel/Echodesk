@@ -1,411 +1,303 @@
-# EchoDesk – AI Development Master Prompt
-**A Production-Quality Django Complaint & Review Management System**
+# EchoDesk - Complaint & Review Management System
+
+EchoDesk is a full-stack **Complaint & Review Management System (CRMS)** built with **Django** and **PostgreSQL**. It provides a centralized platform where users can submit complaints, track their progress, communicate with staff, and provide feedback after resolution.
+
+This project is being developed as a portfolio-quality application following Django best practices and real-world software architecture.
 
 ---
 
-## 📋 Project Overview
+## Features
 
-**EchoDesk** is a portfolio-quality backend project demonstrating professional Django development practices. It's a Complaint & Review Management System similar to government complaint portals, university complaint systems, or customer support ticket systems.
+### User
+- User Registration & Login
+- Secure Authentication
+- Dashboard
+- Create Complaints
+- Upload Attachments
+- Track Complaint Status
+- View Complaint History
+- Notifications
+- Review & Rating System
 
-**Target Audience:** Internships and junior backend/full-stack roles
+### Staff
+- View Assigned Complaints
+- Update Complaint Status
+- Reply to Complaints
+- Internal Notes
 
----
-
-## 🎯 User Goals
-
-### Regular Users
-- ✅ Register & Login
-- ✅ Submit complaints with attachments
-- ✅ Track complaint status in real-time
-- ✅ View complete complaint history
-- ✅ Receive notifications on updates
-- ✅ Review and rate resolved complaints
-
-### Staff Members
-- ✅ View assigned complaints
-- ✅ Reply to complaints
-- ✅ Update complaint status
-- ✅ Add internal notes
-
-### Admins
-- ✅ Manage all users
-- ✅ Manage all complaints
-- ✅ Manage staff assignments
-- ✅ Access system dashboards
-- ✅ Generate reports
+### Admin
+- Manage Users
+- Manage Complaints
+- Manage Categories
+- Assign Staff
+- Dashboard & Analytics
+- Reports
 
 ---
 
-## 💾 Tech Stack
+## Tech Stack
 
-| Component | Technology |
-|-----------|-----------|
-| **Backend** | Python 3.x + Django 6.0 |
-| **Database** | PostgreSQL |
-| **Frontend** | Django Templates + HTML |
-| **Frontend Status** | Pure HTML (no CSS, Bootstrap, Tailwind yet) |
-| **JS** | None (no AJAX, Charts.js, DataTables) |
-
-**Focus:** Backend architecture and Django fundamentals
+| Technology | Usage |
+|------------|------|
+| Python 3 | Backend |
+| Django 6 | Web Framework |
+| PostgreSQL | Database |
+| HTML5 | Templates |
+| CSS3 | Custom Styling |
+| JavaScript | Client-side Interactions |
+| Chart.js | Dashboard Analytics |
+| Git & GitHub | Version Control |
 
 ---
 
-## 📁 Project Structure
+## Project Structure
 
 ```
-Echodesk/
-├── config/                  # Django project settings
-│   ├── __init__.py
-│   ├── asgi.py
-│   ├── settings.py          # Database, apps, middleware
-│   ├── urls.py              # Main URL routing
-│   └── wsgi.py
+EchoDesk/
 │
-├── users/                   # User management app
-│   ├── migrations/
-│   ├── models.py            # User-related models
-│   ├── views.py             # Auth views (register, login, logout)
-│   ├── urls.py              # User URLs
-│   ├── forms.py             # User forms
-│   ├── admin.py             # Admin configuration
-│   ├── apps.py
-│   ├── tests.py
-│   └── __init__.py
-│
-├── complaints/              # Complaint management app
-│   ├── migrations/
-│   ├── models.py            # Complaint models
-│   ├── views.py             # Complaint CRUD views
-│   ├── urls.py              # Complaint URLs
-│   ├── forms.py             # Complaint forms
-│   ├── admin.py             # Admin configuration
-│   ├── apps.py
-│   ├── tests.py
-│   └── __init__.py
-│
-├── dashboard/               # Dashboard app
-│   ├── migrations/
-│   ├── models.py            # Dashboard models (if needed)
-│   ├── views.py             # Dashboard views
-│   ├── urls.py              # Dashboard URLs
-│   ├── admin.py
-│   ├── apps.py
-│   ├── tests.py
-│   └── __init__.py
-│
-├── templates/               # Django templates
-│   ├── base.html            # Base template
-│   ├── auth/
-│   │   ├── register.html
-│   │   ├── login.html
-│   │   └── profile.html
-│   ├── complaints/
-│   │   ├── complaint_list.html
-│   │   ├── complaint_detail.html
-│   │   ├── complaint_create.html
-│   │   └── complaint_update.html
-│   └── dashboard/
-│       ├── user_dashboard.html
-│       └── admin_dashboard.html
-│
-├── static/                  # Static files (CSS, JS, images)
+├── complaints/
+├── users/
+├── dashboard/
+├── templates/
+├── static/
 │   ├── css/
 │   ├── js/
 │   └── images/
-│
-├── media/                   # User uploads
-│
-├── manage.py                # Django management script
-├── requirements.txt         # Python dependencies
-├── .env                     # Environment variables
-├── .gitignore               # Git ignore file
-└── README.md               # This file
-
+├── media/
+├── config/
+├── manage.py
+├── requirements.txt
+└── README.md
 ```
 
 ---
 
-## 🗄️ Database Models (Phase 1)
+## Main Modules
 
-### User Roles
-- **User:** Regular user who submits complaints
-- **Staff:** Staff member who processes complaints
-- **Admin:** System administrator
-
-### Core Models
-
-#### 1. **Category**
-Categories of complaints (Electricity, Water, Road, etc.)
-
-#### 2. **Complaint**
-Main complaint submission by users
-
-**Fields:**
-- `complaint_id` - Readable ID (CMP-20260001)
-- `user` - FK to User
-- `category` - FK to Category
-- `title` - Complaint title
-- `description` - Detailed description
-- `priority` - Low, Medium, High, Urgent
-- `status` - Pending, Assigned, In Progress, Waiting for User, Resolved, Closed, Rejected
-- `assigned_staff` - FK to Staff User (nullable)
-- `created_at` - Timestamp
-- `updated_at` - Timestamp
-
-#### 3. **ComplaintAttachment**
-File uploads for complaints
-
-#### 4. **ComplaintReply**
-Responses from staff or user
-
-#### 5. **ComplaintHistory**
-Track status changes and events
-
-#### 6. **Review**
-User ratings after complaint resolution
-
-#### 7. **Notification**
-System notifications
-
----
-
-## 📊 Complaint Status Workflow
-
-```
-Pending → Assigned → In Progress → Waiting for User → Resolved → Closed
-   ↓                                                      ↓
-   └──────────────────────→ Rejected ──────────────→ Closed
-```
-
----
-
-## 🔐 Security Features
-
-- ✅ Django Authentication System (built-in)
-- ✅ `@login_required` decorator
-- ✅ Permission-based access control
-- ✅ CSRF protection (default)
-- ✅ Django Forms validation
-- ✅ ORM only (no raw SQL)
-- ✅ File type validation
-- ✅ Never trust user input
-
----
-
-## 🚀 Development Phases
-
-### Phase 1: Database Models ✨ **CURRENT**
-- Create all database models
-- Set up relationships
-- Generate migrations
-- Explain ORM concepts
-
-### Phase 2: Django Admin Configuration
-- Register models in admin
-- Configure list_display, list_filter, search_fields
-- Test models via admin interface
-
-### Phase 3: Authentication System
-- User registration
-- Login/logout
-- User profiles
-- Profile editing
-- Password change
-
-### Phase 4: Complaint CRUD Operations
-- Create complaint
-- View complaint detail
-- Update complaint
-- Delete complaint
-- Complaint listing
-
-### Phase 5: Replies, Attachments & History
-- Complaint replies
-- File attachments with validation
-- Complaint history tracking
-- Timeline view
-
-### Phase 6: Dashboards
-- User dashboard
-- Admin dashboard
-- Staff dashboard
-- Display statistics
-
-### Phase 7: Search & Filtering
-- Search complaints
-- Filter by status, priority, category, date
+- Authentication System
+- Complaint Management
+- Category Management
+- Complaint Status Tracking
+- Complaint History
+- File Attachments
+- Review & Rating
+- Notifications
+- Dashboard & Analytics
+- Search & Filtering
 - Pagination
-
-### Phase 8: Notifications
-- Database notifications
-- Notification triggers
-- Notification display
-
-### Phase 9: Review System
-- Rate resolved complaints
-- Textual feedback
-- Review listings
-
-### Phase 10: Code Cleanup & Optimization
-- Code review
-- Performance optimization
-- Deployment preparation
+- Reports
 
 ---
 
-## 🛠️ Development Rules
+## Complaint Workflow
 
-### Code Quality
-- ✅ Always follow Django best practices
-- ✅ Use meaningful variable names
-- ✅ Keep code clean and organized
-- ✅ Avoid duplicated logic
-- ✅ Use Django ORM only
+```
+Pending
+   │
+Assigned
+   │
+In Progress
+   │
+Waiting for User
+   │
+Resolved
+   │
+Closed
+```
 
-### File Organization
-- ✅ Always separate: Models, Views, URLs, Forms, Templates, Admin
-- ✅ Use Function-Based Views (FBV) initially
-- ✅ Use Class-Based Views (CBV) only after project completion
-
-### Explanation
-- ✅ Explain why each file is created
-- ✅ Explain how Django uses each component
-- ✅ Explain database relationships
-- ✅ Include common interview questions
-- ✅ Highlight common beginner mistakes
-
-### Development Workflow
-- ✅ Never jump ahead to future phases
-- ✅ Build feature by feature
-- ✅ Generate complete, working code
-- ✅ Never generate placeholder code
-- ✅ Stop at end of each phase for confirmation
+Rejected complaints can be closed directly.
 
 ---
 
-## 📚 Key Django Concepts
+## Database Models
 
-### Models
-- Django ORM automatically creates tables
-- ForeignKey creates relationships
-- `related_name` allows reverse queries
-- `created_at`, `updated_at` for tracking
-
-### Migrations
-- Track database schema changes
-- `python manage.py makemigrations`
-- `python manage.py migrate`
-
-### Admin Interface
-- Built-in CRUD interface
-- Configure with `list_display`, `list_filter`
-- Great for testing models
-
-### Authentication
-- Django's built-in User model
-- `@login_required` decorator
-- Permission system
-
-### Templates
-- Reusable HTML with variables
-- Template inheritance with `{% extends %}`
-- Context variables from views
+- User
+- Category
+- Complaint
+- ComplaintAttachment
+- ComplaintReply
+- ComplaintHistory
+- Review
+- Notification
 
 ---
 
-## 🎓 Learning Outcomes
+## Security Features
 
-After completing EchoDesk, you'll understand:
-
-- ✅ Complete Django project structure
-- ✅ Database modeling and relationships
-- ✅ Django ORM and migrations
-- ✅ Authentication and permissions
-- ✅ Form handling and validation
-- ✅ Template rendering and inheritance
-- ✅ Admin interface customization
-- ✅ URL routing and views
-- ✅ File uploads and media handling
-- ✅ Search and filtering
-- ✅ Notifications system
-- ✅ Django best practices
+- Django Authentication
+- Login Required Protection
+- Role-Based Authorization
+- CSRF Protection
+- Form Validation
+- Secure File Upload Validation
+- Django ORM (No Raw SQL)
 
 ---
 
-## 🚦 Getting Started
+## Installation
 
-### Prerequisites
-- Python 3.8+
-- PostgreSQL
-- Virtual Environment
+### Clone Repository
 
-### Setup
 ```bash
-# Activate virtual environment
-source venv/bin/activate  # On Windows: venv\Scripts\activate
+git clone https://github.com/yourusername/EchoDesk.git
 
-# Install dependencies
+cd EchoDesk
+```
+
+### Create Virtual Environment
+
+```bash
+python -m venv venv
+```
+
+### Activate Virtual Environment
+
+Windows
+
+```bash
+venv\Scripts\activate
+```
+
+Linux / macOS
+
+```bash
+source venv/bin/activate
+```
+
+### Install Dependencies
+
+```bash
 pip install -r requirements.txt
+```
 
-# Create .env file with DATABASE_URL
+### Configure Environment Variables
 
-# Run migrations
+Create a `.env` file and add your PostgreSQL credentials.
+
+Example:
+
+```
+SECRET_KEY=your-secret-key
+
+DEBUG=True
+
+DB_NAME=echodesk
+
+DB_USER=postgres
+
+DB_PASSWORD=yourpassword
+
+DB_HOST=localhost
+
+DB_PORT=5432
+```
+
+### Apply Migrations
+
+```bash
+python manage.py makemigrations
+
 python manage.py migrate
+```
 
-# Create superuser
+### Create Superuser
+
+```bash
 python manage.py createsuperuser
+```
 
-# Run development server
+### Run Server
+
+```bash
 python manage.py runserver
 ```
 
-### Access
-- Admin Panel: http://localhost:8000/admin
-- (More URLs will be added as we build)
+Visit:
+
+```
+http://127.0.0.1:8000/
+```
+
+Admin Panel:
+
+```
+http://127.0.0.1:8000/admin/
+```
 
 ---
 
-## 📖 Phase Progress Checklist
+## Project Status
 
-- [ ] Phase 1: Database Models
-- [ ] Phase 2: Admin Configuration
-- [ ] Phase 3: Authentication
-- [ ] Phase 4: Complaint CRUD
-- [ ] Phase 5: Replies, Attachments, History
-- [ ] Phase 6: Dashboards
-- [ ] Phase 7: Search & Filtering
-- [ ] Phase 8: Notifications
-- [ ] Phase 9: Reviews
-- [ ] Phase 10: Cleanup & Optimization
+Current Development Progress
 
----
-
-## 💡 Important Notes
-
-1. **Never jump ahead:** Build exactly in the order specified
-2. **Always explain:** Every file, every relationship, every concept
-3. **Complete code only:** No placeholders, no TODOs
-4. **Interview ready:** Include learning insights at each phase
-5. **Production quality:** Follow Django best practices throughout
+- ✅ Database Models
+- ✅ Authentication
+- ✅ Complaint CRUD
+- ✅ Dashboard
+- ✅ Search & Filtering
+- 🚧 Notifications
+- 🚧 Review System
+- 🚧 Reports & Analytics
+- 🚧 Deployment
 
 ---
 
-## 📞 Common Interview Questions
+## Learning Objectives
 
-These will be answered throughout the project:
+This project demonstrates:
 
-- What is Django ORM and why use it?
-- How do ForeignKey relationships work?
-- What's the difference between related_name and reverse queries?
-- How does Django migration system work?
-- Why separate models, views, and templates?
-- How do permissions work in Django?
-- What's CSRF protection?
-- How to handle file uploads securely?
+- Django Project Architecture
+- PostgreSQL Integration
+- Authentication & Authorization
+- CRUD Operations
+- Django ORM
+- File Upload Handling
+- Search & Filtering
+- Pagination
+- Dashboard Analytics
+- Clean Code Practices
+- MVC (MVT) Architecture
+- Git Workflow
 
 ---
 
-**Status:** Ready for Phase 1 🚀
+## Future Improvements
 
-*Next: Database Models & Django ORM*
+- Email Notifications
+- REST API
+- JWT Authentication
+- Real-time Notifications
+- Docker Support
+- Unit Testing
+- CI/CD Pipeline
+- Cloud Deployment
+- AI-Based Complaint Categorization
+- Mobile Responsive UI
 
+---
+
+## Screenshots
+
+Add project screenshots here.
+
+```
+/screenshots
+
+login.png
+
+dashboard.png
+
+complaints.png
+
+admin.png
+```
+
+---
+
+## Author
+
+**Mitesh Chandel**
+
+Computer Engineering Student
+
+---
