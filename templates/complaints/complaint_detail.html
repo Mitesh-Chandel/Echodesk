@@ -3,85 +3,71 @@
 {% block title %}{{ complaint.complaint_id }} - EchoDesk{% endblock %}
 
 {% block content %}
-<div class="complaint-detail-page">
+<div class="profile-form">[cite: 1]
 
-    <h2>{{ complaint.complaint_id }} - {{ complaint.title }}</h2>
+    <h2 class="auth__title">{{ complaint.complaint_id }} - {{ complaint.title }}</h2>[cite: 1]
 
     <!-- Complaint Details -->
-    <div class="card">
+    <div class="card">[cite: 1]
 
-        <div class="complaint-info-grid">
+        <h3 class="card__title">Metadata Information</h3>[cite: 1]
 
-            <div>
+        <div class="profile-form__grid">[cite: 1]
 
-                <div class="info-item">
-                    <div class="info-label">Complaint ID</div>
-                    <div class="info-value">{{ complaint.complaint_id }}</div>
-                </div>
-
-                <div class="info-item">
-                    <div class="info-label">Status</div>
-                    <div class="info-value">
-                        <span class="complaint-status status-{{ complaint.status }}">
-                            {{ complaint.get_status_display }}
-                        </span>
-                    </div>
-                </div>
-
-                <div class="info-item">
-                    <div class="info-label">Priority</div>
-                    <div class="info-value">
-                        <span class="complaint-status complaint-priority">
-                            {{ complaint.get_priority_display }}
-                        </span>
-                    </div>
-                </div>
-
-                <div class="info-item">
-                    <div class="info-label">Category</div>
-                    <div class="info-value">
-                        {{ complaint.category.name }}
-                    </div>
-                </div>
-
+            <div class="form-group">[cite: 1]
+                <div class="form-text">Complaint ID</div>[cite: 1]
+                <div class="fw-semibold">{{ complaint.complaint_id }}</div>[cite: 1]
             </div>
 
-            <div>
-
-                <div class="info-item">
-                    <div class="info-label">Submitted By</div>
-                    <div class="info-value">
-                        {{ complaint.user.get_full_name|default:complaint.user.username }}
-                    </div>
+            <div class="form-group">[cite: 1]
+                <div class="form-text">Status</div>[cite: 1]
+                <div>
+                    <span class="status-badge status-{{ complaint.status }}">[cite: 1]
+                        {{ complaint.get_status_display }}
+                    </span>
                 </div>
+            </div>
 
-                <div class="info-item">
-                    <div class="info-label">Assigned To</div>
-                    <div class="info-value">
-                        {% if complaint.assigned_staff %}
-                            {{ complaint.assigned_staff.get_full_name|default:complaint.assigned_staff.username }}
-                        {% else %}
-                            <span class="text-muted">
-                                Not assigned
-                            </span>
-                        {% endif %}
-                    </div>
+            <div class="form-group">[cite: 1]
+                <div class="form-text">Priority</div>[cite: 1]
+                <div>
+                    <span class="status-badge">[cite: 1]
+                        {{ complaint.get_priority_display }}
+                    </span>
                 </div>
+            </div>
 
-                <div class="info-item">
-                    <div class="info-label">Created</div>
-                    <div class="info-value">
-                        {{ complaint.created_at|date:"d M, Y H:i" }}
-                    </div>
+            <div class="form-group">[cite: 1]
+                <div class="form-text">Category</div>[cite: 1]
+                <div class="fw-semibold">{{ complaint.category.name }}</div>[cite: 1]
+            </div>
+
+            <div class="form-group">[cite: 1]
+                <div class="form-text">Submitted By</div>[cite: 1]
+                <div class="fw-semibold">
+                    {{ complaint.user.get_full_name|default:complaint.user.username }}
                 </div>
+            </div>
 
-                <div class="info-item">
-                    <div class="info-label">Last Updated</div>
-                    <div class="info-value">
-                        {{ complaint.updated_at|date:"d M, Y H:i" }}
-                    </div>
+            <div class="form-group">[cite: 1]
+                <div class="form-text">Assigned To</div>[cite: 1]
+                <div class="fw-semibold">
+                    {% if complaint.assigned_staff %}
+                        {{ complaint.assigned_staff.get_full_name|default:complaint.assigned_staff.username }}
+                    {% else %}
+                        <span class="text-muted">Not assigned</span>[cite: 1]
+                    {% endif %}
                 </div>
+            </div>
 
+            <div class="form-group">[cite: 1]
+                <div class="form-text">Created</div>[cite: 1]
+                <div class="fw-semibold">{{ complaint.created_at|date:"d M, Y H:i" }}</div>[cite: 1]
+            </div>
+
+            <div class="form-group">[cite: 1]
+                <div class="form-text">Last Updated</div>[cite: 1]
+                <div class="fw-semibold">{{ complaint.updated_at|date:"d M, Y H:i" }}</div>[cite: 1]
             </div>
 
         </div>
@@ -89,203 +75,148 @@
     </div>
 
     <!-- Complaint Description -->
-    <div class="card">
+    <div class="card mt-4">[cite: 1]
 
-        <h3>Description</h3>
+        <h3 class="card__title">Description</h3>[cite: 1]
 
-        <p>{{ complaint.description|linebreaks }}</p>
+        <p class="fw-normal">{{ complaint.description|linebreaks }}</p>[cite: 1]
 
         {% if complaint.location %}
-        <div class="complaint-location">
-            <strong>Location:</strong><br>
-            {{ complaint.location|linebreaks }}
+        <div class="form-errors mt-3" style="color: inherit; background-color: rgba(0,0,0,0.02);">[cite: 1]
+            <div class="form-errors__title" style="color: inherit;">Location Details</div>[cite: 1]
+            <p class="fw-normal mt-1 mb-0">{{ complaint.location|linebreaks }}</p>[cite: 1]
         </div>
         {% endif %}
 
     </div>
 
     <!-- Attachments -->
-    {% if complaint.attachments.all %}
-    <div class="card">
+    <div class="card mt-4">[cite: 1]
 
-        <h3>📎 Attachments ({{ complaint.attachments.count }})</h3>
+        <h3 class="card__title">📎 Attachments ({{ complaint.attachments.count }})</h3>[cite: 1]
 
-        <div class="attachment-list">
+        {% if complaint.attachments.all %}
+        <div class="complaints-list">[cite: 1]
 
             {% for attachment in complaint.attachments.all %}
+            <div class="complaint-list-item">[cite: 1]
 
-            <div class="attachment-item">
-
-                <div>
-                    <strong>{{ attachment.file_name }}</strong><br>
-
-                    <small class="text-muted">
-                        {{ attachment.file_type|upper }}
-                        •
-                        Uploaded:
-                        {{ attachment.uploaded_at|date:"d M, Y" }}
-                    </small>
+                <div class="complaint-list-item__title">[cite: 1]
+                    {{ attachment.file_name }}
                 </div>
 
-                <a href="{{ attachment.file.url }}" target="_blank" class="btn btn-secondary">
+                <div class="text-muted text-sm">[cite: 1]
+                    {{ attachment.file_type|upper }} • Uploaded: {{ attachment.uploaded_at|date:"d M, Y" }}
+                </div>
+
+                <a href="{{ attachment.file.url }}" target="_blank" class="btn btn--secondary btn--sm" style="margin-left: auto;">[cite: 1]
                     Download
                 </a>
 
             </div>
-
             {% endfor %}
 
         </div>
+        {% else %}
+        <p class="text-muted fw-normal">No attachments yet.</p>[cite: 1]
+        {% endif %}
 
         {% if complaint.user == user %}
-        <a href="{% url 'complaints:upload_attachment' complaint.id %}" class="btn">
-            + Add More Files
-        </a>
+        <div class="profile-form__footer mt-3">[cite: 1]
+            <a href="{% url 'complaints:upload_attachment' complaint.id %}" class="btn btn--primary btn--sm">[cite: 1]
+                {% if complaint.attachments.all %}+ Add More Files{% else %}+ Upload Attachment{% endif %}
+            </a>
+        </div>
         {% endif %}
 
     </div>
-
-    {% else %}
-
-    <div class="card">
-
-        <h3>📎 Attachments</h3>
-
-        <p class="empty-text">
-            No attachments yet.
-        </p>
-
-        {% if complaint.user == user %}
-        <a href="{% url 'complaints:upload_attachment' complaint.id %}" class="btn">
-            + Upload Attachment
-        </a>
-        {% endif %}
-
-    </div>
-
-    {% endif %}
 
     <!-- Replies -->
-    <div class="card">
+    <div class="card mt-4">[cite: 1]
 
-        <h3>💬 Replies & Updates ({{ complaint.replies.count }})</h3>
+        <h3 class="card__title">💬 Replies & Updates ({{ complaint.replies.count }})</h3>[cite: 1]
 
         {% if complaint.replies.all %}
-
-        <div class="reply-list">
+        <div class="complaints-list">[cite: 1]
 
             {% for reply in complaint.replies.all %}
+            <div class="complaint-list-item d-block reply-{{ reply.reply_type }} mb-3" style="border-left: 4px solid var(--primary-color, #0d6efd);">[cite: 1]
 
-            <div class="reply-card reply-{{ reply.reply_type }}">
-
-                <div class="reply-header">
-
-                    <strong>
-                        {{ reply.replied_by.get_full_name|default:reply.replied_by.username }}
-                    </strong>
-
-                    <span class="reply-badge badge-{{ reply.reply_type }}">
-                        {% if reply.reply_type == 'internal' %}
-                            Internal Note
-                        {% elif reply.reply_type == 'staff' %}
-                            Staff
-                        {% else %}
-                            User
-                        {% endif %}
+                <div class="d-flex align-items-center mb-2" style="display: flex; gap: 10px; align-items: center;">
+                    <strong class="fw-semibold">{{ reply.replied_by.get_full_name|default:reply.replied_by.username }}</strong>[cite: 1]
+                    
+                    <span class="status-badge">[cite: 1]
+                        {% if reply.reply_type == 'internal' %}Internal Note{% elif reply.reply_type == 'staff' %}Staff{% else %}User{% endif %}
                     </span>
 
-                    <div class="reply-date">
-                        {{ reply.created_at|date:"d M, Y H:i" }}
-                    </div>
-
+                    <span class="text-muted text-sm" style="margin-left: auto;">{{ reply.created_at|date:"d M, Y H:i" }}</span>[cite: 1]
                 </div>
 
-                <p>{{ reply.message|linebreaks }}</p>
+                <p class="fw-normal mb-0">{{ reply.message|linebreaks }}</p>[cite: 1]
 
             </div>
-
             {% endfor %}
 
         </div>
-
         {% else %}
-
-        <p class="no-replies">
-            No replies yet.
-        </p>
-
+        <p class="text-muted fw-normal">No replies yet.</p>[cite: 1]
         {% endif %}
 
-        <a href="{% url 'complaints:add_reply' complaint.id %}" class="btn">
-            + Add Reply
-        </a>
+        <div class="profile-form__footer mt-3">[cite: 1]
+            <a href="{% url 'complaints:add_reply' complaint.id %}" class="btn btn--primary">[cite: 1]
+                + Add Reply
+            </a>
+        </div>
 
     </div>
 
     <!-- History -->
     {% if complaint.history.all %}
+    <div class="card mt-4">[cite: 1]
 
-    <div class="card">
+        <h3 class="card__title">📋 Complaint History</h3>[cite: 1]
 
-        <h3>📋 Complaint History</h3>
-
-        <div class="history-list">
+        <div class="complaints-list">[cite: 1]
 
             {% for hist in complaint.history.all %}
+            <div class="complaint-list-item d-block">[cite: 1]
 
-            <div class="history-item">
+                <div class="fw-semibold">{{ hist.get_change_type_display }}</div>[cite: 1]
 
-                <strong>{{ hist.get_change_type_display }}</strong><br>
-
-                <small class="text-muted">
-
+                <div class="text-muted text-sm mt-1">[cite: 1]
                     {% if hist.old_value and hist.new_value %}
-                        Changed from
-                        <code>{{ hist.old_value }}</code>
-                        to
-                        <code>{{ hist.new_value }}</code>
+                        Changed from <code class="fw-semibold">{{ hist.old_value }}</code> to <code class="fw-semibold">{{ hist.new_value }}</code>
                     {% endif %}
-
                     {% if hist.description %}
                         - {{ hist.description }}
                     {% endif %}
-
                     <br>
-
-                    By
-                    {{ hist.changed_by.get_full_name|default:hist.changed_by.username }}
-                    on
-                    {{ hist.created_at|date:"d M, Y H:i" }}
-
-                </small>
+                    By {{ hist.changed_by.get_full_name|default:hist.changed_by.username }} on {{ hist.created_at|date:"d M, Y H:i" }}
+                </div>
 
             </div>
-
             {% endfor %}
 
         </div>
 
     </div>
-
     {% endif %}
 
-    <!-- Action Buttons -->
-    <div class="detail-actions">
+    <!-- Action Buttons Navigation Block -->
+    <div class="profile-form__footer mt-4">[cite: 1]
 
-        <a href="{% url 'complaints:complaint_list' %}" class="btn btn-secondary">
+        <a href="{% url 'complaints:complaint_list' %}" class="btn btn--secondary">[cite: 1]
             Back to Complaints
         </a>
 
         {% if complaint.status == 'pending' %}
+            <a href="{% url 'complaints:complaint_update' complaint.id %}" class="btn btn--primary">[cite: 1]
+                Edit Complaint
+            </a>
 
-        <a href="{% url 'complaints:complaint_update' complaint.id %}" class="btn">
-            Edit Complaint
-        </a>
-
-        <a href="{% url 'complaints:complaint_delete' complaint.id %}" class="btn btn-danger">
-            Delete Complaint
-        </a>
-
+            <a href="{% url 'complaints:complaint_delete' complaint.id %}" class="btn btn--danger">[cite: 1]
+                Delete Complaint
+            </a>
         {% endif %}
 
     </div>

@@ -4,30 +4,33 @@
 
 {% block content %}
 
-<div class="form-container complaint-form">
+<div class="profile-form">
 
-    <h2>{{ page_title }}</h2>
+    <h2 class="auth__title">{{ page_title }}</h2>
 
-    <form method="post" novalidate>
+    <form method="post" novalidate class="auth__form">
 
         {% csrf_token %}
 
         {% if form.non_field_errors %}
-        <div class="message error">
-            {% for error in form.non_field_errors %}
-                {{ error }}<br>
-            {% endfor %}
+        <div class="form-errors">
+            <div class="form-errors__title">Error</div>
+            <ul class="form-errors__list">
+                {% for error in form.non_field_errors %}
+                    <li class="form-errors__item">{{ error }}</li>
+                {% endfor %}
+            </ul>
         </div>
         {% endif %}
 
         <div class="form-group">
 
-            <label for="id_category">Category *</label>
+            <label for="id_category" class="form-text">Category *</label>
 
             {{ form.category }}
 
             {% if form.category.errors %}
-            <div class="error-messages">
+            <div class="form-text--error">
                 {% for error in form.category.errors %}
                     <div>{{ error }}</div>
                 {% endfor %}
@@ -38,12 +41,12 @@
 
         <div class="form-group">
 
-            <label for="id_title">Title *</label>
+            <label for="id_title" class="form-text">Title *</label>
 
             {{ form.title }}
 
             {% if form.title.errors %}
-            <div class="error-messages">
+            <div class="form-text--error">
                 {% for error in form.title.errors %}
                     <div>{{ error }}</div>
                 {% endfor %}
@@ -54,12 +57,12 @@
 
         <div class="form-group">
 
-            <label for="id_description">Description *</label>
+            <label for="id_description" class="form-text">Description *</label>
 
             {{ form.description }}
 
             {% if form.description.errors %}
-            <div class="error-messages">
+            <div class="form-text--error">
                 {% for error in form.description.errors %}
                     <div>{{ error }}</div>
                 {% endfor %}
@@ -70,12 +73,12 @@
 
         <div class="form-group">
 
-            <label for="id_priority">Priority *</label>
+            <label for="id_priority" class="form-text">Priority *</label>
 
             {{ form.priority }}
 
             {% if form.priority.errors %}
-            <div class="error-messages">
+            <div class="form-text--error">
                 {% for error in form.priority.errors %}
                     <div>{{ error }}</div>
                 {% endfor %}
@@ -86,12 +89,12 @@
 
         <div class="form-group">
 
-            <label for="id_location">Location (optional)</label>
+            <label for="id_location" class="form-text">Location (optional)</label>
 
             {{ form.location }}
 
             {% if form.location.errors %}
-            <div class="error-messages">
+            <div class="form-text--error">
                 {% for error in form.location.errors %}
                     <div>{{ error }}</div>
                 {% endfor %}
@@ -100,19 +103,21 @@
 
         </div>
 
-        <button type="submit">
-            {% if complaint %}
-                Update Complaint
-            {% else %}
-                Submit Complaint
-            {% endif %}
-        </button>
+        <div class="form-actions">
+            <button type="submit" class="btn btn--primary">
+                {% if complaint %}
+                    Update Complaint
+                {% else %}
+                    Submit Complaint
+                {% endif %}
+            </button>
 
-        <a
-            href="{% if complaint %}{% url 'complaints:complaint_detail' complaint.id %}{% else %}{% url 'complaints:complaint_list' %}{% endif %}"
-            class="btn btn-secondary">
-            Cancel
-        </a>
+            <a
+                href="{% if complaint %}{% url 'complaints:complaint_detail' complaint.id %}{% else %}{% url 'complaints:complaint_list' %}{% endif %}"
+                class="btn btn--secondary">
+                Cancel
+            </a>
+        </div>
 
     </form>
 

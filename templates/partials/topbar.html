@@ -1,73 +1,46 @@
 <header class="topbar">
-    <button
-    class="btn btn--ghost btn--icon"
-    id="menuToggle"
-    type="button">
-
-☰
-
-</button>
+    
+    <button class="btn btn--ghost btn--icon" id="menuToggle" type="button">
+        ☰
+    </button>
 
     <div>
-
-        <h3>
+        <h3 class="topbar__title">
             {% block page_title %}
             EchoDesk
             {% endblock %}
         </h3>
-
     </div>
 
     <div class="topbar__actions">
 
-        <button class="btn btn--ghost btn--icon"
-                type="button"
-                title="Notifications">
-
+        <button class="btn btn--ghost btn--icon" type="button" title="Notifications">
             🔔
-
         </button>
 
-        <button class="btn btn--ghost btn--icon"
-                id="themeToggle"
-                type="button"
-                title="Dark Mode">
-
+        <button class="btn btn--ghost btn--icon" id="themeToggle" type="button" title="Dark Mode">
             🌙
-
         </button>
 
         <div class="topbar__user">
 
             <div class="avatar">
-
                 {{ user.first_name|default:user.username|first|upper }}
-
             </div>
 
-            <div>
-
-                <strong>
-
+            <div class="topbar__user-info">
+                <strong class="topbar__user-name">
                     {{ user.get_full_name|default:user.username }}
-
                 </strong>
-
-                <div class="text-xs text-muted">
-
+                <div class="text--xs text--muted">
                     {% if user.is_superuser %}
                         Super Admin
-
                     {% elif user.is_staff %}
                         Staff
-
                     {% else %}
                         Student
-
                     {% endif %}
-
                 </div>
-
             </div>
 
         </div>

@@ -4,45 +4,48 @@
 
 {% block content %}
 
-<div class="form-container reply-form">
+<div class="profile-form">[cite: 1]
 
-    <h2>
+    <h2 class="auth__title">[cite: 1]
         Reply to {{ complaint.complaint_id }}
     </h2>
 
-    <p class="reply-subtitle">
+    <p class="auth__subtitle">[cite: 1]
         {{ complaint.title }}
     </p>
 
-    <form method="post" novalidate>
+    <form method="post" novalidate class="auth__form">[cite: 1]
 
         {% csrf_token %}
 
         {% if form.non_field_errors %}
-        <div class="message error">
-            {% for error in form.non_field_errors %}
-                {{ error }}<br>
-            {% endfor %}
+        <div class="form-errors">[cite: 1]
+            <div class="form-errors__title">Error</div>[cite: 1]
+            <ul class="form-errors__list">[cite: 1]
+                {% for error in form.non_field_errors %}
+                    <li class="form-errors__item">{{ error }}</li>[cite: 1]
+                {% endfor %}
+            </ul>
         </div>
         {% endif %}
 
-        <div class="form-group">
+        <div class="form-group">[cite: 1]
 
-            <label for="id_reply_type">
+            <label for="id_reply_type" class="form-text">[cite: 1]
                 Reply Type *
             </label>
 
             {{ form.reply_type }}
 
             {% if form.reply_type.errors %}
-            <div class="error-messages">
+            <div class="form-text--error">[cite: 1]
                 {% for error in form.reply_type.errors %}
                     <div>{{ error }}</div>
                 {% endfor %}
             </div>
             {% endif %}
 
-            <small class="reply-help">
+            <small class="text-muted text-sm mt-1 d-block">[cite: 1]
 
                 {% if user.profile.is_staff_member %}
                     Staff replies are visible to the user.
@@ -55,16 +58,16 @@
 
         </div>
 
-        <div class="form-group">
+        <div class="form-group">[cite: 1]
 
-            <label for="id_message">
+            <label for="id_message" class="form-text">[cite: 1]
                 Message *
             </label>
 
             {{ form.message }}
 
             {% if form.message.errors %}
-            <div class="error-messages">
+            <div class="form-text--error">[cite: 1]
                 {% for error in form.message.errors %}
                     <div>{{ error }}</div>
                 {% endfor %}
@@ -73,13 +76,15 @@
 
         </div>
 
-        <button type="submit">
-            Send Reply
-        </button>
+        <div class="form-actions">[cite: 1]
+            <button type="submit" class="btn btn--primary">[cite: 1]
+                Send Reply
+            </button>
 
-        <a href="{% url 'complaints:complaint_detail' complaint.id %}" class="btn btn-secondary">
-            Cancel
-        </a>
+            <a href="{% url 'complaints:complaint_detail' complaint.id %}" class="btn btn--secondary">[cite: 1]
+                Cancel
+            </a>
+        </div>
 
     </form>
 

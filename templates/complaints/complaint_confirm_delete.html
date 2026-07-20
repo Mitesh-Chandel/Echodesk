@@ -4,44 +4,39 @@
 
 {% block content %}
 
-<div class="delete-page">
+<div class="profile-form">[cite: 1]
 
-    <div class="card delete-card">
+    <div class="card">[cite: 1]
 
-        <h2 class="delete-title">
+        <h2 class="auth__title text-danger">[cite: 1]
             ⚠️ Delete Complaint
         </h2>
 
-        <p class="delete-warning">
+        <p class="fw-normal my-3">[cite: 1]
             Are you sure you want to delete this complaint? This action cannot be undone.
         </p>
 
-        <div class="delete-info">
-
-            <strong>Complaint ID:</strong>
-            {{ complaint.complaint_id }}
-            <br>
-
-            <strong>Title:</strong>
-            {{ complaint.title }}
-            <br>
-
-            <strong>Status:</strong>
-            {{ complaint.get_status_display }}
-
+        <div class="form-errors mb-4">[cite: 1]
+            <ul class="form-errors__list" style="list-style: none; padding-left: 0;">[cite: 1]
+                <li class="form-errors__item" style="color: inherit;"><strong>Complaint ID:</strong> {{ complaint.complaint_id }}</li>[cite: 1]
+                <li class="form-errors__item" style="color: inherit;"><strong>Title:</strong> {{ complaint.title }}</li>[cite: 1]
+                <li class="form-errors__item" style="color: inherit;"><strong>Status:</strong> {{ complaint.get_status_display }}</li>[cite: 1]
+            </ul>
         </div>
 
-        <form method="post">
+        <form method="post" class="auth__form">[cite: 1]
 
             {% csrf_token %}
 
-            <button type="submit" class="btn btn-danger">
-                Yes, Delete This Complaint
-            </button>
+            <div class="form-actions">[cite: 1]
+                <button type="submit" class="btn btn--danger">[cite: 1]
+                    Yes, Delete This Complaint
+                </button>
 
-            <a href="{% url 'complaints:complaint_detail' complaint.id %}" class="btn btn-secondary">
-                Cancel
-            </a>
+                <a href="{% url 'complaints:complaint_detail' complaint.id %}" class="btn btn--secondary">[cite: 1]
+                    Cancel
+                </a>
+            </div>
 
         </form>
 

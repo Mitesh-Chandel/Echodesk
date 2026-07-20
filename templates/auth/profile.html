@@ -4,55 +4,55 @@
 
 {% block content %}
 
-<div class="profile-page">
+<div class="profile-form">[cite: 1]
 
-    <h2>My Profile</h2>
+    <h2 class="auth__title">My Profile</h2>[cite: 1]
 
-    <div class="card">
+    <div class="card">[cite: 1]
 
-        <h3>Personal Information</h3>
+        <h3 class="card__title">Personal Information</h3>[cite: 1]
 
-        <div class="profile-info">
+        <div class="profile-form__grid">[cite: 1]
 
-            <div class="info-item">
-                <div class="info-label">Username</div>
-                <div class="info-value">{{ user.username }}</div>
+            <div class="form-group">[cite: 1]
+                <div class="form-text">Username</div>[cite: 1]
+                <div class="fw-semibold">{{ user.username }}</div>[cite: 1]
             </div>
 
-            <div class="info-item">
-                <div class="info-label">Email</div>
-                <div class="info-value">{{ user.email }}</div>
+            <div class="form-group">[cite: 1]
+                <div class="form-text">Email</div>[cite: 1]
+                <div class="fw-semibold">{{ user.email }}</div>[cite: 1]
             </div>
 
-            <div class="info-item">
-                <div class="info-label">Full Name</div>
-                <div class="info-value">{{ user.get_full_name|default:"Not provided" }}</div>
+            <div class="form-group">[cite: 1]
+                <div class="form-text">Full Name</div>[cite: 1]
+                <div class="fw-semibold">{{ user.get_full_name|default:"Not provided" }}</div>[cite: 1]
             </div>
 
-            <div class="info-item">
-                <div class="info-label">User Role</div>
-                <div class="info-value">{{ profile.get_role_display }}</div>
+            <div class="form-group">[cite: 1]
+                <div class="form-text">User Role</div>[cite: 1]
+                <div class="fw-semibold">{{ profile.get_role_display }}</div>[cite: 1]
             </div>
 
-            <div class="info-item">
-                <div class="info-label">Phone</div>
-                <div class="info-value">{{ profile.phone|default:"Not provided" }}</div>
+            <div class="form-group">[cite: 1]
+                <div class="form-text">Phone</div>[cite: 1]
+                <div class="fw-semibold">{{ profile.phone|default:"Not provided" }}</div>[cite: 1]
             </div>
 
-            <div class="info-item">
-                <div class="info-label">Member Since</div>
-                <div class="info-value">{{ user.date_joined|date:"d M, Y" }}</div>
+            <div class="form-group">[cite: 1]
+                <div class="form-text">Member Since</div>[cite: 1]
+                <div class="fw-semibold">{{ user.date_joined|date:"d M, Y" }}</div>[cite: 1]
             </div>
 
         </div>
 
-        <div class="profile-actions">
+        <div class="profile-form__footer">[cite: 1]
 
-            <a href="{% url 'auth:edit_profile' %}" class="btn">
+            <a href="{% url 'auth:edit_profile' %}" class="btn btn--primary">[cite: 1]
                 Edit Profile
             </a>
 
-            <a href="{% url 'auth:change_password' %}" class="btn btn-secondary">
+            <a href="{% url 'auth:change_password' %}" class="btn btn--secondary">[cite: 1]
                 Change Password
             </a>
 
@@ -61,45 +61,45 @@
     </div>
 
     {% if profile.address %}
-    <div class="card">
+    <div class="card mt-4">[cite: 1]
 
-        <h3>Address</h3>
+        <h3 class="card__title">Address</h3>[cite: 1]
 
-        <p>{{ profile.address|linebreaks }}</p>
+        <p class="fw-normal">{{ profile.address|linebreaks }}</p>[cite: 1]
 
     </div>
     {% endif %}
 
-    <div class="card">
+    <div class="card mt-4">[cite: 1]
 
-        <h3>Statistics</h3>
+        <h3 class="card__title">Statistics</h3>[cite: 1]
 
-        <div class="profile-info">
+        <div class="stat-grid stat-grid--4col">[cite: 1]
 
-            <div class="info-item">
-                <div class="info-label">Total Complaints</div>
-                <div class="info-value stat-value stat-primary">
+            <div class="stat-card">[cite: 1]
+                <div class="stat-card__label">Total Complaints</div>[cite: 1]
+                <div class="stat-card__value text-primary">[cite: 1]
                     {{ user.complaints.count }}
                 </div>
             </div>
 
-            <div class="info-item">
-                <div class="info-label">Pending Complaints</div>
-                <div class="info-value stat-value stat-danger">
+            <div class="stat-card">[cite: 1]
+                <div class="stat-card__label">Pending Complaints</div>[cite: 1]
+                <div class="stat-card__value text-danger">[cite: 1]
                     {{ user.complaints.filter|dictsort:"status=pending"|length }}
                 </div>
             </div>
 
-            <div class="info-item">
-                <div class="info-label">Resolved Complaints</div>
-                <div class="info-value stat-value stat-success">
+            <div class="stat-card">[cite: 1]
+                <div class="stat-card__label">Resolved Complaints</div>[cite: 1]
+                <div class="stat-card__value text-success">[cite: 1]
                     {{ user.complaints.filter|dictsort:"status=resolved"|length }}
                 </div>
             </div>
 
-            <div class="info-item">
-                <div class="info-label">Unread Notifications</div>
-                <div class="info-value stat-value stat-warning">
+            <div class="stat-card">[cite: 1]
+                <div class="stat-card__label">Unread Notifications</div>[cite: 1]
+                <div class="stat-card__value text-warning">[cite: 1]
                     {{ unread_notifications }}
                 </div>
             </div>
@@ -109,35 +109,34 @@
     </div>
 
     {% if recent_complaints %}
-    <div class="card">
+    <div class="card mt-4">[cite: 1]
 
-        <h3>Recent Complaints</h3>
+        <h3 class="card__title">Recent Complaints</h3>[cite: 1]
 
-        <div class="complaints-list">
+        <div class="complaints-list">[cite: 1]
 
             {% for complaint in recent_complaints %}
 
-            <div class="complaint-item">
+            <div class="complaint-list-item">[cite: 1]
 
-                <div class="complaint-id">
+                <div class="complaint-list-item__id">[cite: 1]
                     {{ complaint.complaint_id }}
                 </div>
 
-                <div class="complaint-title">
+                <div class="complaint-list-item__title">[cite: 1]
                     {{ complaint.title }}
                 </div>
 
-                <span class="complaint-status status-{{ complaint.status }}">
+                <span class="status-badge status-{{ complaint.status }}">[cite: 1]
                     {{ complaint.get_status_display }}
                 </span>
 
-                <span class="complaint-status complaint-priority">
+                <span class="status-badge">[cite: 1]
                     Priority: {{ complaint.get_priority_display }}
                 </span>
 
-                <div class="complaint-date">
-                    Created:
-                    {{ complaint.created_at|date:"d M, Y" }}
+                <div class="text-muted text-sm">[cite: 1]
+                    Created: {{ complaint.created_at|date:"d M, Y" }}
                 </div>
 
             </div>

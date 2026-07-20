@@ -14,41 +14,43 @@
     
     <!-- Statistics Grid -->
     <div class="grid grid--6 stack">
-        <div class="card stat-card">
+        
+        <div class="card stat-card border--primary">
             <div class="page__title text--primary">{{ total_complaints }}</div>
             <div class="page__subtitle">Total Complaints</div>
         </div>
         
-        <div class="card stat-card">
+        <div class="card stat-card border--danger">
             <div class="page__title text--danger">{{ pending }}</div>
             <div class="page__subtitle">Pending</div>
         </div>
         
-        <div class="card stat-card">
+        <div class="card stat-card border--warning">
             <div class="page__title text--warning">{{ in_progress }}</div>
             <div class="page__subtitle">In Progress</div>
         </div>
         
-        <div class="card stat-card">
+        <div class="card stat-card border--success">
             <div class="page__title text--success">{{ resolved }}</div>
             <div class="page__subtitle">Resolved</div>
         </div>
         
-        <div class="card stat-card">
+        <div class="card stat-card border--muted">
             <div class="page__title text--muted">{{ closed }}</div>
             <div class="page__subtitle">Closed</div>
         </div>
         
-        <div class="card stat-card">
+        <div class="card stat-card border--danger">
             <div class="page__title text--danger">{{ rejected }}</div>
             <div class="page__subtitle">Rejected</div>
         </div>
+        
     </div>
     
     <!-- Quick Actions -->
     <div class="card stack">
         <h3>Quick Actions</h3>
-        <div class="row">
+        <div class="row row--gap-md">
             <a href="{% url 'complaints:complaint_create' %}">
                 <button class="btn btn--success">+ New Complaint</button>
             </a>
@@ -64,18 +66,18 @@
         <h3>Recent Complaints</h3>
         <div class="complaints-list stack">
             {% for complaint in recent_complaints %}
-            <div class="complaint-item">
+            <div class="complaint-item border-bottom">
                 <div class="row row--justify-between row--align-center">
-                    <div class="stack">
-                        <div class="complaint-id">{{ complaint.complaint_id }}</div>
-                        <div class="complaint-title">{{ complaint.title }}</div>
-                        <div class="row">
+                    <div class="stack stack--gap-xs">
+                        <div class="complaint-id"><strong>{{ complaint.complaint_id }}</strong></div>
+                        <div class="complaint-title text-medium">{{ complaint.title }}</div>
+                        <div class="row row--gap-sm">
                             <span class="badge badge--{{ complaint.status }}">{{ complaint.get_status_display }}</span>
                             <span class="badge badge--info">{{ complaint.category.name }}</span>
                         </div>
                     </div>
                     <a href="{% url 'complaints:complaint_detail' complaint.id %}">
-                        <button class="btn btn--outline">View</button>
+                        <button class="btn btn--outline btn--sm">View</button>
                     </a>
                 </div>
             </div>
@@ -88,16 +90,19 @@
     {% if unread_notifications %}
     <div class="card stack">
         <h3>🔔 Unread Notifications ({{ unread_notifications.count }})</h3>
-        <div class="grid stack">
+        <div class="grid stack stack--gap-md">
             {% for notification in unread_notifications|slice:":5" %}
             <div class="card card--glass card--alert-info">
                 <strong class="text--info">{{ notification.get_notification_type_display }}</strong>
-                <p class="text--info">{{ notification.message }}</p>
-                <small class="text--info">{{ notification.created_at|timesince }} ago</small>
+                <p class="text--info mt-xs">{{ notification.message }}</p>
+                <div class="mt-sm">
+                    <small class="text--info text-muted">{{ notification.created_at|timesince }} ago</small>
+                </div>
             </div>
             {% endfor %}
         </div>
     </div>
     {% endif %}
+    
 </div>
 {% endblock %}

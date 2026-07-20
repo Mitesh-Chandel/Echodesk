@@ -3,125 +3,119 @@
 {% block title %}My Complaints - EchoDesk{% endblock %}
 
 {% block content %}
-<div class="complaints-page">
+<div class="profile-form">
 
-    <div class="complaints-header">
-        <h2>My Complaints</h2>
+    <div class="d-flex align-items-center mb-4" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+        <h2 class="auth__title mb-0" style="margin-bottom: 0;">My Complaints</h2>
 
-        <a href="{% url 'complaints:complaint_create' %}" class="btn btn-success">
+        <a href="{% url 'complaints:complaint_create' %}" class="btn btn--primary" style="background-color: var(--success-color, #198754); border-color: var(--success-color, #198754);">
             + New Complaint
         </a>
     </div>
 
     <!-- Filter Section -->
-    <div class="card">
-        <h3>Filter Complaints</h3>
+    <div class="card mb-4">
+        <h3 class="card__title">Filter Complaints</h3>
 
-        <form method="get" class="filter-form">
-            {{ filter_form.search }}
-            {{ filter_form.status }}
-            {{ filter_form.priority }}
-            {{ filter_form.category }}
+        <form method="get" class="auth__form" style="display: flex; flex-wrap: wrap; gap: 1rem; align-items: flex-end;">
+            <div style="flex: 1; min-width: 150px;">
+                {{ filter_form.search }}
+            </div>
+            <div style="flex: 1; min-width: 120px;">
+                {{ filter_form.status }}
+            </div>
+            <div style="flex: 1; min-width: 120px;">
+                {{ filter_form.priority }}
+            </div>
+            <div style="flex: 1; min-width: 120px;">
+                {{ filter_form.category }}
+            </div>
 
-            <button type="submit">Apply Filters</button>
-
-            <a href="?" class="btn btn-secondary">
-                Clear Filters
-            </a>
+            <div class="form-actions" style="margin-top: 0; padding-top: 0; border-top: none;">
+                <button type="submit" class="btn btn--primary">Apply Filters</button>
+                <a href="?" class="btn btn--secondary">Clear Filters</a>
+            </div>
         </form>
     </div>
 
     <!-- Complaints List -->
     {% if page_obj %}
-        {% for complaint in page_obj %}
-        <div class="complaint-item">
-
-            <div class="complaint-row">
+        <div class="complaints-list">
+            {% for complaint in page_obj %}
+            <div class="complaint-list-item" style="display: flex; justify-content: space-between; align-items: center; gap: 1.5rem;">
 
                 <div>
-                    <div class="complaint-id">
+                    <div class="complaint-list-item__id">
                         {{ complaint.complaint_id }}
                     </div>
 
-                    <div class="complaint-title">
+                    <div class="complaint-list-item__title">
                         {{ complaint.title }}
                     </div>
 
-                    <div class="complaint-meta">
-
-                        <span class="complaint-status status-{{ complaint.status }}">
+                    <div class="d-flex gap-2 my-2" style="display: flex; gap: 0.5rem; margin: 0.5rem 0; flex-wrap: wrap;">
+                        <span class="status-badge status-{{ complaint.status }}">
                             {{ complaint.get_status_display }}
                         </span>
 
-                        <span class="complaint-status complaint-category">
+                        <span class="status-badge">
                             {{ complaint.category.name }}
                         </span>
 
-                        <span class="complaint-status complaint-priority">
+                        <span class="status-badge">
                             Priority: {{ complaint.get_priority_display }}
                         </span>
-
                     </div>
 
-                    <div class="complaint-details">
-                        Created:
-                        {{ complaint.created_at|date:"d M, Y H:i" }}
-                        |
-                        Replies:
-                        {{ complaint.replies.count }}
+                    <div class="text-muted text-sm">
+                        Created: {{ complaint.created_at|date:"d M, Y H:i" }} | Replies: {{ complaint.replies.count }}
                     </div>
-
                 </div>
 
-                <div class="complaint-actions">
-
-                    <a href="{% url 'complaints:complaint_detail' complaint.id %}" class="btn">
+                <div class="d-flex gap-2" style="display: flex; gap: 0.5rem; align-items: center; flex-shrink: 0;">
+                    <a href="{% url 'complaints:complaint_detail' complaint.id %}" class="btn btn--primary btn--sm">
                         View
                     </a>
 
                     {% if complaint.status == 'pending' %}
-
-                    <a href="{% url 'complaints:complaint_update' complaint.id %}" class="btn btn-secondary">
+                    <a href="{% url 'complaints:complaint_update' complaint.id %}" class="btn btn--secondary btn--sm">
                         Edit
                     </a>
 
-                    <a href="{% url 'complaints:complaint_delete' complaint.id %}" class="btn btn-danger">
+                    <a href="{% url 'complaints:complaint_delete' complaint.id %}" class="btn btn--danger btn--sm">
                         Delete
                     </a>
-
                     {% endif %}
-
                 </div>
 
             </div>
-
+            {% endfor %}
         </div>
-        {% endfor %}
 
         <!-- Pagination -->
         {% if page_obj.has_other_pages %}
-        <div class="pagination">
+        <div class="profile-form__footer" style="display: flex; justify-content: center; align-items: center; gap: 1rem; margin-top: 2rem;">
 
             {% if page_obj.has_previous %}
-                <a href="?page=1{% if filter_form.is_valid %}&{{ filter_form.urlencode }}{% endif %}" class="btn">
+                <a href="?page=1{% if filter_form.is_valid %}&{{ filter_form.urlencode }}{% endif %}" class="btn btn--secondary btn--sm">
                     First
                 </a>
 
-                <a href="?page={{ page_obj.previous_page_number }}{% if filter_form.is_valid %}&{{ filter_form.urlencode }}{% endif %}" class="btn">
+                <a href="?page={{ page_obj.previous_page_number }}{% if filter_form.is_valid %}&{{ filter_form.urlencode }}{% endif %}" class="btn btn--secondary btn--sm">
                     Previous
                 </a>
             {% endif %}
 
-            <span class="pagination-info">
+            <span class="text-muted text-sm fw-semibold">
                 Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
             </span>
 
             {% if page_obj.has_next %}
-                <a href="?page={{ page_obj.next_page_number }}{% if filter_form.is_valid %}&{{ filter_form.urlencode }}{% endif %}" class="btn">
+                <a href="?page={{ page_obj.next_page_number }}{% if filter_form.is_valid %}&{{ filter_form.urlencode }}{% endif %}" class="btn btn--secondary btn--sm">
                     Next
                 </a>
 
-                <a href="?page={{ page_obj.paginator.num_pages }}{% if filter_form.is_valid %}&{{ filter_form.urlencode }}{% endif %}" class="btn">
+                <a href="?page={{ page_obj.paginator.num_pages }}{% if filter_form.is_valid %}&{{ filter_form.urlencode }}{% endif %}" class="btn btn--secondary btn--sm">
                     Last
                 </a>
             {% endif %}
@@ -131,14 +125,15 @@
 
     {% else %}
 
-    <div class="card">
-        <h3>No Complaints Found</h3>
-
-        <p>You haven't submitted any complaints yet.</p>
-
-        <a href="{% url 'complaints:complaint_create' %}" class="btn">
-            Create Your First Complaint
-        </a>
+    <div class="card" style="text-align: center; padding: 3rem 1.5rem;">
+        <h3 class="card__title">No Complaints Found</h3>
+        <p class="text-muted fw-normal">You haven't submitted any complaints yet.</p>
+        
+        <div class="profile-form__footer" style="justify-content: center; border-top: none; margin-top: 1.5rem;">
+            <a href="{% url 'complaints:complaint_create' %}" class="btn btn--primary">
+                Create Your First Complaint
+            </a>
+        </div>
     </div>
 
     {% endif %}

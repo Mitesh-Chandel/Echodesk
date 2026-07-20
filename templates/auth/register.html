@@ -4,32 +4,35 @@
 
 {% block content %}
 
-<div class="form-container">
+<div class="auth__card">[cite: 1]
 
-    <h2>Create Your Account</h2>
+    <h2 class="auth__title">Create Your Account</h2>[cite: 1]
 
-    <p class="form-subtitle">
+    <p class="auth__subtitle">[cite: 1]
         Join EchoDesk to submit and track your complaints
     </p>
 
-    <form method="post" novalidate>
+    <form method="post" novalidate class="auth__form">[cite: 1]
 
         {% csrf_token %}
 
         {% if form.non_field_errors %}
-        <div class="message error">
-            {% for error in form.non_field_errors %}
-                {{ error }}<br>
-            {% endfor %}
+        <div class="form-errors">[cite: 1]
+            <div class="form-errors__title">Error</div>[cite: 1]
+            <ul class="form-errors__list">[cite: 1]
+                {% for error in form.non_field_errors %}
+                    <li class="form-errors__item">{{ error }}</li>[cite: 1]
+                {% endfor %}
+            </ul>
         </div>
         {% endif %}
 
-        <div class="form-group">
-            <label for="id_username">Username *</label>
+        <div class="form-group">[cite: 1]
+            <label for="id_username" class="form-text">[cite: 1]Username *</label>
             {{ form.username }}
 
             {% if form.username.errors %}
-            <div class="error-messages">
+            <div class="form-text--error">[cite: 1]
                 {% for error in form.username.errors %}
                     <div>{{ error }}</div>
                 {% endfor %}
@@ -37,12 +40,12 @@
             {% endif %}
         </div>
 
-        <div class="form-group">
-            <label for="id_email">Email *</label>
+        <div class="form-group">[cite: 1]
+            <label for="id_email" class="form-text">[cite: 1]Email *</label>
             {{ form.email }}
 
             {% if form.email.errors %}
-            <div class="error-messages">
+            <div class="form-text--error">[cite: 1]
                 {% for error in form.email.errors %}
                     <div>{{ error }}</div>
                 {% endfor %}
@@ -50,22 +53,22 @@
             {% endif %}
         </div>
 
-        <div class="form-group">
-            <label for="id_first_name">First Name</label>
+        <div class="form-group">[cite: 1]
+            <label for="id_first_name" class="form-text">[cite: 1]First Name</label>
             {{ form.first_name }}
         </div>
 
-        <div class="form-group">
-            <label for="id_last_name">Last Name</label>
+        <div class="form-group">[cite: 1]
+            <label for="id_last_name" class="form-text">[cite: 1]Last Name</label>
             {{ form.last_name }}
         </div>
 
-        <div class="form-group">
-            <label for="id_password1">Password *</label>
+        <div class="form-group">[cite: 1]
+            <label for="id_password1" class="form-text">[cite: 1]Password *</label>
             {{ form.password1 }}
 
             {% if form.password1.errors %}
-            <div class="error-messages">
+            <div class="form-text--error">[cite: 1]
                 {% for error in form.password1.errors %}
                     <div>{{ error }}</div>
                 {% endfor %}
@@ -73,12 +76,12 @@
             {% endif %}
         </div>
 
-        <div class="form-group">
-            <label for="id_password2">Confirm Password *</label>
+        <div class="form-group">[cite: 1]
+            <label for="id_password2" class="form-text">[cite: 1]Confirm Password *</label>
             {{ form.password2 }}
 
             {% if form.password2.errors %}
-            <div class="error-messages">
+            <div class="form-text--error">[cite: 1]
                 {% for error in form.password2.errors %}
                     <div>{{ error }}</div>
                 {% endfor %}
@@ -86,15 +89,15 @@
             {% endif %}
         </div>
 
-        <button type="submit">
+        <button type="submit" class="btn btn--primary">[cite: 1]
             Create Account
         </button>
 
     </form>
 
-    <div class="form-footer">
+    <div class="auth__footer">[cite: 1]
         Already have an account?
-        <a href="{% url 'auth:login' %}">
+        <a href="{% url 'auth:login' %}" class="auth__link">[cite: 1]
             Login here
         </a>
     </div>

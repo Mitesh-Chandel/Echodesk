@@ -1,104 +1,13 @@
-<aside class="sidebar">
+{% extends "admin/base.html" %}
+{% load static %}
 
-    <div class="sidebar__brand">
-        <div class="sidebar__brand-mark"></div>
+{% block extrastyle %}
+{{ block.super }}
+<link rel="stylesheet" href="{% static 'admin/css/admin.css' %}">
+{% endblock %}
 
-        <div>
-            <div>EchoDesk</div>
-            <small class="text-muted">Complaint System</small>
-        </div>
-    </div>
-
-    <div class="sidebar__section-label">
-        Main
-    </div>
-
-    <nav class="sidebar__nav">
-
-        <a href="{% url 'dashboard:user_dashboard' %}"
-           class="sidebar__link">
-
-            <span class="icon">🏠</span>
-            Dashboard
-
-        </a>
-
-        <a href="{% url 'complaints:complaint_list' %}"
-           class="sidebar__link">
-
-            <span class="icon">📋</span>
-            My Complaints
-
-        </a>
-
-        <a href="{% url 'complaints:complaint_create' %}"
-           class="sidebar__link">
-
-            <span class="icon">➕</span>
-            New Complaint
-
-        </a>
-
-    </nav>
-
-    <div class="sidebar__section-label">
-
-        Account
-
-    </div>
-
-    <nav class="sidebar__nav">
-
-        <a href="{% url 'auth:profile' %}"
-           class="sidebar__link">
-
-            <span class="icon">👤</span>
-            Profile
-
-        </a>
-
-        <a href="{% url 'auth:change_password' %}"
-           class="sidebar__link">
-
-            <span class="icon">🔒</span>
-            Password
-
-        </a>
-
-    </nav>
-
-    {% if user.is_staff %}
-
-    <div class="sidebar__section-label">
-
-        Administration
-
-    </div>
-
-    <nav class="sidebar__nav">
-
-        <a href="{% url 'dashboard:admin_dashboard' %}"
-           class="sidebar__link">
-
-            <span class="icon">⚙️</span>
-            Admin Dashboard
-
-        </a>
-
-    </nav>
-
-    {% endif %}
-
-    <div class="sidebar__footer">
-
-        <a href="{% url 'auth:logout' %}"
-           class="sidebar__link">
-
-            <span class="icon">🚪</span>
-            Logout
-
-        </a>
-
-    </div>
-
-</aside>
+{% block branding %}
+<h1 id="site-name">
+    EchoDesk Administration
+</h1>
+{% endblock %}

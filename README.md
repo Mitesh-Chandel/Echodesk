@@ -301,3 +301,108 @@ admin.png
 Computer Engineering Student
 
 ---
+
+```
+Echodesk
+├─ complaints
+│  ├─ admin.py
+│  ├─ apps.py
+│  ├─ forms.py
+│  ├─ migrations
+│  │  ├─ 0001_initial.py
+│  │  └─ __init__.py
+│  ├─ models.py
+│  ├─ tests.py
+│  ├─ urls.py
+│  ├─ views.py
+│  └─ __init__.py
+├─ COMPLETION_SUMMARY.md
+├─ config
+│  ├─ asgi.py
+│  ├─ settings.py
+│  ├─ urls.py
+│  ├─ wsgi.py
+│  └─ __init__.py
+├─ cssGuide.md
+├─ dashboard
+│  ├─ admin.py
+│  ├─ apps.py
+│  ├─ migrations
+│  │  └─ __init__.py
+│  ├─ models.py
+│  ├─ tests.py
+│  ├─ urls.py
+│  ├─ views.py
+│  └─ __init__.py
+├─ data.json
+├─ DEPLOYMENT_READY.md
+├─ DOCUMENTATION_INDEX.md
+├─ FILE_MANIFEST.md
+├─ manage.py
+├─ PHASES_2_5_COMPLETE.md
+├─ PHASE_1_COMPLETE.md
+├─ QUICK_START.md
+├─ README.md
+├─ requirements.txt
+├─ setup_data.py
+├─ static
+│  ├─ admin
+│  │  └─ css
+│  │     └─ admin.css
+│  ├─ css
+│  │  ├─ auth.css
+│  │  ├─ complaints.css
+│  │  ├─ components.css
+│  │  ├─ dashboard.css
+│  │  ├─ forms.css
+│  │  ├─ layout.css
+│  │  ├─ main.css
+│  │  ├─ responsive.css
+│  │  └─ utilities.css
+│  ├─ images
+│  └─ js
+│     └─ layout.js
+├─ structure.md
+├─ templates
+│  ├─ admin
+│  │  └─ base_site.html
+│  ├─ auth
+│  │  ├─ base_auth.html
+│  │  ├─ change_password.html
+│  │  ├─ edit_profile.html
+│  │  ├─ login.html
+│  │  ├─ profile.html
+│  │  └─ register.html
+│  ├─ base.html
+│  ├─ complaints
+│  │  ├─ add_reply.html
+│  │  ├─ complaint_confirm_delete.html
+│  │  ├─ complaint_detail.html
+│  │  ├─ complaint_form.html
+│  │  ├─ complaint_list.html
+│  │  └─ upload_attachment.html
+│  ├─ dashboard
+│  │  ├─ admin_dashboard.html
+│  │  ├─ staff_dashboard.html
+│  │  ├─ student_dashboard.html
+│  │  └─ user_dashboard.html
+│  └─ partials
+│     ├─ footer.html
+│     ├─ messages.html
+│     ├─ sidebar.html
+│     └─ topbar.html
+└─ users
+   ├─ admin.py
+   ├─ apps.py
+   ├─ forms.py
+   ├─ migrations
+   │  ├─ 0001_initial.py
+   │  └─ __init__.py
+   ├─ models.py
+   ├─ signals.py
+   ├─ tests.py
+   ├─ urls.py
+   ├─ views.py
+   └─ __init__.py
+
+```

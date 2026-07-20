@@ -3,42 +3,41 @@
 {% block title %}Upload Attachment - EchoDesk{% endblock %}
 
 {% block content %}
-<div class="form-container upload-form">
-    <h2>Upload Attachment</h2>
+<div class="profile-form">
+    <h2 class="auth__title">Upload Attachment</h2>
 
-    <p class="complaint-info">
-        Complaint:
-        <strong>{{ complaint.complaint_id }} - {{ complaint.title }}</strong>
+    <p class="auth__subtitle">
+        Complaint: <strong>{{ complaint.complaint_id }} - {{ complaint.title }}</strong>
     </p>
 
-    <div class="file-info-box">
-        <strong class="file-info-title">
-            📄 Supported File Types
-        </strong>
-
-        <p class="file-info-text">
+    <div class="form-errors mb-4" style="color: inherit; background-color: rgba(0,0,0,0.02); border-color: rgba(0,0,0,0.1);">
+        <div class="form-errors__title" style="color: inherit;">📄 Supported File Types</div>
+        <p class="fw-normal text-muted text-sm mt-1 mb-0">
             PDF, DOC, DOCX, JPG, JPEG, PNG, GIF (Max 5MB each)
         </p>
     </div>
 
-    <form method="post" enctype="multipart/form-data" novalidate>
+    <form method="post" enctype="multipart/form-data" novalidate class="auth__form">
         {% csrf_token %}
 
         {% if form.non_field_errors %}
-        <div class="message error">
-            {% for error in form.non_field_errors %}
-                {{ error }}<br>
-            {% endfor %}
+        <div class="form-errors">
+            <div class="form-errors__title">Error</div>
+            <ul class="form-errors__list">
+                {% for error in form.non_field_errors %}
+                    <li class="form-errors__item">{{ error }}</li>
+                {% endfor %}
+            </ul>
         </div>
         {% endif %}
 
         <div class="form-group">
-            <label for="id_file">Choose File *</label>
+            <label for="id_file" class="form-text">Choose File *</label>
 
             {{ form.file }}
 
             {% if form.file.errors %}
-            <div class="error-messages">
+            <div class="form-text--error">
                 {% for error in form.file.errors %}
                     <div>{{ error }}</div>
                 {% endfor %}
@@ -46,11 +45,13 @@
             {% endif %}
         </div>
 
-        <button type="submit">Upload Attachment</button>
+        <div class="form-actions">
+            <button type="submit" class="btn btn--primary">Upload Attachment</button>
 
-        <a href="{% url 'complaints:complaint_detail' complaint.id %}" class="btn btn-secondary">
-            Cancel
-        </a>
+            <a href="{% url 'complaints:complaint_detail' complaint.id %}" class="btn btn--secondary">
+                Cancel
+            </a>
+        </div>
     </form>
 </div>
 {% endblock %}
