@@ -12,10 +12,11 @@
 {% block content %}
 <div class="container page">
     
-    <h3 class="page__subtitle">Your Complaint Summary</h3>
+    <!-- <h3 class="page__subtitle ">Your Complaint Summary</h3> -->
+    <h3 class="page__subtitle fs-xl fw-bold text-center mb-12">Your Complaint Summary</h3>
     
     <!-- Statistics Grid -->
-    <div class="grid grid--6 stack">
+   <div class="stat-grid stat-grid--6">
         
         <div class="card stat-card border--primary">
             <div class="stack stack--align-center">
@@ -99,10 +100,12 @@
     </div>
     {% endif %}
     
-    <h3 class="page__subtitle">Your Recent Complaints (Latest 5)</h3>
+    <h3 class="page__subtitle  fs-xl fw-bold text-center mb-12">Your Recent Complaints (Latest 5)</h3>
     
     {% if recent_complaints %}
-        <div class="card table-responsive">
+        <!-- <div class="card table-responsive"> -->
+          
+          <div class="table-wrapper">  <div class="card">
             <table class="table">
                 <thead>
                     <tr>
@@ -150,12 +153,18 @@
                 </tbody>
             </table>
         </div>
+    </div>
         
-        <div class="row row--justify-center">
+        <!-- <div class="row row--justify-center">
             <a href="{% url 'complaints:complaint_list' %}">
                 <button class="btn btn--success">View All Complaints</button>
             </a>
-        </div>
+        </div> -->
+        <div class="row d-flex justify-center mt-6">
+    <a href="{% url 'complaints:complaint_list' %}">
+        <button class="btn btn--success">View All Complaints</button>
+    </a>
+</div>
     {% else %}
         <div class="card">
             <div class="stack stack--align-center stack--pad-lg">
