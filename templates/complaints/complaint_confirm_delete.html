@@ -4,49 +4,93 @@
 
 {% block content %}
 
-<div class="delete-page">
+<div class="page py-12 px-4">
+    <div class="max-w-sm mx-auto">
 
-    <div class="card delete-card">
+        <!-- Delete Confirmation Modal Card -->
+        <div class="card shadow-lg rounded-lg p-8">
 
-        <h2 class="delete-title">
-            ⚠️ Delete Complaint
-        </h2>
+            <!-- Header with Icon -->
+            <div class="card__header mb-6 pb-6 d-flex flex-column align-center gap-4">
+                <div class="modal__icon text-danger fs-xl">
+                    ⚠️
+                </div>
+                <h1 class="card__title fw-bold text-center text-danger">
+                    Delete Complaint
+                </h1>
+            </div>
 
-        <p class="delete-warning">
-            Are you sure you want to delete this complaint? This action cannot be undone.
-        </p>
+            <!-- Warning Message -->
+            <div class="delete-confirmation__message bg-danger opacity-10 p-4 rounded-md mb-6">
+                <p class="text-danger fw-medium fs-sm">
+                    This action cannot be undone. Please review the complaint details before confirming.
+                </p>
+            </div>
 
-        <div class="delete-info">
+            <!-- Complaint Details Section -->
+            <div class="complaint-detail mb-8 pb-6">
 
-            <strong>Complaint ID:</strong>
-            {{ complaint.complaint_id }}
-            <br>
+                <div class="complaint-detail-item mb-4">
+                    <div class="complaint-detail-item__label fw-semibold text-primary fs-sm">
+                        Complaint ID
+                    </div>
+                    <div class="complaint-detail-item__value text-secondary mt-1">
+                        {{ complaint.complaint_id }}
+                    </div>
+                </div>
 
-            <strong>Title:</strong>
-            {{ complaint.title }}
-            <br>
+                <div class="complaint-detail-item mb-4">
+                    <div class="complaint-detail-item__label fw-semibold text-primary fs-sm">
+                        Title
+                    </div>
+                    <div class="complaint-detail-item__value text-secondary mt-1">
+                        {{ complaint.title }}
+                    </div>
+                </div>
 
-            <strong>Status:</strong>
-            {{ complaint.get_status_display }}
+                <div class="complaint-detail-item">
+                    <div class="complaint-detail-item__label fw-semibold text-primary fs-sm">
+                        Current Status
+                    </div>
+                    <div class="complaint-detail-item__value mt-1">
+                        <span class="status-badge status-badge--{{ complaint.status|lower }}">
+                            {{ complaint.get_status_display }}
+                        </span>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Confirmation Highlight -->
+            <div class="delete-confirmation__highlight p-4 rounded-md mb-8" style="border-left: 4px solid #ef4444;">
+                <p class="text-center text-muted fs-sm">
+                    <strong>Deleting this complaint will:</strong>
+                </p>
+                <ul class="mt-2 ml-4 text-muted fs-sm gap-2 d-flex flex-column">
+                    <li>• Remove all associated replies and attachments</li>
+                    <li>• Clear the complaint history</li>
+                    <li>• Update staff workload statistics</li>
+                </ul>
+            </div>
+
+            <!-- Action Buttons -->
+            <form method="post" class="d-flex flex-column gap-3">
+
+                {% csrf_token %}
+
+                <button type="submit" class="delete-confirmation__action delete-confirmation__action--delete btn btn--danger fw-semibold">
+                    Yes, Delete This Complaint
+                </button>
+
+                <a href="{% url 'complaints:complaint_detail' complaint.id %}" class="delete-confirmation__action delete-confirmation__action--cancel btn btn--secondary fw-semibold text-center">
+                    Cancel
+                </a>
+
+            </form>
 
         </div>
 
-        <form method="post">
-
-            {% csrf_token %}
-
-            <button type="submit" class="btn btn-danger">
-                Yes, Delete This Complaint
-            </button>
-
-            <a href="{% url 'complaints:complaint_detail' complaint.id %}" class="btn btn-secondary">
-                Cancel
-            </a>
-
-        </form>
-
     </div>
-
 </div>
 
 {% endblock %}

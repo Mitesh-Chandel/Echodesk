@@ -8,7 +8,7 @@
 
     <h2>{{ page_title }}</h2>
 
-    <form method="post" novalidate>
+    <form method="post" enctype="multipart/form-data" novalidate id="complaintForm">
 
         {% csrf_token %}
 
@@ -100,7 +100,55 @@
 
         </div>
 
-        <button type="submit">
+        <!-- ================================================================
+             ATTACHMENTS SECTION (NEW)
+             ================================================================ -->
+
+        <div class="form-group">
+            <label for="id_attachments">{{ form.attachments.label }}</label>
+
+            <div class="alert alert-info">
+                <strong>📎 Upload Supporting Files</strong><br>
+                ✓ Supported: PDF, DOC, DOCX, JPG, PNG, GIF<br>
+                ✓ Maximum: 5MB per file, up to 10 files<br>
+                ✓ Optional - you can also add files after creating the complaint
+            </div>
+
+            <div class="border border-dashed p-3 mb-3" id="dropZone">
+                <div class="mb-2">
+                    <label for="id_attachments" class="btn btn-primary">
+                        📁 Click to select files or drag & drop here
+                    </label>
+                    {% if form.attachments.field.widget.input_type == 'file' %}
+                        <input type="file" name="attachments" id="id_attachments" class="form-control file-input" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.gif" multiple style="display: none;">
+                    {% else %}
+                        {{ form.attachments }}
+                    {% endif %}
+                </div>
+                <small class="form-text text-muted">{{ form.attachments.help_text }}</small>
+            </div>
+
+            <div id="fileList">
+                <div id="fileListContainer">
+                    <div class="text-muted text-center py-3">No files selected</div>
+                </div>
+                <div id="fileCount" style="display: none;" class="badge badge-secondary"></div>
+            </div>
+
+            {% if form.attachments.errors %}
+            <div class="error-messages mt-2">
+                {% for error in form.attachments.errors %}
+                    <div>{{ error }}</div>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- ================================================================
+             END ATTACHMENTS SECTION
+             ================================================================ -->
+
+        <button type="submit" class="btn btn-success">
             {% if complaint %}
                 Update Complaint
             {% else %}
@@ -117,5 +165,204 @@
     </form>
 
 </div>
+
+<!-- ================================================================
+     JAVASCRIPT FOR FILE UPLOAD
+     ================================================================ -->
+
+<script>
+    const ALLOWED_EXTENSIONS = ['pdf', 'doc', 'docx', 'jpg', 'jpeg', 'png', 'gif'];
+    const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+    const MAX_FILES = 10;
+
+    const fileInput = document.getElementById('id_attachments');
+    const dropZone = document.getElementById('dropZone');
+    const fileListContainer = document.getElementById('fileListContainer');
+    const fileCount = document.getElementById('fileCount');
+    const complaintForm = document.getElementById('complaintForm');
+
+    let selectedFiles = [];
+
+    // ====================================================================
+    // FILE VALIDATION
+    // ====================================================================
+
+    function getFileIcon(extension) {
+        const iconMap = {
+            'pdf': '📄',
+            'doc': '📝',
+            'docx': '📝',
+            'jpg': '🖼️',
+            'jpeg': '🖼️',
+            'png': '🖼️',
+            'gif': '🖼️'
+        };
+        return iconMap[extension.toLowerCase()] || '📎';
+    }
+
+    function formatFileSize(bytes) {
+        if (bytes === 0) return '0 Bytes';
+        const k = 1024;
+        const sizes = ['Bytes', 'KB', 'MB'];
+        const i = Math.floor(Math.log(bytes, k));
+        return Math.round((bytes / Math.pow(k, i)) * 100) / 100 + ' ' + sizes[i];
+    }
+
+    function validateFile(file) {
+        const errors = [];
+        const extension = file.name.split('.').pop().toLowerCase();
+
+        // Check extension
+        if (!ALLOWED_EXTENSIONS.includes(extension)) {
+            errors.push(`Invalid file type: .${extension}`);
+        }
+
+        // Check file size
+        if (file.size > MAX_FILE_SIZE) {
+            errors.push(`File exceeds 5MB limit (${formatFileSize(file.size)})`);
+        }
+
+        return errors;
+    }
+
+    // ====================================================================
+    // RENDER FILE LIST
+    // ====================================================================
+
+    function renderFileList() {
+        fileListContainer.innerHTML = '';
+
+        if (selectedFiles.length === 0) {
+            fileListContainer.innerHTML = '<div class="text-muted text-center py-3">No files selected</div>';
+            fileCount.style.display = 'none';
+            return;
+        }
+
+        selectedFiles.forEach((fileData, index) => {
+            const { file, errors } = fileData;
+            const extension = file.name.split('.').pop().toLowerCase();
+            const icon = getFileIcon(extension);
+            const size = formatFileSize(file.size);
+
+            const fileItem = document.createElement('div');
+            fileItem.className = 'card mb-2';
+            
+            const errorHTML = errors.length > 0 ? `<small class="text-danger d-block mt-1">⚠️ ${errors.join(', ')}</small>` : '';
+            
+            fileItem.innerHTML = `
+                <div class="card-body py-2">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div class="flex-grow-1">
+                            <div><strong>${icon} ${file.name}</strong></div>
+                            <small class="text-muted d-block mt-1">${size}</small>
+                            ${errorHTML}
+                        </div>
+                        <button type="button" class="btn btn-sm btn-danger file-remove" data-index="${index}">
+                            Remove
+                        </button>
+                    </div>
+                </div>
+            `;
+
+            fileListContainer.appendChild(fileItem);
+        });
+
+        // Update file count
+        const validFileCount = selectedFiles.filter(f => f.errors.length === 0).length;
+        fileCount.textContent = `${validFileCount} file(s) ready to upload`;
+        fileCount.style.display = 'inline-block';
+
+        // Add remove button listeners
+        document.querySelectorAll('.file-remove').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                const index = parseInt(btn.dataset.index);
+                selectedFiles.splice(index, 1);
+                renderFileList();
+                updateFileInput();
+            });
+        });
+    }
+
+    // ====================================================================
+    // UPDATE FILE INPUT
+    // ====================================================================
+
+    function updateFileInput() {
+        const dataTransfer = new DataTransfer();
+        selectedFiles.forEach(fileData => {
+            if (fileData.errors.length === 0) {
+                dataTransfer.items.add(fileData.file);
+            }
+        });
+        fileInput.files = dataTransfer.files;
+    }
+
+    // ====================================================================
+    // HANDLE FILE SELECTION
+    // ====================================================================
+
+    function handleFiles(files) {
+        // Check total file limit
+        if (selectedFiles.length + files.length > MAX_FILES) {
+            alert(`Maximum ${MAX_FILES} files allowed. You're trying to add too many files.`);
+            return;
+        }
+
+        // Process each file
+        Array.from(files).forEach(file => {
+            const errors = validateFile(file);
+            selectedFiles.push({ file, errors });
+        });
+
+        // Update UI
+        renderFileList();
+        updateFileInput();
+    }
+
+    // ====================================================================
+    // FILE INPUT CHANGE EVENT
+    // ====================================================================
+
+    fileInput.addEventListener('change', (e) => {
+        handleFiles(e.target.files);
+    });
+
+    // ====================================================================
+    // DRAG & DROP
+    // ====================================================================
+
+    dropZone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        dropZone.classList.add('border-primary', 'bg-light');
+    });
+
+    dropZone.addEventListener('dragleave', () => {
+        dropZone.classList.remove('border-primary', 'bg-light');
+    });
+
+    dropZone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        dropZone.classList.remove('border-primary', 'bg-light');
+        handleFiles(e.dataTransfer.files);
+    });
+
+    // ====================================================================
+    // FORM VALIDATION ON SUBMIT
+    // ====================================================================
+
+    complaintForm.addEventListener('submit', (e) => {
+        const validFiles = selectedFiles.filter(f => f.errors.length === 0);
+        
+        if (selectedFiles.length > 0 && validFiles.length === 0) {
+            e.preventDefault();
+            alert('Please remove files with errors before submitting.');
+            return;
+        }
+    });
+
+</script>
 
 {% endblock %}

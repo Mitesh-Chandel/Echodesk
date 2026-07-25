@@ -1,88 +1,134 @@
 {% extends "base.html" %}
 
-{% block title %}Reply to Complaint - EchoDesk{% endblock %}
+{% block title %}Reply to {{ complaint.complaint_id }} - EchoDesk{% endblock %}
 
 {% block content %}
 
-<div class="form-container reply-form">
+<div class="page py-12 px-4">
+    <div class="max-w-md mx-auto">
 
-    <h2>
-        Reply to {{ complaint.complaint_id }}
-    </h2>
-
-    <p class="reply-subtitle">
-        {{ complaint.title }}
-    </p>
-
-    <form method="post" novalidate>
-
-        {% csrf_token %}
-
-        {% if form.non_field_errors %}
-        <div class="message error">
-            {% for error in form.non_field_errors %}
-                {{ error }}<br>
-            {% endfor %}
+        <!-- Header Section -->
+        <div class="page__header mb-8">
+            <h1 class="page__title fs-lg fw-semibold text-primary">
+                Reply to Complaint
+            </h1>
+            <p class="page__subtitle text-muted mt-2">
+                {{ complaint.complaint_id }}
+            </p>
         </div>
-        {% endif %}
 
-        <div class="form-group">
+        <!-- Main Card -->
+        <div class="card card--hoverable shadow-md rounded-lg p-8">
 
-            <label for="id_reply_type">
-                Reply Type *
-            </label>
-
-            {{ form.reply_type }}
-
-            {% if form.reply_type.errors %}
-            <div class="error-messages">
-                {% for error in form.reply_type.errors %}
-                    <div>{{ error }}</div>
-                {% endfor %}
+            <!-- Card Header with Complaint Info -->
+            <div class="card__header mb-6 pb-6">
+                <h2 class="card__title fw-semibold text-primary mb-2">
+                    {{ complaint.title }}
+                </h2>
+                <p class="text-muted fs-sm">
+                    Complaint ID: <span class="fw-medium">{{ complaint.complaint_id }}</span>
+                </p>
             </div>
-            {% endif %}
 
-            <small class="reply-help">
+            <!-- Reply Form -->
+            <form method="post" novalidate class="reply-form">
 
-                {% if user.profile.is_staff_member %}
-                    Staff replies are visible to the user.
-                    Internal notes are only visible to staff.
-                {% else %}
-                    Your reply will be visible to the assigned staff member.
+                {% csrf_token %}
+
+                <!-- Non-field Errors -->
+                {% if form.non_field_errors %}
+                <div class="auth__error mb-6 p-4 rounded-lg">
+                    {% for error in form.non_field_errors %}
+                        <div class="text-danger fs-sm">{{ error }}</div>
+                    {% endfor %}
+                </div>
                 {% endif %}
 
-            </small>
+                <!-- Form Fields Grid -->
+                <div class="form-grid form-grid--2col gap-6 mb-6">
+
+                    <!-- Reply Type Field -->
+                    <div class="form-group d-flex flex-column gap-2">
+                        <label for="id_reply_type" class="form-text fw-semibold text-primary fs-sm">
+                            Reply Type <span class="text-danger">*</span>
+                        </label>
+
+                        <div class="form-group">
+                            {{ form.reply_type }}
+                        </div>
+
+                        {% if form.reply_type.errors %}
+                        <div class="form-text form-text--error mt-1 fs-xs">
+                            {% for error in form.reply_type.errors %}
+                                <div>{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+
+                        <small class="text-muted fs-xs mt-1">
+                            {% if user.profile.is_staff_member %}
+                                <span class="d-block">Staff replies are public</span>
+                                <span class="d-block">Internal notes are staff-only</span>
+                            {% else %}
+                                <span class="d-block">Visible to assigned staff</span>
+                            {% endif %}
+                        </small>
+                    </div>
+
+                    <!-- Message Field (Full Width) -->
+                    <div class="form-group profile-form__grid--full d-flex flex-column gap-2">
+                        <label for="id_message" class="form-text fw-semibold text-primary fs-sm">
+                            Message <span class="text-danger">*</span>
+                        </label>
+
+                        <div class="form-group">
+                            {{ form.message }}
+                        </div>
+
+                        {% if form.message.errors %}
+                        <div class="form-text form-text--error mt-1 fs-xs">
+                            {% for error in form.message.errors %}
+                                <div>{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+
+                        <!-- Character Counter -->
+                        <div class="reply-form__char-count text-muted fs-xs">
+                            <span id="char-count">0</span> / 1000 characters
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Form Actions -->
+                <div class="form-actions form-actions--spread gap-3 mt-8 pt-6">
+                    <button type="submit" class="btn btn--primary fw-semibold flex-row justify-center">
+                        Send Reply
+                    </button>
+
+                    <a href="{% url 'complaints:complaint_detail' complaint.id %}" class="btn btn--secondary fw-semibold flex-row justify-center">
+                        Cancel
+                    </a>
+                </div>
+
+            </form>
 
         </div>
 
-        <div class="form-group">
-
-            <label for="id_message">
-                Message *
-            </label>
-
-            {{ form.message }}
-
-            {% if form.message.errors %}
-            <div class="error-messages">
-                {% for error in form.message.errors %}
-                    <div>{{ error }}</div>
-                {% endfor %}
-            </div>
-            {% endif %}
-
-        </div>
-
-        <button type="submit">
-            Send Reply
-        </button>
-
-        <a href="{% url 'complaints:complaint_detail' complaint.id %}" class="btn btn-secondary">
-            Cancel
-        </a>
-
-    </form>
-
+    </div>
 </div>
+
+<!-- Character Counter Script -->
+<script>
+    const messageField = document.querySelector('#id_message');
+    const charCount = document.querySelector('#char-count');
+    
+    if (messageField) {
+        messageField.addEventListener('input', function() {
+            charCount.textContent = this.value.length;
+        });
+    }
+</script>
 
 {% endblock %}

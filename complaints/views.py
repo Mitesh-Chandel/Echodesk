@@ -96,15 +96,18 @@ def complaint_detail(request, complaint_id):
 
 
 # ============================================================================
-# CREATE COMPLAINT VIEW
+# CREATE COMPLAINT VIEW (UPDATED WITH FILE HANDLING)
 # ============================================================================
 
 @login_required(login_url='auth:login')
 def complaint_create(request):
     """
-    Handle complaint creation.
+    Handle complaint creation with file attachments.
     GET: Display form
-    POST: Create complaint and redirect
+    POST: Create complaint, save files, and redirect
+    
+    NEW: Files can now be uploaded during complaint creation.
+    Files are validated and saved immediately with the complaint.
     """
     
     # Only regular users can create complaints
@@ -113,15 +116,48 @@ def complaint_create(request):
         return redirect('dashboard:admin_dashboard')
     
     if request.method == 'POST':
-        form = ComplaintForm(request.POST)
+        form = ComplaintForm(request.POST, request.FILES)
         
         if form.is_valid():
-            # Create complaint without saving
+            # Step 1: Create complaint
             complaint = form.save(commit=False)
             complaint.user = request.user
             complaint.save()
             
-            # Create history entry
+            # Step 2: Process uploaded attachments
+            uploaded_files = request.FILES.getlist('attachments')
+            attachment_count = 0
+            
+            for uploaded_file in uploaded_files:
+                try:
+                    # Create attachment
+                    attachment = ComplaintAttachment(
+                        complaint=complaint,
+                        file=uploaded_file,
+                        file_name=uploaded_file.name,
+                        file_type=uploaded_file.name.split('.')[-1].lower()
+                    )
+                    attachment.save()
+                    attachment_count += 1
+                    
+                    # Create history entry for attachment
+                    ComplaintHistory.objects.create(
+                        complaint=complaint,
+                        change_type='attachment_added',
+                        old_value='-',
+                        new_value=uploaded_file.name,
+                        changed_by=request.user,
+                        description=f'Attachment uploaded: {uploaded_file.name}'
+                    )
+                except Exception as e:
+                    # Log error but don't fail the entire process
+                    print(f"Error saving attachment {uploaded_file.name}: {str(e)}")
+                    messages.warning(
+                        request, 
+                        f'File "{uploaded_file.name}" could not be saved, but complaint was created successfully.'
+                    )
+            
+            # Step 3: Create history entry for complaint creation
             ComplaintHistory.objects.create(
                 complaint=complaint,
                 change_type='status_change',
@@ -131,9 +167,21 @@ def complaint_create(request):
                 description='Complaint created'
             )
             
-            messages.success(request, f'Complaint {complaint.complaint_id} created successfully!')
+            # Step 4: Show success message
+            if attachment_count > 0:
+                messages.success(
+                    request, 
+                    f'Complaint {complaint.complaint_id} created with {attachment_count} attachment(s)!'
+                )
+            else:
+                messages.success(
+                    request, 
+                    f'Complaint {complaint.complaint_id} created successfully!'
+                )
+            
             return redirect('complaints:complaint_detail', complaint_id=complaint.id)
         else:
+            # Form validation failed
             for field, errors in form.errors.items():
                 for error in errors:
                     messages.error(request, f'{field}: {error}')
@@ -157,6 +205,7 @@ def complaint_update(request, complaint_id):
     """
     Handle complaint editing.
     Users can only edit their own pending complaints.
+    Note: File uploads during update are NOT allowed - use upload_attachment instead.
     """
     
     complaint = get_object_or_404(Complaint, id=complaint_id)
@@ -172,7 +221,7 @@ def complaint_update(request, complaint_id):
         return redirect('complaints:complaint_detail', complaint_id=complaint.id)
     
     if request.method == 'POST':
-        form = ComplaintForm(request.POST, instance=complaint)
+        form = ComplaintForm(request.POST, request.FILES, instance=complaint)
         
         if form.is_valid():
             # Store old values for history
@@ -183,6 +232,32 @@ def complaint_update(request, complaint_id):
             }
             
             updated_complaint = form.save()
+            
+            # Handle any new attachments during update
+            uploaded_files = request.FILES.getlist('attachments')
+            for uploaded_file in uploaded_files:
+                try:
+                    attachment = ComplaintAttachment(
+                        complaint=updated_complaint,
+                        file=uploaded_file,
+                        file_name=uploaded_file.name,
+                        file_type=uploaded_file.name.split('.')[-1].lower()
+                    )
+                    attachment.save()
+                    
+                    ComplaintHistory.objects.create(
+                        complaint=updated_complaint,
+                        change_type='attachment_added',
+                        old_value='-',
+                        new_value=uploaded_file.name,
+                        changed_by=request.user,
+                        description=f'Attachment uploaded: {uploaded_file.name}'
+                    )
+                except Exception as e:
+                    messages.warning(
+                        request,
+                        f'File "{uploaded_file.name}" could not be saved.'
+                    )
             
             # Create history entries for changes
             if old_values['category'] != updated_complaint.category.name:
@@ -271,7 +346,7 @@ def complaint_delete(request, complaint_id):
 
 
 # ============================================================================
-# ADD REPLY TO COMPLAINT VIEW (Phase 5)
+# ADD REPLY TO COMPLAINT VIEW
 # ============================================================================
 
 @login_required(login_url='auth:login')
@@ -336,14 +411,16 @@ def add_reply(request, complaint_id):
 
 
 # ============================================================================
-# UPLOAD ATTACHMENT VIEW (Phase 5)
+# UPLOAD ATTACHMENT VIEW (Post-submission attachments)
 # ============================================================================
 
 @login_required(login_url='auth:login')
 def upload_attachment(request, complaint_id):
     """
-    Handle file attachment uploads.
+    Handle file attachment uploads AFTER complaint submission.
     Only the complaint owner can upload attachments.
+    
+    This view is still available for adding additional files after creation.
     """
     
     complaint = get_object_or_404(Complaint, id=complaint_id)
@@ -387,267 +464,3 @@ def upload_attachment(request, complaint_id):
     }
     
     return render(request, 'complaints/upload_attachment.html', context)
-
-# ============================================================================
-# COMPLAINT LIST VIEW (with filtering and pagination)
-# ============================================================================
-
-@login_required(login_url='auth:login')
-def complaint_list(request):
-    """
-    Display list of complaints for the logged-in user.
-    Supports filtering by status, priority, category.
-    """
-    
-    # Get all complaints for user
-    complaints = request.user.complaints.all().order_by('-created_at')
-    
-    # Initialize filter form
-    filter_form = ComplaintFilterForm(request.GET or None)
-    
-    # Apply filters
-    if filter_form.is_valid():
-        # Status filter
-        if filter_form.cleaned_data.get('status'):
-            complaints = complaints.filter(status=filter_form.cleaned_data['status'])
-        
-        # Priority filter
-        if filter_form.cleaned_data.get('priority'):
-            complaints = complaints.filter(priority=filter_form.cleaned_data['priority'])
-        
-        # Category filter
-        if filter_form.cleaned_data.get('category'):
-            complaints = complaints.filter(category=filter_form.cleaned_data['category'])
-        
-        # Search filter
-        search_query = filter_form.cleaned_data.get('search', '')
-        if search_query:
-            complaints = complaints.filter(
-                Q(complaint_id__icontains=search_query) |
-                Q(title__icontains=search_query) |
-                Q(description__icontains=search_query)
-            )
-    
-    # Pagination
-    paginator = Paginator(complaints, 10)
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
-    
-    context = {
-        'page_obj': page_obj,
-        'filter_form': filter_form,
-        'page_title': 'My Complaints',
-    }
-    
-    return render(request, 'complaints/complaint_list.html', context)
-
-
-# ============================================================================
-# COMPLAINT DETAIL VIEW
-# ============================================================================
-
-@login_required(login_url='auth:login')
-def complaint_detail(request, complaint_id):
-    """
-    Display detailed view of a single complaint.
-    Shows: Details, attachments, replies, history.
-    """
-    
-    # Get complaint and ensure user owns it or is staff/admin
-    complaint = get_object_or_404(Complaint, id=complaint_id)
-    
-    # Check permissions
-    if complaint.user != request.user and not request.user.profile.is_staff_member():
-        messages.error(request, 'You do not have permission to view this complaint.')
-        return redirect('complaints:complaint_list')
-    
-    # Get related data
-    attachments = complaint.attachments.all()
-    replies = complaint.replies.all().order_by('created_at')
-    history = complaint.history.all().order_by('-created_at')
-    
-    context = {
-        'complaint': complaint,
-        'attachments': attachments,
-        'replies': replies,
-        'history': history,
-        'page_title': f'Complaint {complaint.complaint_id}',
-    }
-    
-    return render(request, 'complaints/complaint_detail.html', context)
-
-
-# ============================================================================
-# CREATE COMPLAINT VIEW
-# ============================================================================
-
-@login_required(login_url='auth:login')
-def complaint_create(request):
-    """
-    Handle complaint creation.
-    GET: Display form
-    POST: Create complaint and redirect
-    """
-    
-    # Only regular users can create complaints
-    if request.user.profile.role == 'admin':
-        messages.error(request, 'Admins cannot create complaints.')
-        return redirect('dashboard:admin_dashboard')
-    
-    if request.method == 'POST':
-        form = ComplaintForm(request.POST)
-        
-        if form.is_valid():
-            # Create complaint without saving
-            complaint = form.save(commit=False)
-            complaint.user = request.user
-            complaint.save()
-            
-            # Create history entry
-            ComplaintHistory.objects.create(
-                complaint=complaint,
-                change_type='status_change',
-                old_value='-',
-                new_value='pending',
-                changed_by=request.user,
-                description='Complaint created'
-            )
-            
-            messages.success(request, f'Complaint {complaint.complaint_id} created successfully!')
-            return redirect('complaints:complaint_detail', complaint_id=complaint.id)
-        else:
-            for field, errors in form.errors.items():
-                for error in errors:
-                    messages.error(request, f'{field}: {error}')
-    else:
-        form = ComplaintForm()
-    
-    context = {
-        'form': form,
-        'page_title': 'Create Complaint',
-    }
-    
-    return render(request, 'complaints/complaint_form.html', context)
-
-
-# ============================================================================
-# UPDATE COMPLAINT VIEW
-# ============================================================================
-
-@login_required(login_url='auth:login')
-def complaint_update(request, complaint_id):
-    """
-    Handle complaint editing.
-    Users can only edit their own pending complaints.
-    """
-    
-    complaint = get_object_or_404(Complaint, id=complaint_id)
-    
-    # Permission check
-    if complaint.user != request.user:
-        messages.error(request, 'You can only edit your own complaints.')
-        return redirect('complaints:complaint_list')
-    
-    # Can only edit pending complaints
-    if complaint.status != 'pending':
-        messages.error(request, 'You can only edit pending complaints.')
-        return redirect('complaints:complaint_detail', complaint_id=complaint.id)
-    
-    if request.method == 'POST':
-        form = ComplaintForm(request.POST, instance=complaint)
-        
-        if form.is_valid():
-            # Store old values for history
-            old_values = {
-                'category': complaint.category.name if complaint.category else '-',
-                'title': complaint.title,
-                'priority': complaint.get_priority_display(),
-            }
-            
-            updated_complaint = form.save()
-            
-            # Create history entries for changes
-            if old_values['category'] != updated_complaint.category.name:
-                ComplaintHistory.objects.create(
-                    complaint=updated_complaint,
-                    change_type='category_change',
-                    old_value=old_values['category'],
-                    new_value=updated_complaint.category.name,
-                    changed_by=request.user,
-                    description='Category changed'
-                )
-            
-            if old_values['title'] != updated_complaint.title:
-                ComplaintHistory.objects.create(
-                    complaint=updated_complaint,
-                    change_type='status_change',
-                    old_value='Title changed',
-                    new_value=updated_complaint.title,
-                    changed_by=request.user,
-                    description='Complaint title updated'
-                )
-            
-            if old_values['priority'] != updated_complaint.get_priority_display():
-                ComplaintHistory.objects.create(
-                    complaint=updated_complaint,
-                    change_type='priority_change',
-                    old_value=old_values['priority'],
-                    new_value=updated_complaint.get_priority_display(),
-                    changed_by=request.user,
-                    description='Priority changed'
-                )
-            
-            messages.success(request, 'Complaint updated successfully!')
-            return redirect('complaints:complaint_detail', complaint_id=complaint.id)
-        else:
-            for field, errors in form.errors.items():
-                for error in errors:
-                    messages.error(request, f'{error}')
-    else:
-        form = ComplaintForm(instance=complaint)
-    
-    context = {
-        'form': form,
-        'complaint': complaint,
-        'page_title': f'Edit Complaint {complaint.complaint_id}',
-    }
-    
-    return render(request, 'complaints/complaint_form.html', context)
-
-
-# ============================================================================
-# DELETE COMPLAINT VIEW
-# ============================================================================
-
-@login_required(login_url='auth:login')
-def complaint_delete(request, complaint_id):
-    """
-    Handle complaint deletion.
-    Users can only delete their own pending complaints.
-    """
-    
-    complaint = get_object_or_404(Complaint, id=complaint_id)
-    
-    # Permission check
-    if complaint.user != request.user:
-        messages.error(request, 'You can only delete your own complaints.')
-        return redirect('complaints:complaint_list')
-    
-    # Can only delete pending complaints
-    if complaint.status != 'pending':
-        messages.error(request, 'You can only delete pending complaints.')
-        return redirect('complaints:complaint_detail', complaint_id=complaint.id)
-    
-    if request.method == 'POST':
-        complaint_id_str = complaint.complaint_id
-        complaint.delete()
-        messages.success(request, f'Complaint {complaint_id_str} deleted successfully!')
-        return redirect('complaints:complaint_list')
-    
-    context = {
-        'complaint': complaint,
-        'page_title': f'Delete Complaint {complaint.complaint_id}',
-    }
-    
-    return render(request, 'complaints/complaint_confirm_delete.html', context)
-

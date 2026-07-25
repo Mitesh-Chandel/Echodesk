@@ -35,6 +35,8 @@
   z-index: var(--z-sticky);
 }
 
+
+
 .sidebar__brand {
   display: flex;
   align-items: center;

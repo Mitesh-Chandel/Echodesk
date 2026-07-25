@@ -1,13 +1,26 @@
+
+{% load static %}
+<style>
+    .sidebar__logo {
+    width: 36px;         /* Increased from 32px to zoom it slightly */
+    height: 36px;        /* Keeping it square for proper circle shape */
+    object-fit: cover;  /* Ensures the image fills the circle without stretching, might crop edges slightly */
+    border-radius: 50%; /* This creates the perfect circular shape */
+    
+    /* Optional: Ensure vertical alignment with the text next to it */
+    vertical-align: middle; 
+}
+</style>
 <aside class="sidebar">
+<div class="sidebar__brand">
+    <!-- Updated line: replaces the empty div with your static image -->
+    <img src="{% static 'images/logo.png' %}" alt="EchoDesk Logo" class="sidebar__logo">
 
-    <div class="sidebar__brand">
-        <div class="sidebar__brand-mark"></div>
-
-        <div>
-            <div>EchoDesk</div>
-            <small class="text-muted">Complaint System</small>
-        </div>
+    <div>
+        <div>EchoDesk</div>
+        <small class="text-muted">Complaint System</small>
     </div>
+</div>
 
     <div class="sidebar__section-label">
         Main
