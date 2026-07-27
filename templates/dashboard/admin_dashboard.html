@@ -257,14 +257,14 @@
        
         <!-- Navigation Panel Footer -->
         <div style="text-align: center; margin-top: 30px; margin-bottom: 50px; display: flex; justify-content: center; gap: 15px;">
-            <a href="{% url 'complaints:complaint_list' %}" style="text-decoration: none;">
+            <!-- <a href="{% url 'complaints:complaint_list' %}" style="text-decoration: none;">
                 <button class="btn-secondary" style="background-color: #34495e; color: white; border: none; padding: 12px 22px; border-radius: 4px; cursor: pointer; font-size: 15px; font-weight: bold; box-shadow: 0 2px 4px rgba(52,73,94,0.15);">
                     View All Complaints
                 </button>
-            </a>
+            </a> -->
             <a href="{% url 'admin:complaints_complaint_changelist' %}" style="text-decoration: none;">
                 <button style="background-color: #9b59b6; color: white; border: none; padding: 12px 22px; border-radius: 4px; cursor: pointer; font-size: 15px; font-weight: bold; box-shadow: 0 2px 4px rgba(155,89,182,0.15);">
-                    Manage in Django Admin
+                    Manage in Admin Panel
                 </button>
             </a>
         </div>
