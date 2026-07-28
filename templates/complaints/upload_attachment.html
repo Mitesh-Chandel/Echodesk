@@ -3,54 +3,72 @@
 {% block title %}Upload Attachment - EchoDesk{% endblock %}
 
 {% block content %}
-<div class="form-container upload-form">
-    <h2>Upload Attachment</h2>
 
-    <p class="complaint-info">
-        Complaint:
-        <strong>{{ complaint.complaint_id }} - {{ complaint.title }}</strong>
-    </p>
+<div class="page py-12 px-4">
+    <div class="max-w-md mx-auto">
 
-    <div class="file-info-box">
-        <strong class="file-info-title">
-            📄 Supported File Types
-        </strong>
+        <div class="card card--hoverable shadow-md rounded-lg p-8">
+            
+            <h2 class="card__title fw-semibold text-primary mb-6">
+                Upload Attachment
+            </h2>
 
-        <p class="file-info-text">
-            PDF, DOC, DOCX, JPG, JPEG, PNG, GIF (Max 5MB each)
-        </p>
-    </div>
+            <p class="notification-card mb-6 p-4 rounded-lg border bg-surface">
+                <span class="fw-medium text-primary">Complaint:</span>
+                <span class="text-secondary d-block mt-2">{{ complaint.complaint_id }} - {{ complaint.title }}</span>
+            </p>
 
-    <form method="post" enctype="multipart/form-data" novalidate>
-        {% csrf_token %}
+            <div class="attachment-upload__hint mb-6 p-4 rounded-lg border bg-surface">
+                <strong class="fw-semibold text-secondary d-block mb-2">
+                    📄 Supported File Types
+                </strong>
 
-        {% if form.non_field_errors %}
-        <div class="message error">
-            {% for error in form.non_field_errors %}
-                {{ error }}<br>
-            {% endfor %}
-        </div>
-        {% endif %}
-
-        <div class="form-group">
-            <label for="id_file">Choose File *</label>
-
-            {{ form.file }}
-
-            {% if form.file.errors %}
-            <div class="error-messages">
-                {% for error in form.file.errors %}
-                    <div>{{ error }}</div>
-                {% endfor %}
+                <p class="text-muted fs-sm">
+                    PDF, DOC, DOCX, JPG, JPEG, PNG, GIF (Max 5MB each)
+                </p>
             </div>
-            {% endif %}
+
+            <form method="post" enctype="multipart/form-data" novalidate>
+                {% csrf_token %}
+
+                {% if form.non_field_errors %}
+                <div class="auth__error mb-6 p-4 rounded-lg">
+                    {% for error in form.non_field_errors %}
+                        <div class="text-danger fs-sm">{{ error }}</div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                <div class="form-group d-flex flex-column gap-2 mb-6">
+                    <label for="id_file" class="form-text fw-semibold text-primary fs-sm">
+                        Choose File <span class="text-danger">*</span>
+                    </label>
+
+                    {{ form.file }}
+
+                    {% if form.file.errors %}
+                    <div class="form-text form-text--error mt-1 fs-xs">
+                        {% for error in form.file.errors %}
+                            <div>{{ error }}</div>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+
+                <div class="form-actions form-actions--spread gap-3">
+                    <button type="submit" class="btn btn--primary fw-semibold">
+                        Upload Attachment
+                    </button>
+
+                    <a href="{% url 'complaints:complaint_detail' complaint.id %}" class="btn btn--secondary fw-semibold">
+                        Cancel
+                    </a>
+                </div>
+            </form>
+
         </div>
 
-        <button type="submit">Upload Attachment</button>
-
-        <a href="{% url 'complaints:complaint_detail' complaint.id %}" class="btn btn-secondary">
-            Cancel
-        </a>
-    </form>
+    </div>
 </div>
+
 {% endblock %}

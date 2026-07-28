@@ -3,81 +3,130 @@
 {% block title %}{{ complaint.complaint_id }} - EchoDesk{% endblock %}
 
 {% block content %}
-<div class="complaint-detail-page">
 
-    <h2>{{ complaint.complaint_id }} - {{ complaint.title }}</h2>
+<div class="page py-12 px-4">
 
-    <!-- Complaint Details -->
-    <div class="card">
-
-        <div class="complaint-info-grid">
-
+    <!-- Page Header -->
+    <div class="page__header mb-12">
+        <div class="d-flex flex-row justify-between align-start gap-4">
             <div>
+                <h1 class="page__title fs-lg fw-bold text-primary">
+                    {{ complaint.complaint_id }}
+                </h1>
+                <p class="page__subtitle text-muted mt-2">
+                    {{ complaint.title }}
+                </p>
+            </div>
+            <div class="d-flex flex-row gap-2">
+                <span class="status-badge status-badge--{{ complaint.status|lower }}">
+                    {{ complaint.get_status_display }}
+                </span>
+                <span class="badge badge--{{ complaint.get_priority_display|lower }}">
+                    {{ complaint.get_priority_display }}
+                </span>
+            </div>
+        </div>
+    </div>
 
-                <div class="info-item">
-                    <div class="info-label">Complaint ID</div>
-                    <div class="info-value">{{ complaint.complaint_id }}</div>
+    <!-- Complaint Details Section -->
+    <div class="card card--hoverable shadow-md rounded-lg mb-8">
+
+        <div class="card__header pb-6 mb-6">
+            <h2 class="card__title fw-semibold text-primary">
+                Complaint Details
+            </h2>
+        </div>
+
+        <div class="complaint-details-grid grid--2 gap-8">
+
+            <!-- Left Column -->
+            <div class="d-flex flex-column gap-6">
+
+                <div class="complaint-detail-item">
+                    <div class="complaint-detail-item__label fw-semibold text-secondary fs-sm">
+                        Complaint ID
+                    </div>
+                    <div class="complaint-detail-item__value text-primary fw-medium mt-1">
+                        {{ complaint.complaint_id }}
+                    </div>
                 </div>
 
-                <div class="info-item">
-                    <div class="info-label">Status</div>
-                    <div class="info-value">
-                        <span class="complaint-status status-{{ complaint.status }}">
+                <div class="complaint-detail-item">
+                    <div class="complaint-detail-item__label fw-semibold text-secondary fs-sm">
+                        Status
+                    </div>
+                    <div class="complaint-detail-item__value mt-1">
+                        <span class="status-badge status-badge--{{ complaint.status|lower }}">
                             {{ complaint.get_status_display }}
                         </span>
                     </div>
                 </div>
 
-                <div class="info-item">
-                    <div class="info-label">Priority</div>
-                    <div class="info-value">
-                        <span class="complaint-status complaint-priority">
+                <div class="complaint-detail-item">
+                    <div class="complaint-detail-item__label fw-semibold text-secondary fs-sm">
+                        Priority
+                    </div>
+                    <div class="complaint-detail-item__value mt-1">
+                        <span class="badge priority-{{ complaint.get_priority_display|lower }}">
                             {{ complaint.get_priority_display }}
                         </span>
                     </div>
                 </div>
 
-                <div class="info-item">
-                    <div class="info-label">Category</div>
-                    <div class="info-value">
+                <div class="complaint-detail-item">
+                    <div class="complaint-detail-item__label fw-semibold text-secondary fs-sm">
+                        Category
+                    </div>
+                    <div class="complaint-detail-item__value text-primary mt-1">
                         {{ complaint.category.name }}
                     </div>
                 </div>
 
             </div>
 
-            <div>
+            <!-- Right Column -->
+            <div class="d-flex flex-column gap-6">
 
-                <div class="info-item">
-                    <div class="info-label">Submitted By</div>
-                    <div class="info-value">
+                <div class="complaint-detail-item">
+                    <div class="complaint-detail-item__label fw-semibold text-secondary fs-sm">
+                        Submitted By
+                    </div>
+                    <div class="complaint-detail-item__value text-primary mt-1">
                         {{ complaint.user.get_full_name|default:complaint.user.username }}
                     </div>
                 </div>
 
-                <div class="info-item">
-                    <div class="info-label">Assigned To</div>
-                    <div class="info-value">
+                <div class="complaint-detail-item">
+                    <div class="complaint-detail-item__label fw-semibold text-secondary fs-sm">
+                        Assigned To
+                    </div>
+                    <div class="complaint-detail-item__value mt-1">
                         {% if complaint.assigned_staff %}
-                            {{ complaint.assigned_staff.get_full_name|default:complaint.assigned_staff.username }}
+                            <span class="text-primary">
+                                {{ complaint.assigned_staff.get_full_name|default:complaint.assigned_staff.username }}
+                            </span>
                         {% else %}
-                            <span class="text-muted">
+                            <span class="text-muted fs-sm italic">
                                 Not assigned
                             </span>
                         {% endif %}
                     </div>
                 </div>
 
-                <div class="info-item">
-                    <div class="info-label">Created</div>
-                    <div class="info-value">
+                <div class="complaint-detail-item">
+                    <div class="complaint-detail-item__label fw-semibold text-secondary fs-sm">
+                        Created
+                    </div>
+                    <div class="complaint-detail-item__value text-muted mt-1 fs-sm">
                         {{ complaint.created_at|date:"d M, Y H:i" }}
                     </div>
                 </div>
 
-                <div class="info-item">
-                    <div class="info-label">Last Updated</div>
-                    <div class="info-value">
+                <div class="complaint-detail-item">
+                    <div class="complaint-detail-item__label fw-semibold text-secondary fs-sm">
+                        Last Updated
+                    </div>
+                    <div class="complaint-detail-item__value text-muted mt-1 fs-sm">
                         {{ complaint.updated_at|date:"d M, Y H:i" }}
                     </div>
                 </div>
@@ -88,176 +137,271 @@
 
     </div>
 
-    <!-- Complaint Description -->
-    <div class="card">
+    <!-- Description Section -->
+    <div class="card card--hoverable shadow-md rounded-lg mb-8">
 
-        <h3>Description</h3>
+        <div class="card__header pb-6 mb-6">
+            <h2 class="card__title fw-semibold text-primary">
+                Description
+            </h2>
+        </div>
 
-        <p>{{ complaint.description|linebreaks }}</p>
+        <div class="complaint-section__content text-secondary leading-relaxed mb-6">
+            {{ complaint.description|linebreaks }}
+        </div>
 
         {% if complaint.location %}
-        <div class="complaint-location">
-            <strong>Location:</strong><br>
-            {{ complaint.location|linebreaks }}
+        <div class="complaint-section border-t pt-6 mt-6">
+            <div class="fw-semibold text-primary mb-2">
+                📍 Location
+            </div>
+            <div class="text-secondary fs-sm">
+                {{ complaint.location|linebreaks }}
+            </div>
         </div>
         {% endif %}
 
     </div>
 
-    <!-- Attachments -->
-    {% if complaint.attachments.all %}
-    <div class="card">
+    <!-- Attachments Section with Preview -->
+    <div class="card card--hoverable shadow-md rounded-lg mb-8">
 
-        <h3>📎 Attachments ({{ complaint.attachments.count }})</h3>
+        <div class="card__header pb-6 mb-6">
+            <h2 class="card__title fw-semibold text-primary">
+                📎 Attachments
+                {% if complaint.attachments.all %}
+                    <span class="text-muted fs-sm fw-normal">
+                        ({{ complaint.attachments.count }})
+                    </span>
+                {% endif %}
+            </h2>
+        </div>
 
-        <div class="attachment-list">
+        {% if complaint.attachments.all %}
 
-            {% for attachment in complaint.attachments.all %}
+            <div class="attachment-section">
 
-            <div class="attachment-item">
+                <div class="attachment-list d-flex flex-column gap-4 mb-6">
 
-                <div>
-                    <strong>{{ attachment.file_name }}</strong><br>
+                    {% for attachment in complaint.attachments.all %}
 
-                    <small class="text-muted">
-                        {{ attachment.file_type|upper }}
-                        •
-                        Uploaded:
-                        {{ attachment.uploaded_at|date:"d M, Y" }}
-                    </small>
+                    <div class="attachment-card card border rounded-lg overflow-hidden">
+
+                        <div class="card-body p-4">
+
+                            <!-- Attachment Header (Name, Size, Download) -->
+                            <div class="attachment-header d-flex flex-row justify-between align-start gap-4">
+
+                                <div class="attachment-info flex-1">
+                                    <div class="attachment-filename fw-semibold text-primary">
+                                        {{ attachment.file_name }}
+                                    </div>
+                                    <div class="attachment-size text-muted fs-xs mt-1">
+                                        {{ attachment.file_type|upper }} • Uploaded: {{ attachment.uploaded_at|date:"d M, Y" }}
+                                    </div>
+                                </div>
+
+                                <a href="{{ attachment.file.url }}" download class="btn btn--secondary btn--sm fw-medium flex-shrink-0">
+                                    ⬇️ Download
+                                </a>
+
+                            </div>
+
+                            <!-- Dynamic Preview Based on File Type -->
+                            {% if attachment.file_type|lower in 'jpg,jpeg,png,gif' %}
+
+                                <!-- IMAGE PREVIEW -->
+                                <div class="preview-box mt-4">
+                                    <img src="{{ attachment.file.url }}" 
+                                         alt="Preview of {{ attachment.file_name }}"
+                                         class="file-preview-image"
+                                         loading="lazy">
+                                </div>
+
+                            {% elif attachment.file_type|lower == 'pdf' %}
+
+                                <!-- PDF PREVIEW -->
+                                <div class="preview-box mt-4">
+                                    <iframe src="{{ attachment.file.url }}#toolbar=0" 
+                                            title="PDF preview of {{ attachment.file_name }}"
+                                            class="pdf-preview">
+                                    </iframe>
+                                </div>
+
+                            {% elif attachment.file_type|lower in 'doc,docx' %}
+
+                                <!-- DOCUMENT PREVIEW -->
+                                <div class="document-preview">
+                                    <div class="fs-lg fw-semibold text-primary mb-2">
+                                        📄 Document File
+                                    </div>
+                                    <div class="text-secondary fs-sm">
+                                        Preview not available in browser.<br>
+                                        <strong>{{ attachment.file_name }}</strong> can be viewed by downloading.
+                                    </div>
+                                </div>
+
+                            {% else %}
+
+                                <!-- UNSUPPORTED FILE TYPE -->
+                                <div class="document-preview">
+                                    <div class="fs-sm text-secondary">
+                                        File type not previewable in browser
+                                    </div>
+                                </div>
+
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+                    {% endfor %}
+
                 </div>
-
-                <a href="{{ attachment.file.url }}" target="_blank" class="btn btn-secondary">
-                    Download
-                </a>
 
             </div>
 
-            {% endfor %}
+        {% else %}
 
+            <div class="complaints-empty text-center py-8">
+                <div class="complaints-empty__icon text-muted mb-2 fs-xl">
+                    📎
+                </div>
+                <p class="complaints-empty__message text-muted">
+                    No attachments yet.
+                </p>
+            </div>
+
+        {% endif %}
+
+        <!-- Only owner can add attachments -->
+        {% if complaint.user == user %}
+        <div class="attachment-section mt-6 pt-6 border-t">
+            <a href="{% url 'complaints:upload_attachment' complaint.id %}" class="btn btn--primary fw-medium">
+                + Add Attachment
+            </a>
         </div>
-
-        {% if complaint.user == user %}
-        <a href="{% url 'complaints:upload_attachment' complaint.id %}" class="btn">
-            + Add More Files
-        </a>
         {% endif %}
 
     </div>
 
-    {% else %}
+    <!-- Replies Section -->
+    <div class="card card--hoverable shadow-md rounded-lg mb-8">
 
-    <div class="card">
-
-        <h3>📎 Attachments</h3>
-
-        <p class="empty-text">
-            No attachments yet.
-        </p>
-
-        {% if complaint.user == user %}
-        <a href="{% url 'complaints:upload_attachment' complaint.id %}" class="btn">
-            + Upload Attachment
-        </a>
-        {% endif %}
-
-    </div>
-
-    {% endif %}
-
-    <!-- Replies -->
-    <div class="card">
-
-        <h3>💬 Replies & Updates ({{ complaint.replies.count }})</h3>
+        <div class="card__header pb-6 mb-6">
+            <h2 class="card__title fw-semibold text-primary">
+                💬 Replies & Updates
+                <span class="text-muted fs-sm fw-normal">
+                    ({{ complaint.replies.count }})
+                </span>
+            </h2>
+        </div>
 
         {% if complaint.replies.all %}
 
-        <div class="reply-list">
+            <div class="reply-thread d-flex flex-column gap-4 mb-6">
 
-            {% for reply in complaint.replies.all %}
+                {% for reply in complaint.replies.all %}
 
-            <div class="reply-card reply-{{ reply.reply_type }}">
+                <div class="reply-item p-4 rounded-md border bg-surface">
 
-                <div class="reply-header">
+                    <div class="reply-item__header d-flex flex-row justify-between align-start gap-3 mb-3 pb-3 border-b">
 
-                    <strong>
-                        {{ reply.replied_by.get_full_name|default:reply.replied_by.username }}
-                    </strong>
+                        <div>
+                            <div class="reply-item__author fw-semibold text-primary">
+                                {{ reply.replied_by.get_full_name|default:reply.replied_by.username }}
+                            </div>
+                            <div class="reply-item__role text-muted fs-xs">
+                                {% if reply.reply_type == 'internal' %}
+                                    <span class="badge badge--pending">Internal Note</span>
+                                {% elif reply.reply_type == 'staff' %}
+                                    <span class="badge badge--resolved">Staff Reply</span>
+                                {% else %}
+                                    <span class="badge badge--in-progress">User Reply</span>
+                                {% endif %}
+                            </div>
+                        </div>
 
-                    <span class="reply-badge badge-{{ reply.reply_type }}">
-                        {% if reply.reply_type == 'internal' %}
-                            Internal Note
-                        {% elif reply.reply_type == 'staff' %}
-                            Staff
-                        {% else %}
-                            User
-                        {% endif %}
-                    </span>
+                        <div class="reply-item__time text-muted fs-xs text-right">
+                            {{ reply.created_at|date:"d M, Y H:i" }}
+                        </div>
 
-                    <div class="reply-date">
-                        {{ reply.created_at|date:"d M, Y H:i" }}
+                    </div>
+
+                    <div class="reply-item__text text-secondary leading-relaxed">
+                        {{ reply.message|linebreaks }}
                     </div>
 
                 </div>
 
-                <p>{{ reply.message|linebreaks }}</p>
+                {% endfor %}
 
             </div>
 
-            {% endfor %}
-
-        </div>
-
         {% else %}
 
-        <p class="no-replies">
-            No replies yet.
-        </p>
+            <div class="complaints-empty text-center py-8">
+                <div class="complaints-empty__icon text-muted mb-2 fs-xl">
+                    💬
+                </div>
+                <p class="complaints-empty__message text-muted">
+                    No replies yet.
+                </p>
+            </div>
 
         {% endif %}
 
-        <a href="{% url 'complaints:add_reply' complaint.id %}" class="btn">
-            + Add Reply
-        </a>
+        <div class="attachment-section mt-6 pt-6 border-t">
+            <a href="{% url 'complaints:add_reply' complaint.id %}" class="btn btn--primary fw-medium">
+                + Add Reply
+            </a>
+        </div>
 
     </div>
 
-    <!-- History -->
+    <!-- History Section -->
     {% if complaint.history.all %}
 
-    <div class="card">
+    <div class="card card--hoverable shadow-md rounded-lg mb-8">
 
-        <h3>📋 Complaint History</h3>
+        <div class="card__header pb-6 mb-6">
+            <h2 class="card__title fw-semibold text-primary">
+                📋 Complaint History
+            </h2>
+        </div>
 
-        <div class="history-list">
+        <div class="timeline d-flex flex-column gap-4">
 
             {% for hist in complaint.history.all %}
 
-            <div class="history-item">
+            <div class="timeline__item p-4 rounded-md border-l-4 bg-surface">
 
-                <strong>{{ hist.get_change_type_display }}</strong><br>
+                <div class="timeline__title fw-semibold text-primary mb-2">
+                    {{ hist.get_change_type_display }}
+                </div>
 
-                <small class="text-muted">
+                <div class="timeline__meta text-muted fs-sm gap-2 d-flex flex-column">
 
                     {% if hist.old_value and hist.new_value %}
+                    <div>
                         Changed from
-                        <code>{{ hist.old_value }}</code>
+                        <code class="bg-gray-100 px-2 py-1 rounded text-xs">{{ hist.old_value }}</code>
                         to
-                        <code>{{ hist.new_value }}</code>
+                        <code class="bg-gray-100 px-2 py-1 rounded text-xs">{{ hist.new_value }}</code>
+                    </div>
                     {% endif %}
 
                     {% if hist.description %}
-                        - {{ hist.description }}
+                    <div>{{ hist.description }}</div>
                     {% endif %}
 
-                    <br>
+                    <div class="text-xs">
+                        By <strong>{{ hist.changed_by.get_full_name|default:hist.changed_by.username }}</strong>
+                        on {{ hist.created_at|date:"d M, Y H:i" }}
+                    </div>
 
-                    By
-                    {{ hist.changed_by.get_full_name|default:hist.changed_by.username }}
-                    on
-                    {{ hist.created_at|date:"d M, Y H:i" }}
-
-                </small>
+                </div>
 
             </div>
 
@@ -270,25 +414,34 @@
     {% endif %}
 
     <!-- Action Buttons -->
-    <div class="detail-actions">
+    <div class="page__actions d-flex flex-row gap-3 mt-12 pt-8 border-t">
 
-        <a href="{% url 'complaints:complaint_list' %}" class="btn btn-secondary">
-            Back to Complaints
+        <a href="{% url 'complaints:complaint_list' %}" class="btn btn--secondary fw-medium">
+            ← Back to Complaints
         </a>
 
-        {% if complaint.status == 'pending' %}
+        <!-- STAFF: Only show status change button -->
+        {% if is_assigned %}
 
-        <a href="{% url 'complaints:complaint_update' complaint.id %}" class="btn">
-            Edit Complaint
-        </a>
+            <a href="{% url 'complaints:complaint_update' complaint.id %}" class="btn btn--primary fw-medium">
+                📊 Change Status
+            </a>
 
-        <a href="{% url 'complaints:complaint_delete' complaint.id %}" class="btn btn-danger">
-            Delete Complaint
-        </a>
+        <!-- OWNER (USERS): Show edit and delete for pending only -->
+        {% elif is_owner and complaint.status == 'pending' %}
+
+            <a href="{% url 'complaints:complaint_update' complaint.id %}" class="btn btn--primary fw-medium">
+                ✏️ Edit Complaint
+            </a>
+
+            <a href="{% url 'complaints:complaint_delete' complaint.id %}" class="btn btn--danger fw-medium">
+                🗑️ Delete Complaint
+            </a>
 
         {% endif %}
 
     </div>
 
 </div>
+
 {% endblock %}

@@ -4,121 +4,127 @@
 
 {% block content %}
 
-<div class="form-container">
+<div class="auth__container d-flex justify-center align-center py-8">
 
-    <h2>Edit Your Profile</h2>
+    <div class="auth__card auth__card--wide max-w-lg w-100">
 
-    <form method="post" novalidate>
-
-        {% csrf_token %}
-
-        {% if form.non_field_errors %}
-        <div class="message error">
-            {% for error in form.non_field_errors %}
-                {{ error }}<br>
-            {% endfor %}
+        <div class="auth__header mb-6 text-center">
+            <h2 class="auth__title">Edit Your Profile</h2>
+            <p class="auth__subtitle text-muted">Update your personal and contact details</p>
         </div>
-        {% endif %}
 
-        <div class="form-group">
+        <form method="post" novalidate class="profile-form">
 
-            <label for="id_first_name">
-                First Name
-            </label>
+            {% csrf_token %}
 
-            {{ form.first_name }}
-
-            {% if form.first_name.errors %}
-            <div class="error-messages">
-                {% for error in form.first_name.errors %}
-                    <div>{{ error }}</div>
-                {% endfor %}
+            {% if form.non_field_errors %}
+            <div class="form-errors mb-4">
+                <div class="form-errors__title">Error</div>
+                <ul class="form-errors__list">
+                    {% for error in form.non_field_errors %}
+                        <li class="form-errors__item">{{ error }}</li>
+                    {% endfor %}
+                </ul>
             </div>
             {% endif %}
 
-        </div>
+            <div class="profile-form__section mb-6">
+                
+                <div class="profile-form__grid form-grid--2col gap-4">
 
-        <div class="form-group">
+                    <!-- First Name -->
+                    <div class="form-group mb-3">
+                        <label for="id_first_name" class="form-text fw-medium">
+                            First Name
+                        </label>
+                        {{ form.first_name }}
+                        {% if form.first_name.errors %}
+                        <div class="form-text form-text--error mt-1">
+                            {% for error in form.first_name.errors %}
+                                <div>{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                    </div>
 
-            <label for="id_last_name">
-                Last Name
-            </label>
+                    <!-- Last Name -->
+                    <div class="form-group mb-3">
+                        <label for="id_last_name" class="form-text fw-medium">
+                            Last Name
+                        </label>
+                        {{ form.last_name }}
+                        {% if form.last_name.errors %}
+                        <div class="form-text form-text--error mt-1">
+                            {% for error in form.last_name.errors %}
+                                <div>{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                    </div>
 
-            {{ form.last_name }}
+                    <!-- Email -->
+                    <div class="form-group mb-3">
+                        <label for="id_email" class="form-text fw-medium">
+                            Email
+                        </label>
+                        {{ form.email }}
+                        {% if form.email.errors %}
+                        <div class="form-text form-text--error mt-1">
+                            {% for error in form.email.errors %}
+                                <div>{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                    </div>
 
-            {% if form.last_name.errors %}
-            <div class="error-messages">
-                {% for error in form.last_name.errors %}
-                    <div>{{ error }}</div>
-                {% endfor %}
+                    <!-- Phone -->
+                    <div class="form-group mb-3">
+                        <label for="id_phone" class="form-text fw-medium">
+                            Phone
+                        </label>
+                        {{ form.phone }}
+                        {% if form.phone.errors %}
+                        <div class="form-text form-text--error mt-1">
+                            {% for error in form.phone.errors %}
+                                <div>{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                    </div>
+
+                </div>
+
+                <!-- Address (Full Width Row) -->
+                <div class="form-group profile-form__grid--full mt-2 mb-4">
+                    <label for="id_address" class="form-text fw-medium">
+                        Address
+                    </label>
+                    {{ form.address }}
+                    {% if form.address.errors %}
+                    <div class="form-text form-text--error mt-1">
+                        {% for error in form.address.errors %}
+                            <div>{{ error }}</div>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+
             </div>
-            {% endif %}
 
-        </div>
+            <!-- Action Buttons -->
+            <div class="profile-form__footer form-actions form-actions--spread d-flex gap-3">
+                <button type="submit" class="btn btn--primary btn--full">
+                    Save Changes
+                </button>
 
-        <div class="form-group">
-
-            <label for="id_email">
-                Email
-            </label>
-
-            {{ form.email }}
-
-            {% if form.email.errors %}
-            <div class="error-messages">
-                {% for error in form.email.errors %}
-                    <div>{{ error }}</div>
-                {% endfor %}
+                <a href="{% url 'auth:profile' %}" class="btn btn--secondary btn--full text-center">
+                    Cancel
+                </a>
             </div>
-            {% endif %}
 
-        </div>
+        </form>
 
-        <div class="form-group">
-
-            <label for="id_phone">
-                Phone
-            </label>
-
-            {{ form.phone }}
-
-            {% if form.phone.errors %}
-            <div class="error-messages">
-                {% for error in form.phone.errors %}
-                    <div>{{ error }}</div>
-                {% endfor %}
-            </div>
-            {% endif %}
-
-        </div>
-
-        <div class="form-group">
-
-            <label for="id_address">
-                Address
-            </label>
-
-            {{ form.address }}
-
-            {% if form.address.errors %}
-            <div class="error-messages">
-                {% for error in form.address.errors %}
-                    <div>{{ error }}</div>
-                {% endfor %}
-            </div>
-            {% endif %}
-
-        </div>
-
-        <button type="submit">
-            Save Changes
-        </button>
-
-        <a href="{% url 'auth:profile' %}" class="btn btn-secondary">
-            Cancel
-        </a>
-
-    </form>
+    </div>
 
 </div>
 

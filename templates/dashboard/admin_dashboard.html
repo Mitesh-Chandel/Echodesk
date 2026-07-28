@@ -256,23 +256,24 @@
         </div>
        
         <!-- Navigation Panel Footer -->
-        <div style="text-align: center; margin-top: 30px; margin-bottom: 50px; display: flex; justify-content: center; gap: 15px;">
-            <a href="{% url 'complaints:complaint_list' %}" style="text-decoration: none;">
-                <button class="btn-secondary" style="background-color: #34495e; color: white; border: none; padding: 12px 22px; border-radius: 4px; cursor: pointer; font-size: 15px; font-weight: bold; box-shadow: 0 2px 4px rgba(52,73,94,0.15);">
-                    View All Complaints
-                </button>
-            </a>
-            <a href="{% url 'admin:complaints_complaint_changelist' %}" style="text-decoration: none;">
-                <button style="background-color: #9b59b6; color: white; border: none; padding: 12px 22px; border-radius: 4px; cursor: pointer; font-size: 15px; font-weight: bold; box-shadow: 0 2px 4px rgba(155,89,182,0.15);">
-                    Manage in Django Admin
-                </button>
-            </a>
-        </div>
+        
     {% else %}
         <div class="card" style="background: #fff; padding: 50px 20px; border-radius: 4px; text-align: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05); margin-bottom: 30px;">
             <h4 style="color: #7f8c8d; margin: 0; font-size: 16px;">No complaints are currently logged in EchoDesk.</h4>
         </div>
     {% endif %}
    
+    <div style="text-align: center; margin-top: 30px; margin-bottom: 50px; display: flex; justify-content: center; gap: 15px;">
+            <!-- <a href="{% url 'complaints:complaint_list' %}" style="text-decoration: none;">
+                <button class="btn-secondary" style="background-color: #34495e; color: white; border: none; padding: 12px 22px; border-radius: 4px; cursor: pointer; font-size: 15px; font-weight: bold; box-shadow: 0 2px 4px rgba(52,73,94,0.15);">
+                    View All Complaints
+                </button>
+            </a> -->
+            <a href="{% url 'admin:complaints_complaint_changelist' %}" style="text-decoration: none;">
+                <button style="background-color: #9b59b6; color: white; border: none; padding: 12px 22px; border-radius: 4px; cursor: pointer; font-size: 15px; font-weight: bold; box-shadow: 0 2px 4px rgba(155,89,182,0.15);">
+                    Manage in Admin Panel
+                </button>
+            </a>
+        </div>
 </div>
 {% endblock %}

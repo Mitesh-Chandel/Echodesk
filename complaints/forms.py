@@ -65,12 +65,13 @@ class ComplaintAttachmentForm(forms.ModelForm):
 
 
 # ============================================================================
-# COMPLAINT FORM
+# COMPLAINT FORM (UPDATED)
 # ============================================================================
 
 class ComplaintForm(forms.ModelForm):
     """
     Form for creating and updating complaints.
+    Now includes multiple file attachments during creation.
     """
     
     category = forms.ModelChoiceField(
@@ -78,6 +79,21 @@ class ComplaintForm(forms.ModelForm):
         empty_label="Select a category",
         widget=forms.Select(attrs={'class': 'form-control'})
     )
+    
+    # ========================================================================
+    # NEW: Attachments field
+    # ========================================================================
+    attachments = forms.FileField(
+    label='Attach Files (optional)',
+    required=False,
+    widget=forms.FileInput(attrs={
+        'class': 'form-control file-input',
+        'accept': '.pdf,.doc,.docx,.jpg,.jpeg,.png,.gif'
+        # ❌ Removed: 'multiple': True
+    }),
+    help_text='Upload PDF, DOC, DOCX, JPG, PNG, GIF files (Max 5MB each, up to 10 files)'
+)
+        
     
     class Meta:
         model = Complaint
@@ -101,6 +117,39 @@ class ComplaintForm(forms.ModelForm):
                 'placeholder': 'Location where the issue occurred (optional)'
             }),
         }
+    
+    def clean_attachments(self):
+        """
+        Validate uploaded files.
+        Note: This validates files from the 'attachments' field only.
+        """
+        files = self.files.getlist('attachments')
+        
+        if not files:
+            return files
+        
+        # Validate number of files
+        if len(files) > 10:
+            raise forms.ValidationError("Maximum 10 files allowed per complaint.")
+        
+        allowed_extensions = ['pdf', 'doc', 'docx', 'jpg', 'jpeg', 'png', 'gif']
+        
+        for file in files:
+            # Check file size (5MB per file)
+            if file.size > 5 * 1024 * 1024:
+                raise forms.ValidationError(
+                    f"File '{file.name}' exceeds maximum size of 5MB."
+                )
+            
+            # Check file extension
+            file_extension = file.name.split('.')[-1].lower()
+            if file_extension not in allowed_extensions:
+                raise forms.ValidationError(
+                    f"File '{file.name}': '.{file_extension}' is not allowed. "
+                    f"Allowed types: {', '.join(allowed_extensions)}"
+                )
+        
+        return files
 
 
 # ============================================================================

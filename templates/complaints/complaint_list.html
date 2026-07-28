@@ -3,10 +3,10 @@
 {% block title %}My Complaints - EchoDesk{% endblock %}
 
 {% block content %}
-<div class="complaints-page">
+<div class="page container">
 
-    <div class="complaints-header">
-        <h2>My Complaints</h2>
+    <div class="page__header">
+        <h2 class="page__title">My Complaints</h2>
 
         <a href="{% url 'complaints:complaint_create' %}" class="btn btn-success">
             + New Complaint
@@ -14,40 +14,66 @@
     </div>
 
     <!-- Filter Section -->
-    <div class="card">
-        <h3>Filter Complaints</h3>
+   <div class="card mb-8">
 
-        <form method="get" class="filter-form">
-            {{ filter_form.search }}
-            {{ filter_form.status }}
-            {{ filter_form.priority }}
-            {{ filter_form.category }}
-
-            <button type="submit">Apply Filters</button>
-
-            <a href="?" class="btn btn-secondary">
-                Clear Filters
-            </a>
-        </form>
+    <div class="card__header">
+        <h3 class="card__title">Filter Complaints</h3>
     </div>
 
+    <form method="get" class="form-grid form-grid--2col">
+
+        <div class="form-group">
+            {{ filter_form.search }}
+        </div>
+
+        <div class="form-group">
+            {{ filter_form.status }}
+        </div>
+
+        <div class="form-group">
+            {{ filter_form.priority }}
+        </div>
+
+        <div class="form-group">
+            {{ filter_form.category }}
+        </div>
+
+      <div class="form-actions form-actions--center form-actions--no-border">
+
+    <button type="submit" class="btn btn-primary">
+        Apply Filters
+    </button>
+
+    <a href="?" class="btn btn-secondary">
+        Clear
+    </a>
+
+</div>
+
+    </form>
+
+</div>
+
     <!-- Complaints List -->
+     <div class="complaints-list">
     {% if page_obj %}
         {% for complaint in page_obj %}
-        <div class="complaint-item">
+       <div class="card complaint-list-item mb-6">
 
-            <div class="complaint-row">
+            <div class="complaint-list-item__content d-flex justify-between align-center">
 
-                <div>
-                    <div class="complaint-id">
+                <div class="complaint-list-item__body">
+                    <div class="text-muted mb-2">
                         {{ complaint.complaint_id }}
                     </div>
 
-                    <div class="complaint-title">
+                    <div class="complaint-list-item__title">
                         {{ complaint.title }}
                     </div>
+                    <!-- cloase h3 -->
+                </h3>
 
-                    <div class="complaint-meta">
+                    <div class="complaint-list-item__meta">
 
                         <span class="complaint-status status-{{ complaint.status }}">
                             {{ complaint.get_status_display }}
@@ -63,7 +89,7 @@
 
                     </div>
 
-                    <div class="complaint-details">
+                    <div class="text-muted mt-2">
                         Created:
                         {{ complaint.created_at|date:"d M, Y H:i" }}
                         |
@@ -73,7 +99,7 @@
 
                 </div>
 
-                <div class="complaint-actions">
+                <div class="d-flex gap-2 align-center">
 
                     <a href="{% url 'complaints:complaint_detail' complaint.id %}" class="btn">
                         View
@@ -95,6 +121,7 @@
 
             </div>
 
+        </div>
         </div>
         {% endfor %}
 

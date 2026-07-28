@@ -35,6 +35,8 @@
   z-index: var(--z-sticky);
 }
 
+
+
 .sidebar__brand {
   display: flex;
   align-items: center;
@@ -121,10 +123,10 @@
 /* --------------------------------------------------------------------------
    3. Topbar
    -------------------------------------------------------------------------- */
-.topbar {
+ .topbar {
   position: sticky;
   top: 0;
-  z-index: var(--z-sticky);
+  z-index: 100; /* Fixed explicit z-index below overlay & sidebar */
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -241,8 +243,20 @@
 /* --------------------------------------------------------------------------
    6. Mobile sidebar toggle (behavior handled in JS; state class only)
    -------------------------------------------------------------------------- */
+    /* --------------------------------------------------------------------------
+   6. Mobile sidebar toggle & Overlay
+   -------------------------------------------------------------------------- */
 .sidebar-overlay {
-  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.5);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  z-index: var(--z-overlay);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity var(--transition-base), visibility var(--transition-base);
 }
 
 @media (max-width: 1024px) {
@@ -255,38 +269,21 @@
     left: 0;
     top: 0;
     width: var(--sidebar-width);
+    height: 100vh;
     transform: translateX(-100%);
     transition: transform var(--transition-base);
     box-shadow: var(--shadow-xl);
+    z-index: var(--z-sidebar-mobile);
   }
 
   .app-shell.is-sidebar-open .sidebar {
     transform: translateX(0);
   }
 
-  .app-shell.is-sidebar-open .sidebar-overlay {
-    display: block;
-    position: fixed;
-    inset: 0;
-    background: rgba(15, 23, 42, 0.4);
-    z-index: calc(var(--z-sticky) - 1);
+  /* Show overlay when app-shell has is-sidebar-open state */
+  .app-shell.is-sidebar-open ~ .sidebar-overlay {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
   }
-}
-/* ===========================================================
-   Footer
-=========================================================== */
-
-.page-footer{
-    margin-top:auto;
-    padding:24px;
-    border-top:1px solid var(--color-border);
-    background:var(--color-surface);
-}
-
-.page-footer__content{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    flex-wrap:wrap;
-    gap:12px;
 }

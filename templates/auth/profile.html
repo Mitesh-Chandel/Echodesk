@@ -3,103 +3,257 @@
 {% block title %}My Profile - EchoDesk{% endblock %}
 
 {% block content %}
+<style>
+    /* ==========================
+   Profile Card
+========================== */
 
-<div class="profile-page">
+.profile-card{
+    max-width: 850px;
+    margin: 0 auto;
+    padding: 2rem;
+    border-radius: 18px;
+    background: var(--color-surface);
+    box-shadow: 0 8px 30px rgba(0,0,0,.08);
+    border: 1px solid var(--color-border);
+    transition: all .3s ease;
+}
 
-    <h2>My Profile</h2>
+.profile-card:hover{
+    transform: translateY(-3px);
+    box-shadow: 0 16px 40px rgba(0,0,0,.12);
+}
 
-    <div class="card">
+/* ==========================
+   Header
+========================== */
 
-        <h3>Personal Information</h3>
+.profile-card__header{
+    display:flex;
+    align-items:center;
+    gap:1.5rem;
+    margin-bottom:2rem;
+    padding-bottom:1.5rem;
+    border-bottom:1px solid var(--color-border);
+}
 
-        <div class="profile-info">
+/* Avatar */
 
-            <div class="info-item">
-                <div class="info-label">Username</div>
-                <div class="info-value">{{ user.username }}</div>
-            </div>
+.profile-avatar{
+    width:90px;
+    height:90px;
+    border-radius:50%;
+    background:linear-gradient(135deg,var(--color-primary),#60a5fa);
+    color:#fff;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:2rem;
+    font-weight:700;
+    flex-shrink:0;
+    box-shadow:0 8px 18px rgba(37,99,235,.25);
+}
 
-            <div class="info-item">
-                <div class="info-label">Email</div>
-                <div class="info-value">{{ user.email }}</div>
-            </div>
+/* Name */
 
-            <div class="info-item">
-                <div class="info-label">Full Name</div>
-                <div class="info-value">{{ user.get_full_name|default:"Not provided" }}</div>
-            </div>
+.profile-name{
+    margin:0;
+    font-size:1.8rem;
+    font-weight:700;
+    color:var(--text-primary);
+}
 
-            <div class="info-item">
-                <div class="info-label">User Role</div>
-                <div class="info-value">{{ profile.get_role_display }}</div>
-            </div>
+/* Role */
 
-            <div class="info-item">
-                <div class="info-label">Phone</div>
-                <div class="info-value">{{ profile.phone|default:"Not provided" }}</div>
-            </div>
+.profile-role{
+    margin-top:.35rem;
+    color:var(--text-secondary);
+    font-size:.95rem;
+}
 
-            <div class="info-item">
-                <div class="info-label">Member Since</div>
-                <div class="info-value">{{ user.date_joined|date:"d M, Y" }}</div>
-            </div>
+/* ==========================
+   Details
+========================== */
 
+.profile-details{
+    display:flex;
+    flex-direction:column;
+    gap:.8rem;
+}
+
+.profile-row{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:1rem 1.25rem;
+    border-radius:12px;
+    background:var(--color-background);
+    transition:.25s ease;
+}
+
+.profile-row:hover{
+    background:rgba(37,99,235,.05);
+    transform:translateX(5px);
+}
+
+.profile-label{
+    font-weight:600;
+    color:var(--text-secondary);
+}
+
+.profile-value{
+    font-weight:600;
+    color:var(--text-primary);
+    text-align:right;
+}
+
+/* ==========================
+   Dark Mode
+========================== */
+
+[data-theme="dark"] .profile-card{
+    background:var(--color-surface);
+    border-color:rgba(255,255,255,.08);
+    box-shadow:0 8px 24px rgba(0,0,0,.45);
+}
+
+[data-theme="dark"] .profile-row{
+    background:rgba(255,255,255,.04);
+}
+
+[data-theme="dark"] .profile-row:hover{
+    background:rgba(59,130,246,.15);
+}
+
+[data-theme="dark"] .profile-card__header{
+    border-bottom-color:rgba(255,255,255,.08);
+}
+</style>
+
+<div class="page">
+
+    <!-- Page Header -->
+    <div class="page__header mb-12">
+
+        <div>
+            <h1 class="page__title">My Profile</h1>
+            <p class="page__subtitle">
+                View and manage your account information.
+            </p>
         </div>
 
-        <div class="profile-actions">
-
-            <a href="{% url 'auth:edit_profile' %}" class="btn">
+        <div class="page__actions">
+            <a href="{% url 'auth:edit_profile' %}" class="btn btn-primary">
                 Edit Profile
             </a>
 
             <a href="{% url 'auth:change_password' %}" class="btn btn-secondary">
                 Change Password
             </a>
-
         </div>
 
     </div>
 
-    {% if profile.address %}
-    <div class="card">
+    <!-- Personal Information -->
+   <!-- Personal Information -->
+<div class="card profile-card mb-8">
 
-        <h3>Address</h3>
+    <div class="profile-card__header">
+
+        <div class="profile-avatar">
+            {{ user.first_name|default:user.username|first|upper }}
+        </div>
+
+        <div>
+            <h2 class="profile-name">
+                {{ user.get_full_name|default:user.username }}
+            </h2>
+
+            <p class="profile-role">
+                {{ profile.get_role_display }}
+            </p>
+        </div>
+
+    </div>
+
+    <div class="profile-details">
+
+        <div class="profile-row">
+            <span class="profile-label">Username</span>
+            <span class="profile-value">{{ user.username }}</span>
+        </div>
+
+        <div class="profile-row">
+            <span class="profile-label">Email</span>
+            <span class="profile-value">{{ user.email }}</span>
+        </div>
+
+        <div class="profile-row">
+            <span class="profile-label">Phone</span>
+            <span class="profile-value">
+                {{ profile.phone|default:"Not provided" }}
+            </span>
+        </div>
+
+        <div class="profile-row">
+            <span class="profile-label">Member Since</span>
+            <span class="profile-value">
+                {{ user.date_joined|date:"d M, Y" }}
+            </span>
+        </div>
+
+    </div>
+
+  
+
+</div>
+
+    <!-- Address -->
+    <!-- {% if profile.address %}
+    <div class="card mb-8">
+
+        <div class="card__header">
+            <h3 class="card__title">Address</h3>
+        </div>
 
         <p>{{ profile.address|linebreaks }}</p>
 
-    </div>
+    </div> -->
     {% endif %}
 
-    <div class="card">
+    <!-- Statistics -->
+    <div class="card mb-8 mt-8">
 
-        <h3>Statistics</h3>
+        <div class="card__header">
+            <h3 class="card__title">Statistics</h3>
+        </div>
 
-        <div class="profile-info">
+        <div class="dashboard-grid">
 
-            <div class="info-item">
-                <div class="info-label">Total Complaints</div>
-                <div class="info-value stat-value stat-primary">
+            <div class="stat-card">
+                <div class="stat-card__label">Total Complaints</div>
+                <div class="stat-card__value">
                     {{ user.complaints.count }}
                 </div>
             </div>
 
-            <div class="info-item">
-                <div class="info-label">Pending Complaints</div>
-                <div class="info-value stat-value stat-danger">
+            <div class="stat-card">
+                <div class="stat-card__label">Pending</div>
+                <div class="stat-card__value">
                     {{ user.complaints.filter|dictsort:"status=pending"|length }}
                 </div>
             </div>
 
-            <div class="info-item">
-                <div class="info-label">Resolved Complaints</div>
-                <div class="info-value stat-value stat-success">
+            <div class="stat-card">
+                <div class="stat-card__label">Resolved</div>
+                <div class="stat-card__value">
                     {{ user.complaints.filter|dictsort:"status=resolved"|length }}
                 </div>
             </div>
 
-            <div class="info-item">
-                <div class="info-label">Unread Notifications</div>
-                <div class="info-value stat-value stat-warning">
+            <div class="stat-card">
+                <div class="stat-card__label">Unread Notifications</div>
+                <div class="stat-card__value">
                     {{ unread_notifications }}
                 </div>
             </div>
@@ -108,36 +262,50 @@
 
     </div>
 
+    <!-- Recent Complaints -->
     {% if recent_complaints %}
     <div class="card">
 
-        <h3>Recent Complaints</h3>
+        <div class="card__header">
+            <h3 class="card__title">Recent Complaints</h3>
+        </div>
 
         <div class="complaints-list">
 
             {% for complaint in recent_complaints %}
 
-            <div class="complaint-item">
+            <div class="card complaint-list-item">
 
-                <div class="complaint-id">
-                    {{ complaint.complaint_id }}
-                </div>
+                <div class="complaint-list-item__content">
 
-                <div class="complaint-title">
-                    {{ complaint.title }}
-                </div>
+                    <div class="complaint-list-item__body">
 
-                <span class="complaint-status status-{{ complaint.status }}">
-                    {{ complaint.get_status_display }}
-                </span>
+                        <div class="text-muted">
+                            {{ complaint.complaint_id }}
+                        </div>
 
-                <span class="complaint-status complaint-priority">
-                    Priority: {{ complaint.get_priority_display }}
-                </span>
+                        <h4 class="complaint-list-item__title">
+                            {{ complaint.title }}
+                        </h4>
 
-                <div class="complaint-date">
-                    Created:
-                    {{ complaint.created_at|date:"d M, Y" }}
+                        <div class="complaint-list-item__meta">
+
+                            <span class="complaint-status status-{{ complaint.status }}">
+                                {{ complaint.get_status_display }}
+                            </span>
+
+                            <span class="complaint-status complaint-priority">
+                                {{ complaint.get_priority_display }}
+                            </span>
+
+                            <span class="text-muted">
+                                {{ complaint.created_at|date:"d M, Y" }}
+                            </span>
+
+                        </div>
+
+                    </div>
+
                 </div>
 
             </div>

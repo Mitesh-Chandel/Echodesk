@@ -8,7 +8,7 @@
 
     <h2>{{ page_title }}</h2>
 
-    <form method="post" novalidate>
+    <form method="post" enctype="multipart/form-data" novalidate id="complaintForm">
 
         {% csrf_token %}
 
@@ -100,7 +100,55 @@
 
         </div>
 
-        <button type="submit">
+        <!-- ================================================================
+             ATTACHMENTS SECTION
+             ================================================================ -->
+
+        <div class="form-group">
+            <label for="id_attachments">{{ form.attachments.label }}</label>
+
+            <div class="alert alert-info">
+                <strong>📎 Upload Supporting Files</strong><br>
+                ✓ Supported: PDF, DOC, DOCX, JPG, PNG, GIF<br>
+                ✓ Maximum: 5MB per file, up to 10 files<br>
+                ✓ Optional - you can also add files after creating the complaint
+            </div>
+
+            <div class="border border-dashed p-3 mb-3" id="dropZone">
+                <div class="mb-2">
+                    <label for="id_attachments" class="btn btn-primary">
+                        📁 Click to select files or drag & drop here
+                    </label>
+                    {% if form.attachments.field.widget.input_type == 'file' %}
+                        <input type="file" name="attachments" id="id_attachments" class="form-control file-input" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.gif" multiple style="display: none;">
+                    {% else %}
+                        {{ form.attachments }}
+                    {% endif %}
+                </div>
+                <small class="form-text text-muted">{{ form.attachments.help_text }}</small>
+            </div>
+
+            <div id="fileList">
+                <div id="fileListContainer">
+                    <div class="text-muted text-center py-3">No files selected</div>
+                </div>
+                <div id="fileCount" style="display: none;" class="badge badge-secondary"></div>
+            </div>
+
+            {% if form.attachments.errors %}
+            <div class="error-messages mt-2">
+                {% for error in form.attachments.errors %}
+                    <div>{{ error }}</div>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- ================================================================
+             END ATTACHMENTS SECTION
+             ================================================================ -->
+
+        <button type="submit" class="btn btn-success">
             {% if complaint %}
                 Update Complaint
             {% else %}
@@ -117,5 +165,398 @@
     </form>
 
 </div>
+
+<!-- ================================================================
+     STYLES FOR FILE PREVIEW
+     ================================================================ -->
+
+<style>
+    /* Preview Container Styles */
+    .attachment-preview-container {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 1rem;
+        margin-top: 1rem;
+    }
+
+    /* Individual Attachment Card */
+    .attachment-card {
+        border: 1px solid #e0e0e0;
+        border-radius: 0.5rem;
+        overflow: hidden;
+        transition: box-shadow 0.2s ease;
+    }
+
+    .attachment-card:hover {
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .attachment-card .card-body {
+        padding: 1rem;
+    }
+
+    /* Attachment Header (Filename, Size, Remove Button) */
+    .attachment-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    .attachment-info {
+        flex: 1;
+    }
+
+    .attachment-filename {
+        font-weight: 600;
+        margin-bottom: 0.25rem;
+        word-break: break-word;
+    }
+
+    .attachment-size {
+        font-size: 0.875rem;
+        color: #666;
+    }
+
+    /* Image Preview */
+    .attachment-image-preview {
+        width: 100%;
+        max-height: 300px;
+        object-fit: contain;
+        border-radius: 0.25rem;
+        margin-top: 0.75rem;
+        background-color: #f5f5f5;
+        padding: 0.5rem;
+        box-sizing: border-box;
+    }
+
+    /* PDF Preview with iFrame */
+    .attachment-pdf-preview {
+        width: 100%;
+        height: 400px;
+        border: 1px solid #ddd;
+        border-radius: 0.25rem;
+        margin-top: 0.75rem;
+    }
+
+    /* Document Type (DOC/DOCX) Icon */
+    .attachment-document-icon {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        margin-top: 0.75rem;
+        padding: 0.75rem;
+        background-color: #f9f9f9;
+        border-radius: 0.25rem;
+        color: #666;
+    }
+
+    .attachment-document-icon-symbol {
+        font-size: 2rem;
+    }
+
+    /* Remove Button */
+    .attachment-remove-btn {
+        padding: 0.375rem 0.75rem;
+        font-size: 0.875rem;
+        white-space: nowrap;
+        flex-shrink: 0;
+    }
+
+    /* Error Message */
+    .attachment-error {
+        margin-top: 0.75rem;
+        padding: 0.5rem;
+        background-color: #fee;
+        border-left: 3px solid #f44;
+        color: #d32f2f;
+        font-size: 0.875rem;
+    }
+
+    /* Drag and Drop Styles */
+    #dropZone.is-dragover {
+        background-color: #e3f2fd;
+        border-color: #1976d2;
+    }
+
+    /* File Count Badge */
+    #fileCount {
+        margin-top: 1rem;
+        display: inline-block;
+        padding: 0.375rem 0.75rem;
+        background-color: #e0e0e0;
+        color: #333;
+        border-radius: 1rem;
+        font-size: 0.875rem;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 640px) {
+        .attachment-header {
+            flex-direction: column;
+        }
+
+        .attachment-remove-btn {
+            width: 100%;
+            text-align: center;
+        }
+
+        .attachment-pdf-preview {
+            height: 300px;
+        }
+
+        .attachment-image-preview {
+            max-height: 250px;
+        }
+    }
+</style>
+
+<!-- ================================================================
+     JAVASCRIPT FOR FILE UPLOAD AND PREVIEW
+     ================================================================ -->
+
+<script>
+    const ALLOWED_EXTENSIONS = ['pdf', 'doc', 'docx', 'jpg', 'jpeg', 'png', 'gif'];
+    const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+    const MAX_FILES = 10;
+
+    const fileInput = document.getElementById('id_attachments');
+    const dropZone = document.getElementById('dropZone');
+    const fileListContainer = document.getElementById('fileListContainer');
+    const fileCount = document.getElementById('fileCount');
+    const complaintForm = document.getElementById('complaintForm');
+
+    let selectedFiles = [];
+
+    // ====================================================================
+    // FILE VALIDATION AND UTILITIES
+    // ====================================================================
+
+    function getFileIcon(extension) {
+        const iconMap = {
+            'pdf': '📄',
+            'doc': '📝',
+            'docx': '📝',
+            'jpg': '🖼️',
+            'jpeg': '🖼️',
+            'png': '🖼️',
+            'gif': '🖼️'
+        };
+        return iconMap[extension.toLowerCase()] || '📎';
+    }
+
+    function formatFileSize(bytes) {
+        if (bytes === 0) return '0 Bytes';
+        const k = 1024;
+        const sizes = ['Bytes', 'KB', 'MB'];
+        const i = Math.floor(Math.log(bytes, k));
+        return Math.round((bytes / Math.pow(k, i)) * 100) / 100 + ' ' + sizes[i];
+    }
+
+    function validateFile(file) {
+        const errors = [];
+        const extension = file.name.split('.').pop().toLowerCase();
+
+        // Check extension
+        if (!ALLOWED_EXTENSIONS.includes(extension)) {
+            errors.push(`Invalid file type: .${extension}`);
+        }
+
+        // Check file size
+        if (file.size > MAX_FILE_SIZE) {
+            errors.push(`File exceeds 5MB limit (${formatFileSize(file.size)})`);
+        }
+
+        return errors;
+    }
+
+    // ====================================================================
+    // SINGLE CLEAN RENDER FILE LIST FUNCTION
+    // ====================================================================
+
+    function renderFileList() {
+        fileListContainer.innerHTML = '';
+
+        // Show "No files" message if empty
+        if (selectedFiles.length === 0) {
+            fileListContainer.innerHTML = '<div class="text-muted text-center py-3">No files selected</div>';
+            fileCount.style.display = 'none';
+            return;
+        }
+
+        // Render each file with preview
+        selectedFiles.forEach((fileData, index) => {
+            const { file, errors } = fileData;
+            const extension = file.name.split('.').pop().toLowerCase();
+            const icon = getFileIcon(extension);
+            const size = formatFileSize(file.size);
+
+            // Create card
+            const card = document.createElement('div');
+            card.className = 'card attachment-card';
+
+            // Build preview HTML based on file type
+            let previewHTML = '';
+
+            if (['jpg', 'jpeg', 'png', 'gif'].includes(extension)) {
+                // Image preview with thumbnail
+                const imageURL = URL.createObjectURL(file);
+                previewHTML = `
+                    <div>
+                        <img src="${imageURL}"
+                             class="attachment-image-preview"
+                             alt="Preview of ${file.name}">
+                    </div>
+                `;
+            } else if (extension === 'pdf') {
+                // PDF preview with iframe
+                const pdfURL = URL.createObjectURL(file);
+                previewHTML = `
+                    <div>
+                        <iframe src="${pdfURL}"
+                                class="attachment-pdf-preview"
+                                title="PDF preview of ${file.name}">
+                        </iframe>
+                    </div>
+                `;
+            } else if (['doc', 'docx'].includes(extension)) {
+                // Document icon for DOC/DOCX
+                previewHTML = `
+                    <div class="attachment-document-icon">
+                        <span class="attachment-document-icon-symbol">📄</span>
+                        <span>Document - Preview not available in browser</span>
+                    </div>
+                `;
+            }
+
+            // Build error message HTML
+            const errorHTML = errors.length > 0
+                ? `<div class="attachment-error">⚠️ ${errors.join(', ')}</div>`
+                : '';
+
+            // Build card HTML
+            card.innerHTML = `
+                <div class="card-body">
+                    <div class="attachment-header">
+                        <div class="attachment-info">
+                            <div class="attachment-filename">
+                                ${icon} ${file.name}
+                            </div>
+                            <div class="attachment-size">
+                                ${size}
+                            </div>
+                        </div>
+                        <button type="button"
+                                class="btn btn-danger btn-sm attachment-remove-btn"
+                                data-index="${index}"
+                                aria-label="Remove ${file.name}">
+                            Remove
+                        </button>
+                    </div>
+                    ${previewHTML}
+                    ${errorHTML}
+                </div>
+            `;
+
+            fileListContainer.appendChild(card);
+        });
+
+        // Update file count badge
+        const validFileCount = selectedFiles.filter(f => f.errors.length === 0).length;
+        fileCount.textContent = `${validFileCount} file(s) ready to upload`;
+        fileCount.style.display = 'inline-block';
+
+        // Attach remove button event listeners
+        document.querySelectorAll('.attachment-remove-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                const index = parseInt(btn.dataset.index, 10);
+                selectedFiles.splice(index, 1);
+                renderFileList();
+                updateFileInput();
+            });
+        });
+    }
+
+    // ====================================================================
+    // UPDATE FILE INPUT WITH DATATRANSFER
+    // ====================================================================
+
+    function updateFileInput() {
+        const dataTransfer = new DataTransfer();
+        selectedFiles.forEach(fileData => {
+            if (fileData.errors.length === 0) {
+                dataTransfer.items.add(fileData.file);
+            }
+        });
+        fileInput.files = dataTransfer.files;
+    }
+
+    // ====================================================================
+    // HANDLE FILE SELECTION
+    // ====================================================================
+
+    function handleFiles(files) {
+        // Check total file limit
+        if (selectedFiles.length + files.length > MAX_FILES) {
+            alert(`Maximum ${MAX_FILES} files allowed. You're trying to add too many files.`);
+            return;
+        }
+
+        // Process each file
+        Array.from(files).forEach(file => {
+            const errors = validateFile(file);
+            selectedFiles.push({ file, errors });
+        });
+
+        // Update UI
+        renderFileList();
+        updateFileInput();
+    }
+
+    // ====================================================================
+    // FILE INPUT CHANGE EVENT
+    // ====================================================================
+
+    fileInput.addEventListener('change', (e) => {
+        handleFiles(e.target.files);
+    });
+
+    // ====================================================================
+    // DRAG AND DROP FUNCTIONALITY
+    // ====================================================================
+
+    dropZone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        dropZone.classList.add('is-dragover');
+    });
+
+    dropZone.addEventListener('dragleave', () => {
+        dropZone.classList.remove('is-dragover');
+    });
+
+    dropZone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        dropZone.classList.remove('is-dragover');
+        handleFiles(e.dataTransfer.files);
+    });
+
+    // ====================================================================
+    // FORM VALIDATION ON SUBMIT
+    // ====================================================================
+
+    complaintForm.addEventListener('submit', (e) => {
+        const validFiles = selectedFiles.filter(f => f.errors.length === 0);
+
+        if (selectedFiles.length > 0 && validFiles.length === 0) {
+            e.preventDefault();
+            alert('Please remove files with errors before submitting.');
+            return;
+        }
+    });
+</script>
 
 {% endblock %}
