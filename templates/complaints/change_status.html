@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+
+{% block title %}Update Status - {{ complaint.complaint_id }} - EchoDesk{% endblock %}
+
+{% block content %}
+
+<div class="page py-12 px-4">
+
+    <div class="page__header mb-12">
+        <h1 class="page__title fs-lg fw-bold text-primary">
+            Update Complaint Status
+        </h1>
+        <p class="page__subtitle text-muted mt-2">
+            {{ complaint.complaint_id }}: {{ complaint.title }}
+        </p>
+    </div>
+
+    <div class="card card--hoverable shadow-md rounded-lg" style="max-width: 600px;">
+
+        <div class="card__header pb-6 mb-6">
+            <h2 class="card__title fw-semibold text-primary">
+                Current Status
+            </h2>
+        </div>
+
+        <div class="mb-8">
+            <div class="d-flex flex-row justify-between align-center gap-4 p-4 rounded-md bg-surface border">
+                <div>
+                    <div class="fw-semibold text-secondary fs-sm">Current Status</div>
+                    <div class="mt-2">
+                        <span class="status-badge status-badge--{{ complaint.status|lower }}">
+                            {{ complaint.get_status_display }}
+                        </span>
+                    </div>
+                </div>
+                <div style="text-align: right;">
+                    <div class="fw-semibold text-secondary fs-sm">User</div>
+                    <div class="text-primary mt-2">
+                        {{ complaint.user.get_full_name|default:complaint.user.username }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- STATUS CHANGE FORM -->
+        <form method="post" class="mt-8">
+            {% csrf_token %}
+
+            <div class="form-group mb-6">
+                <label for="status" class="fw-semibold text-primary mb-2 d-block">
+                    Change Status To
+                </label>
+
+                <select name="status" id="status" class="form-control" required>
+                    <option value="">-- Select New Status --</option>
+                    {% for value, label in complaint.STATUS_CHOICES %}
+                        <option value="{{ value }}" {% if complaint.status == value %}selected{% endif %}>
+                            {{ label }}
+                        </option>
+                    {% endfor %}
+                </select>
+
+                <small class="text-muted d-block mt-2">
+                    Select the new status for this complaint
+                </small>
+            </div>
+
+            <!-- Info Box -->
+            <div class="alert alert-info mb-6">
+                <strong>ℹ️ Status Change Only</strong><br>
+                As a staff member, you can only change the complaint status. 
+                You cannot edit the complaint title, description, or other details.
+                Those can only be edited by the user who filed the complaint.
+            </div>
+
+            <!-- Buttons -->
+            <div class="d-flex flex-row gap-3">
+                <button type="submit" class="btn btn--primary fw-medium">
+                    Update Status
+                </button>
+
+                <a href="{% url 'complaints:complaint_detail' complaint.id %}" class="btn btn--secondary fw-medium">
+                    Cancel
+                </a>
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock %}

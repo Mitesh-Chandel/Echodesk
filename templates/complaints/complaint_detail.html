@@ -163,7 +163,7 @@
 
     </div>
 
-    <!-- Attachments Section -->
+    <!-- Attachments Section with Preview -->
     <div class="card card--hoverable shadow-md rounded-lg mb-8">
 
         <div class="card__header pb-6 mb-6">
@@ -181,26 +181,78 @@
 
             <div class="attachment-section">
 
-                <div class="attachment-list d-flex flex-column gap-3 mb-6">
+                <div class="attachment-list d-flex flex-column gap-4 mb-6">
 
                     {% for attachment in complaint.attachments.all %}
 
-                    <div class="attachment-item d-flex flex-row justify-between align-center gap-4 p-4 rounded-md bg-surface border">
+                    <div class="attachment-card card border rounded-lg overflow-hidden">
 
-                        <div class="attachment-item__content d-flex flex-column gap-1">
-                            <div class="attachment-item__name fw-medium text-primary">
-                                {{ attachment.file_name }}
+                        <div class="card-body p-4">
+
+                            <!-- Attachment Header (Name, Size, Download) -->
+                            <div class="attachment-header d-flex flex-row justify-between align-start gap-4">
+
+                                <div class="attachment-info flex-1">
+                                    <div class="attachment-filename fw-semibold text-primary">
+                                        {{ attachment.file_name }}
+                                    </div>
+                                    <div class="attachment-size text-muted fs-xs mt-1">
+                                        {{ attachment.file_type|upper }} • Uploaded: {{ attachment.uploaded_at|date:"d M, Y" }}
+                                    </div>
+                                </div>
+
+                                <a href="{{ attachment.file.url }}" download class="btn btn--secondary btn--sm fw-medium flex-shrink-0">
+                                    ⬇️ Download
+                                </a>
+
                             </div>
-                            <div class="attachment-item__size text-muted fs-xs">
-                                <span class="attachment-item__icon">{{ attachment.file_type|upper }}</span>
-                                •
-                                Uploaded: {{ attachment.uploaded_at|date:"d M, Y" }}
-                            </div>
+
+                            <!-- Dynamic Preview Based on File Type -->
+                            {% if attachment.file_type|lower in 'jpg,jpeg,png,gif' %}
+
+                                <!-- IMAGE PREVIEW -->
+                                <div class="preview-box mt-4">
+                                    <img src="{{ attachment.file.url }}" 
+                                         alt="Preview of {{ attachment.file_name }}"
+                                         class="file-preview-image"
+                                         loading="lazy">
+                                </div>
+
+                            {% elif attachment.file_type|lower == 'pdf' %}
+
+                                <!-- PDF PREVIEW -->
+                                <div class="preview-box mt-4">
+                                    <iframe src="{{ attachment.file.url }}#toolbar=0" 
+                                            title="PDF preview of {{ attachment.file_name }}"
+                                            class="pdf-preview">
+                                    </iframe>
+                                </div>
+
+                            {% elif attachment.file_type|lower in 'doc,docx' %}
+
+                                <!-- DOCUMENT PREVIEW -->
+                                <div class="document-preview">
+                                    <div class="fs-lg fw-semibold text-primary mb-2">
+                                        📄 Document File
+                                    </div>
+                                    <div class="text-secondary fs-sm">
+                                        Preview not available in browser.<br>
+                                        <strong>{{ attachment.file_name }}</strong> can be viewed by downloading.
+                                    </div>
+                                </div>
+
+                            {% else %}
+
+                                <!-- UNSUPPORTED FILE TYPE -->
+                                <div class="document-preview">
+                                    <div class="fs-sm text-secondary">
+                                        File type not previewable in browser
+                                    </div>
+                                </div>
+
+                            {% endif %}
+
                         </div>
-
-                        <a href="{{ attachment.file.url }}" target="_blank" class="btn btn--secondary btn--sm fw-medium">
-                            Download
-                        </a>
 
                     </div>
 
@@ -223,6 +275,7 @@
 
         {% endif %}
 
+        <!-- Only owner can add attachments -->
         {% if complaint.user == user %}
         <div class="attachment-section mt-6 pt-6 border-t">
             <a href="{% url 'complaints:upload_attachment' complaint.id %}" class="btn btn--primary fw-medium">
@@ -367,7 +420,15 @@
             ← Back to Complaints
         </a>
 
-        {% if complaint.status == 'pending' %}
+        <!-- STAFF: Only show status change button -->
+        {% if is_assigned %}
+
+            <a href="{% url 'complaints:complaint_update' complaint.id %}" class="btn btn--primary fw-medium">
+                📊 Change Status
+            </a>
+
+        <!-- OWNER (USERS): Show edit and delete for pending only -->
+        {% elif is_owner and complaint.status == 'pending' %}
 
             <a href="{% url 'complaints:complaint_update' complaint.id %}" class="btn btn--primary fw-medium">
                 ✏️ Edit Complaint

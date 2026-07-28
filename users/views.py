@@ -57,6 +57,9 @@ def register(request):
 # ============================================================================
 # USER LOGIN VIEW
 # ============================================================================
+# ============================================================================
+# USER LOGIN VIEW
+# ============================================================================
 
 def login_view(request):
     """
@@ -64,33 +67,54 @@ def login_view(request):
     GET: Display login form
     POST: Authenticate and login user
     """
-    
+
     if request.user.is_authenticated:
         # Redirect if already logged in
-        return redirect('dashboard:user_dashboard')
-    
+        if request.user.profile.role == "admin":
+            return redirect("dashboard:admin_dashboard")
+        elif request.user.profile.role == "staff":
+            return redirect("dashboard:staff_dashboard")
+        else:
+            return redirect("dashboard:user_dashboard")
+
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
-        
+
         # Authenticate user
         user = authenticate(request, username=username, password=password)
-        
+
         if user is not None:
             # User exists and password is correct
             login(request, user)
-            messages.success(request, f'Welcome back, {user.username}!')
-            
-            # Redirect to next page if specified, else dashboard
-            next_page = request.GET.get('next', 'dashboard:user_dashboard')
-            return redirect(next_page)
+
+            messages.success(
+                request,
+                f'Welcome back, {user.username}!'
+            )
+
+            # Redirect to requested page first
+            next_page = request.GET.get("next")
+            if next_page:
+                return redirect(next_page)
+
+            # Redirect based on role
+            if user.profile.role == "admin":
+                return redirect("dashboard:admin_dashboard")
+            elif user.profile.role == "staff":
+                return redirect("dashboard:staff_dashboard")
+            else:
+                return redirect("dashboard:user_dashboard")
+
         else:
             # Wrong credentials
-            messages.error(request, 'Invalid username or password.')
-    
-    context = {'page_title': 'Login'}
-    return render(request, 'auth/login.html', context)
+            messages.error(request, "Invalid username or password.")
 
+    context = {
+        "page_title": "Login",
+    }
+
+    return render(request, "auth/login.html", context)
 
 # ============================================================================
 # USER LOGOUT VIEW

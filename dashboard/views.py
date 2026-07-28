@@ -1,6 +1,3 @@
-
-
-
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.db.models import Count, Q
@@ -119,10 +116,13 @@ def staff_dashboard(request):
     - Total assigned complaints
     - Count by status
     - Recent assigned complaints
+    
+    FIXED: Now checks profile.role == 'staff' (not is_staff flag)
     """
     
-    # Check if user is staff
-    if not (request.user.is_staff or request.user.profile.role == 'staff'):
+    # Check if user is STAFF (using custom role, not Django's is_staff)
+    if not (hasattr(request.user, 'profile') and request.user.profile.role == 'staff'):
+        # If not staff, redirect to user dashboard
         return redirect('dashboard:user_dashboard')
     
     # Get ONLY complaints assigned to this staff member
@@ -184,11 +184,17 @@ def admin_dashboard(request):
     - User breakdown by role
     - Recent complaints (all)
     - Chart data (categories, status distribution)
+    
+    FIXED: Now checks profile.role == 'admin' (not is_superuser + role check)
     """
     
-    # Check if user is admin
-    if not request.user.is_superuser and request.user.profile.role != 'admin':
-        return redirect('dashboard:user_dashboard')
+    # Check if user is ADMIN (using custom role)
+    if not (hasattr(request.user, 'profile') and request.user.profile.role == 'admin'):
+        # If not admin, redirect to their appropriate dashboard
+        if hasattr(request.user, 'profile') and request.user.profile.role == 'staff':
+            return redirect('dashboard:staff_dashboard')
+        else:
+            return redirect('dashboard:user_dashboard')
     
     # ---- System Wide Statistics ----
     all_complaints = Complaint.objects.all()

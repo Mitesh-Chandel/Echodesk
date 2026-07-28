@@ -1,19 +1,18 @@
-
 {% load static %}
 <style>
     .sidebar__logo {
-    width: 36px;         /* Increased from 32px to zoom it slightly */
-    height: 36px;        /* Keeping it square for proper circle shape */
-    object-fit: cover;  /* Ensures the image fills the circle without stretching, might crop edges slightly */
-    border-radius: 50%; /* This creates the perfect circular shape */
-    
-    /* Optional: Ensure vertical alignment with the text next to it */
+    width: 36px;
+    height: 36px;
+    object-fit: cover;
+    border-radius: 50%;
     vertical-align: middle; 
 }
 </style>
+
+
 <aside class="sidebar">
+   
 <div class="sidebar__brand">
-    <!-- Updated line: replaces the empty div with your static image -->
     <img src="{% static 'images/logo.png' %}" alt="EchoDesk Logo" class="sidebar__logo">
 
     <div>
@@ -28,7 +27,7 @@
 
     <nav class="sidebar__nav">
 
-        <a href="{% url 'dashboard:user_dashboard' %}"
+        <a href="{% url 'dashboard:staff_dashboard' %}"
            class="sidebar__link">
 
             <span class="icon">🏠</span>
@@ -36,6 +35,8 @@
 
         </a>
 
+        <!-- Hide these links for staff users -->
+        {% if user.profile.role != 'staff' %}
         <a href="{% url 'complaints:complaint_list' %}"
            class="sidebar__link">
 
@@ -44,6 +45,13 @@
 
         </a>
 
+                
+
+
+
+
+
+
         <a href="{% url 'complaints:complaint_create' %}"
            class="sidebar__link">
 
@@ -51,6 +59,7 @@
             New Complaint
 
         </a>
+        {% endif %}
 
     </nav>
 
@@ -80,7 +89,8 @@
 
     </nav>
 
-    {% if user.is_staff %}
+    <!-- Show admin dashboard only for admin users (not staff) -->
+    {% if user.profile.role == 'admin' %}
 
     <div class="sidebar__section-label">
 
