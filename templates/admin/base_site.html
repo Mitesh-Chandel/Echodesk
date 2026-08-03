@@ -4,10 +4,36 @@
 {% block extrastyle %}
 {{ block.super }}
 <link rel="stylesheet" href="{% static 'admin/css/admin.css' %}">
+<link rel="stylesheet" href="{% static 'css/auth.css' %}">
+<style>
+  /* Hide admin header/nav on login page */
+  body.login #header,
+  body.login .header,
+  body.login [class*="admin-header"],
+  body.login #user-tools,
+  body.login .breadcrumbs,
+  body.login nav {
+    display: none !important;
+  }
+</style>
 {% endblock %}
 
 {% block branding %}
 <h1 id="site-name">
     EchoDesk Administration
 </h1>
+{% endblock %}
+
+{% block content %}
+{% if request.resolver_match.url_name == 'admin:login' or request.path == '/admin/login/' %}
+    <!-- Login Page Layout -->
+    <div class="auth-page-wrapper">
+        <div class="auth__card">
+            {{ block.super }}
+        </div>
+    </div>
+{% else %}
+    <!-- Regular Admin Page Layout -->
+    {{ block.super }}
+{% endif %}
 {% endblock %}
