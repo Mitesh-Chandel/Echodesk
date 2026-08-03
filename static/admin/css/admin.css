@@ -1,21 +1,98 @@
-#header{
-    background:#0f172a;
+/* ==========================================================================
+   ADMIN CUSTOMIZATIONS (admin.css)
+   ========================================================================== */
+
+/* Admin branding */
+#header {
+    background: #0f172a;
 }
 
-#branding h1{
-    color:white;
+#branding h1 {
+    color: white;
 }
 
+/* Admin module styling */
 .module h2,
-.module caption{
-    background:#1e293b;
+.module caption {
+    background: #1e293b;
 }
 
+/* Admin buttons */
 .button,
-input[type=submit]{
-    background:#2563eb;
+input[type=submit] {
+    background: #2563eb;
 }
 
-body{
-    background:#0f172a;
+/* Admin body background */
+body {
+    background: #0f172a;
+}
+
+/* ==========================================================================
+   LOGIN PAGE CENTERING
+   ========================================================================== */
+
+/* Reset and prepare body for flex centering */
+body.login {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    min-height: 100vh !important;
+    background: #f8f9fa !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+/* Hide admin header/sidebar on login */
+body.login #header {
+    display: none !important;
+}
+
+body.login .sidebar {
+    display: none !important;
+}
+
+body.login .page-header {
+    display: none !important;
+}
+
+body.login .topbar {
+    display: none !important;
+}
+
+/* Center the wrapper container */
+body.login #container {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    width: 100% !important;
+    min-height: 100vh !important;
+    padding: 0 !important;
+    background: transparent !important;
+}
+
+/* Login page wrapper - full width flex container */
+.auth-page-wrapper {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    width: 100% !important;
+    min-height: 100vh !important;
+    padding: 2rem 1rem !important;
+    box-sizing: border-box !important;
+    background: #f8f9fa !important;
+    margin: 0 !important;
+}
+
+/* Card container */
+.auth__card {
+    width: 100% !important;
+    max-width: 580px !important;
+    margin: 0 !important;
+    padding: 2.5rem !important;
+    background: white !important;
+    border: 1px solid #e2e8f0 !important;
+    border-radius: 12px !important;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07), 0 10px 20px rgba(0, 0, 0, 0.05) !important;
+    box-sizing: border-box !important;
 }
