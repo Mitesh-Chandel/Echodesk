@@ -69,6 +69,75 @@
     color: #a0aec0 !important;
 }
 
+/* Dark mode styling for .form-control */
+[data-theme="dark"] .form-control,
+.dark .form-control {
+    background-color: #2a3a52 !important;
+    color: #f1f5f9 !important;
+    border-color: #475569 !important;
+}
+
+/* Select dropdowns with .form-control need appearance:none and custom arrow */
+[data-theme="dark"] select.form-control,
+.dark select.form-control {
+    appearance: none !important;
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="%23f1f5f9" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>') !important;
+    background-position: right 12px center !important;
+    background-repeat: no-repeat !important;
+    background-size: 18px !important;
+    padding-right: 40px !important;
+}
+
+[data-theme="dark"] select.form-control option,
+.dark select.form-control option {
+    background-color: #2a3a52 !important;
+    color: #f1f5f9 !important;
+}
+
+[data-theme="dark"] .form-control::placeholder,
+.dark .form-control::placeholder {
+    color: #94a3b8 !important;
+}
+
+[data-theme="dark"] .form-control:focus,
+.dark .form-control:focus {
+    border-color: #2563eb !important;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2) !important;
+    background-color: #2a3a52 !important;
+}
+
+/* Dark mode for labels and auth sections */
+[data-theme="dark"] .form-label,
+.dark .form-label {
+    color: #f1f5f9 !important;
+}
+
+[data-theme="dark"] .auth__title,
+.dark .auth__title {
+    color: #f1f5f9 !important;
+}
+
+[data-theme="dark"] .auth__subtitle,
+.dark .auth__subtitle {
+    color: #94a3b8 !important;
+}
+
+[data-theme="dark"] .auth__remember,
+.dark .auth__remember {
+    color: #94a3b8 !important;
+}
+
+[data-theme="dark"] .auth__actions,
+.dark .auth__actions {
+    color: #94a3b8 !important;
+}
+
+[data-theme="dark"] .auth__footer,
+.dark .auth__footer {
+    color: #94a3b8 !important;
+    border-top-color: #263043 !important;
+}
+
 /* Auth actions (remember me + forgot password) */
 .auth__actions {
     display: flex !important;

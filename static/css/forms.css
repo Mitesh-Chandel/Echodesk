@@ -18,24 +18,112 @@
   /* Default Light Mode Surface Colors */
   --input-bg: var(--color-surface, #ffffff);
   --input-border: var(--color-border, #e5e7eb);
-  --input-text: var(--color-text, #111827);
+  --input-text: var(--color-text, #0f172a);
   --input-placeholder: var(--color-text-subtle, #6b7280);
   --input-disabled-bg: #f9fafb;
   --input-disabled-border: #e5e7eb;
   --input-disabled-text: #9ca3af;
+  --input-focus: #3b82f6;
+  --input-shadow: rgba(59, 130, 246, 0.18);
 }
 
 /* --------------------------------------------------------------------------
    2. Dark Mode Form Overrides
    -------------------------------------------------------------------------- */
-[data-theme="dark"] {
-  --input-bg: var(--color-surface-alt, #1A2232);
-  --input-border: var(--color-border, #263043);
-  --input-text: var(--color-text, #F1F5F9);
-  --input-placeholder: var(--color-text-muted, #94A3B8);
+[data-theme="dark"],
+.dark {
+  --input-bg: var(--color-surface-alt, #1e293b);
+  --input-border: var(--color-border-dark, #334155);
+  --input-text: var(--color-text, #f1f5f9);
+  --input-placeholder: var(--color-text-muted, #94a3b8);
   --input-disabled-bg: #111827;
   --input-disabled-border: #374151;
-  --input-disabled-text: #64748B;
+  --input-disabled-text: #64748b;
+  --input-focus: #3b82f6;
+  --input-shadow: rgba(59, 130, 246, 0.22);
+}
+
+/* ==========================================
+   GLOBAL TEXT INPUT STYLING (LIGHT + DARK)
+   ========================================== */
+
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="number"],
+input[type="date"],
+input[type="time"],
+textarea,
+select {
+  width: 100%;
+  min-height: 44px;
+  padding: 0.75rem 0.9rem;
+  border: 1px solid var(--input-border);
+  border-radius: 10px;
+  background-color: var(--input-bg);
+  color: var(--input-text);
+  font-size: 0.96rem;
+  line-height: 1.5;
+  box-sizing: border-box;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease, color 0.2s ease;
+  outline: none;
+}
+
+input[type="text"]::placeholder,
+input[type="email"]::placeholder,
+input[type="password"]::placeholder,
+input[type="number"]::placeholder,
+input[type="date"]::placeholder,
+input[type="time"]::placeholder,
+textarea::placeholder,
+select::placeholder {
+  color: var(--input-placeholder);
+  opacity: 1;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus,
+input[type="number"]:focus,
+input[type="date"]:focus,
+input[type="time"]:focus,
+textarea:focus,
+select:focus {
+  border-color: var(--input-focus);
+  background-color: var(--input-bg);
+  color: var(--input-text);
+  box-shadow: 0 0 0 3px var(--input-shadow);
+}
+
+textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image:
+    linear-gradient(45deg, transparent 50%, var(--input-placeholder) 50%),
+    linear-gradient(135deg, var(--input-placeholder) 50%, transparent 50%);
+  background-position:
+    calc(100% - 18px) calc(50% - 2px),
+    calc(100% - 12px) calc(50% - 2px);
+  background-size: 6px 6px, 6px 6px;
+  background-repeat: no-repeat;
+  padding-right: 2.5rem;
+}
+
+select option {
+  color: #111827;
+  background-color: #ffffff;
+}
+
+[data-theme="dark"] select option,
+.dark select option {
+  color: #f1f5f9;
+  background-color: #1e293b;
 }
 
 /* ==========================================
@@ -641,6 +729,252 @@ legend {
 
 
 
+
+/* ==========================================
+   DARK MODE INPUT STYLING (All Input Types)
+   Supports both [data-theme="dark"] and .dark class
+   ========================================== */
+
+/* ========== .form-control class (Bootstrap/Django forms) ========== */
+[data-theme="dark"] .form-control,
+.dark .form-control {
+  background-color: var(--color-bg-secondary, #2a3a52) !important;
+  color: var(--color-text-primary, #f1f5f9) !important;
+  border-color: var(--color-border-dark, #475569) !important;
+}
+
+/* Select dropdowns with .form-control class need appearance:none */
+[data-theme="dark"] select.form-control,
+.dark select.form-control {
+  appearance: none !important;
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="%23f1f5f9" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>') !important;
+  background-position: right 12px center !important;
+  background-repeat: no-repeat !important;
+  background-size: 18px !important;
+  padding-right: 40px !important;
+}
+
+[data-theme="dark"] select.form-control option,
+.dark select.form-control option {
+  background-color: var(--color-bg-secondary, #2a3a52) !important;
+  color: var(--color-text-primary, #f1f5f9) !important;
+}
+
+[data-theme="dark"] .form-control::placeholder,
+.dark .form-control::placeholder {
+  color: var(--color-text-muted, #94a3b8) !important;
+}
+
+[data-theme="dark"] .form-control:focus,
+.dark .form-control:focus {
+  background-color: var(--color-bg-secondary, #2a3a52) !important;
+  border-color: var(--color-primary, #2563eb) !important;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2) !important;
+}
+
+[data-theme="dark"] .form-control:disabled,
+.dark .form-control:disabled {
+  background-color: #1a2232 !important;
+  border-color: #374151 !important;
+  color: #64748b !important;
+}
+
+/* ========== prefers-color-scheme: dark ========== */
+@media (prefers-color-scheme: dark) {
+  input[type="text"],
+  input[type="email"],
+  input[type="password"],
+  input[type="number"],
+  input[type="date"],
+  input[type="datetime-local"],
+  input[type="search"],
+  input[type="time"],
+  input[type="url"],
+  input[type="tel"],
+  textarea,
+  select {
+    background-color: var(--color-bg-secondary, #2a3a52);
+    color: var(--color-text-primary, #f1f5f9);
+    border-color: var(--color-border-dark, #475569);
+  }
+
+  input[type="text"]::placeholder,
+  input[type="email"]::placeholder,
+  input[type="password"]::placeholder,
+  input[type="number"]::placeholder,
+  input[type="date"]::placeholder,
+  input[type="datetime-local"]::placeholder,
+  input[type="search"]::placeholder,
+  input[type="time"]::placeholder,
+  input[type="url"]::placeholder,
+  input[type="tel"]::placeholder,
+  textarea::placeholder {
+    color: var(--color-text-muted, #94a3b8);
+  }
+
+  input[type="text"]:focus,
+  input[type="email"]:focus,
+  input[type="password"]:focus,
+  input[type="number"]:focus,
+  input[type="date"]:focus,
+  input[type="datetime-local"]:focus,
+  input[type="search"]:focus,
+  input[type="time"]:focus,
+  input[type="url"]:focus,
+  input[type="tel"]:focus,
+  textarea:focus,
+  select:focus {
+    background-color: var(--color-bg-secondary, #2a3a52);
+    border-color: var(--color-primary, #2563eb);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+    outline: none;
+  }
+
+  select {
+    appearance: none;
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="%23f1f5f9" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>');
+    background-position: right 12px center;
+    background-repeat: no-repeat;
+    background-size: 18px;
+    background-color: var(--color-bg-secondary, #2a3a52);
+    padding-right: 40px;
+  }
+
+  select option {
+    background-color: var(--color-bg-secondary, #2a3a52);
+    color: var(--color-text-primary, #f1f5f9);
+  }
+}
+
+/* ========== .dark class-based dark mode ========== */
+.dark input[type="text"],
+.dark input[type="email"],
+.dark input[type="password"],
+.dark input[type="number"],
+.dark input[type="date"],
+.dark input[type="datetime-local"],
+.dark input[type="search"],
+.dark input[type="time"],
+.dark input[type="url"],
+.dark input[type="tel"],
+.dark textarea,
+.dark select {
+  background-color: var(--color-bg-secondary, #2a3a52);
+  color: var(--color-text-primary, #f1f5f9);
+  border-color: var(--color-border-dark, #475569);
+}
+
+.dark input[type="text"]::placeholder,
+.dark input[type="email"]::placeholder,
+.dark input[type="password"]::placeholder,
+.dark input[type="number"]::placeholder,
+.dark input[type="date"]::placeholder,
+.dark input[type="datetime-local"]::placeholder,
+.dark input[type="search"]::placeholder,
+.dark input[type="time"]::placeholder,
+.dark input[type="url"]::placeholder,
+.dark input[type="tel"]::placeholder,
+.dark textarea::placeholder {
+  color: var(--color-text-muted, #94a3b8);
+}
+
+.dark input[type="text"]:focus,
+.dark input[type="email"]:focus,
+.dark input[type="password"]:focus,
+.dark input[type="number"]:focus,
+.dark input[type="date"]:focus,
+.dark input[type="datetime-local"]:focus,
+.dark input[type="search"]:focus,
+.dark input[type="time"]:focus,
+.dark input[type="url"]:focus,
+.dark input[type="tel"]:focus,
+.dark textarea:focus,
+.dark select:focus {
+  background-color: var(--color-bg-secondary, #2a3a52);
+  border-color: var(--color-primary, #2563eb);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+  outline: none;
+}
+
+.dark select {
+  appearance: none;
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="%23f1f5f9" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>');
+  background-position: right 12px center;
+  background-repeat: no-repeat;
+  background-size: 18px;
+  background-color: var(--color-bg-secondary, #2a3a52);
+  padding-right: 40px;
+}
+
+.dark select option {
+  background-color: var(--color-bg-secondary, #2a3a52);
+  color: var(--color-text-primary, #f1f5f9);
+}
+
+/* ========== [data-theme="dark"] attribute selector ========== */
+[data-theme="dark"] input[type="text"],
+[data-theme="dark"] input[type="email"],
+[data-theme="dark"] input[type="password"],
+[data-theme="dark"] input[type="number"],
+[data-theme="dark"] input[type="date"],
+[data-theme="dark"] input[type="datetime-local"],
+[data-theme="dark"] input[type="search"],
+[data-theme="dark"] input[type="time"],
+[data-theme="dark"] input[type="url"],
+[data-theme="dark"] input[type="tel"],
+[data-theme="dark"] textarea,
+[data-theme="dark"] select {
+  background-color: var(--color-bg-secondary, #2a3a52);
+  color: var(--color-text-primary, #f1f5f9);
+  border-color: var(--color-border-dark, #475569);
+}
+
+[data-theme="dark"] input[type="text"]::placeholder,
+[data-theme="dark"] input[type="email"]::placeholder,
+[data-theme="dark"] input[type="password"]::placeholder,
+[data-theme="dark"] input[type="number"]::placeholder,
+[data-theme="dark"] input[type="date"]::placeholder,
+[data-theme="dark"] input[type="datetime-local"]::placeholder,
+[data-theme="dark"] input[type="search"]::placeholder,
+[data-theme="dark"] input[type="time"]::placeholder,
+[data-theme="dark"] input[type="url"]::placeholder,
+[data-theme="dark"] input[type="tel"]::placeholder,
+[data-theme="dark"] textarea::placeholder {
+  color: var(--color-text-muted, #94a3b8);
+}
+
+[data-theme="dark"] input[type="text"]:focus,
+[data-theme="dark"] input[type="email"]:focus,
+[data-theme="dark"] input[type="password"]:focus,
+[data-theme="dark"] input[type="number"]:focus,
+[data-theme="dark"] input[type="date"]:focus,
+[data-theme="dark"] input[type="datetime-local"]:focus,
+[data-theme="dark"] input[type="search"]:focus,
+[data-theme="dark"] input[type="time"]:focus,
+[data-theme="dark"] input[type="url"]:focus,
+[data-theme="dark"] input[type="tel"]:focus,
+[data-theme="dark"] textarea:focus,
+[data-theme="dark"] select:focus {
+  background-color: var(--color-bg-secondary, #2a3a52);
+  border-color: var(--color-primary, #2563eb);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+  outline: none;
+}
+
+[data-theme="dark"] select {
+  appearance: none;
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="%23f1f5f9" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>');
+  background-position: right 12px center;
+  background-repeat: no-repeat;
+  background-size: 18px;
+  background-color: var(--color-bg-secondary, #2a3a52);
+  padding-right: 40px;
+}
+
+[data-theme="dark"] select option {
+  background-color: var(--color-bg-secondary, #2a3a52);
+  color: var(--color-text-primary, #f1f5f9);
+}
 
 /* ==========================================
    AUTOFILL DARK MODE OVERRIDES
