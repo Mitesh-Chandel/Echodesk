@@ -236,7 +236,7 @@
                     {% for complaint in recent_complaints %}
                     <tr class="dashboard__table-row">
                         <td class="dashboard__table-cell">{{ complaint.user.username }}</td>
-                        <td class="dashboard__table-cell"><strong>{{ complaint.complaint_id }}</strong></td>
+                        <td class="dashboard__table-cell dashboard__table-cell--id"><strong>{{ complaint.complaint_id }}</strong></td>
                         <td class="dashboard__table-cell">{{ complaint.title }}</td>
                         <td class="dashboard__table-cell">{{ complaint.category.name }}</td>
                         <td class="dashboard__table-cell">

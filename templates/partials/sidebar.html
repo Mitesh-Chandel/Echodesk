@@ -27,6 +27,7 @@
 
     <nav class="sidebar__nav">
 
+        {% if user.profile.role != 'admin' %}
         <a href="{% url 'dashboard:staff_dashboard' %}"
            class="sidebar__link">
 
@@ -34,9 +35,9 @@
             Dashboard
 
         </a>
+        {% endif %}
 
-        <!-- Hide these links for staff users -->
-        {% if user.profile.role != 'staff' %}
+        {% if user.profile.role != 'staff' and user.profile.role != 'admin' %}
         <a href="{% url 'complaints:complaint_list' %}"
            class="sidebar__link">
 
